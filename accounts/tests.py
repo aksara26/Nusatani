@@ -142,6 +142,20 @@ class GuideAndProfileTests(TestCase):
         response = self.client.get(reverse("home"))
         self.assertRedirects(response, reverse("accounts:login"))
 
+    def test_guide_is_a_three_step_wizard_separate_from_login(self):
+        guide = self.client.get(reverse("accounts:guide"))
+        self.assertContains(guide, 'data-step="1"')
+        self.assertContains(guide, 'data-step="2"')
+        self.assertContains(guide, 'data-step="3"')
+        self.assertContains(guide, 'data-role-select')
+        self.assertContains(guide, 'data-role-steps="farmer"')
+        self.assertNotContains(guide, 'name="password"')
+
+        login = self.client.get(reverse("accounts:login"))
+        self.assertContains(login, 'name="password"')
+        self.assertNotContains(login, "Sebelum masuk, pilih peran Anda")
+        self.assertContains(login, "Buka panduan")
+
     def test_login_prefills_username_from_guide(self):
         response = self.client.get(reverse("accounts:login"), {"username": "petani1"})
         self.assertEqual(response.status_code, 200)

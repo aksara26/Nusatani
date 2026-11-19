@@ -351,120 +351,442 @@ a:hover {
   border-left: 4px solid var(--nt-accent);
 }
 
-/* Guide */
-.guide-shell {
-  max-width: 1080px;
+/* Onboarding wizard */
+[hidden] {
+  display: none !important;
+}
+
+.onboarding {
+  max-width: 980px;
   margin: 0 auto;
 }
 
-.guide-role-card {
-  border: 1px solid var(--nt-border);
-  border-radius: var(--nt-radius-card);
-  background: var(--nt-surface);
-  height: 100%;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+.onboarding-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
 }
 
-.guide-role-card:hover,
-.guide-role-card:focus-within {
-  border-color: var(--nt-primary);
-  box-shadow: 0 10px 28px rgba(21, 128, 61, 0.12);
-  transform: translateY(-2px);
+.onboarding-head h1 {
+  font-size: clamp(1.6rem, 3.2vw, 2.15rem);
 }
 
-.guide-role-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--nt-primary-soft);
-  color: var(--nt-primary-dark);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
+.onboarding-progress {
+  margin-bottom: 1.5rem;
 }
 
-.guide-role-card.is-amber .guide-role-icon {
-  background: var(--nt-accent-soft);
-  color: var(--nt-accent-dark);
-}
-
-.guide-steps {
-  counter-reset: guide-step;
+.onboarding-steps {
+  display: flex;
+  gap: 0.5rem;
   list-style: none;
-  padding-left: 0;
-  margin-bottom: 0;
+  padding: 0;
+  margin: 0 0 0.75rem;
 }
 
-.guide-steps li {
-  position: relative;
-  padding-left: 2.2rem;
-  margin-bottom: 0.65rem;
-  color: #334155;
+.onboarding-steps li {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--nt-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: default;
 }
 
-.guide-steps li::before {
-  counter-increment: guide-step;
-  content: counter(guide-step);
-  position: absolute;
-  left: 0;
-  top: 0.05rem;
-  width: 1.55rem;
-  height: 1.55rem;
-  border-radius: 50%;
-  background: var(--nt-primary-soft);
+.onboarding-steps li.is-active,
+.onboarding-steps li.is-done {
   color: var(--nt-primary-dark);
-  font-size: 0.75rem;
-  font-weight: 700;
+  cursor: pointer;
+}
+
+.onboarding-dot {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--nt-border);
+  background: var(--nt-surface);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.25s ease;
 }
 
-.guide-role-card.is-amber .guide-steps li::before {
-  background: var(--nt-accent-soft);
-  color: var(--nt-accent-dark);
+.is-active .onboarding-dot {
+  background: var(--nt-primary);
+  border-color: var(--nt-primary);
+  color: #ffffff;
+  box-shadow: 0 0 0 5px rgba(21, 128, 61, 0.12);
 }
 
-.guide-demo {
-  background: #f8fafc;
-  border: 1px solid var(--nt-border);
-  border-radius: var(--nt-radius-control);
-  padding: 0.55rem 0.75rem;
+.is-done .onboarding-dot {
+  background: var(--nt-primary-soft);
+  border-color: var(--nt-primary);
+  color: var(--nt-primary-dark);
+  font-size: 0;
+}
+
+.is-done .onboarding-dot::before {
+  content: "✓";
   font-size: 0.85rem;
 }
 
-.guide-demo code {
-  color: var(--nt-primary-dark);
-  font-weight: 700;
-}
-
-/* Login */
-.login-card {
-  border: 1px solid var(--nt-border);
-  border-radius: var(--nt-radius-card);
-  box-shadow: var(--nt-shadow);
+.onboarding-track {
+  height: 6px;
+  border-radius: 999px;
+  background: #e8eee8;
   overflow: hidden;
 }
 
-.login-aside {
-  background: linear-gradient(160deg, var(--nt-primary-dark), var(--nt-primary));
-  color: #ffffff;
+.onboarding-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--nt-primary), #22c55e);
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.login-aside p,
-.login-aside .small {
-  color: rgba(255, 255, 255, 0.82) !important;
+.onboarding-panel {
+  padding: 1.75rem;
+  min-height: 430px;
 }
 
-.login-aside .guide-demo {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+.onboarding-step.is-active {
+  animation: ntStepIn 0.38s ease both;
 }
 
-.login-aside .guide-demo code {
+@keyframes ntStepIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 0.85rem;
+}
+
+.role-card {
+  position: relative;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-height: 172px;
+  padding: 1.1rem 1rem 1rem;
+  border: 1.5px solid var(--nt-border);
+  border-radius: var(--nt-radius-card);
+  background: var(--nt-surface);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--nt-primary);
+  box-shadow: 0 12px 26px rgba(21, 128, 61, 0.12);
+}
+
+.role-card.is-amber:hover {
+  border-color: var(--nt-accent);
+  box-shadow: 0 12px 26px rgba(217, 119, 6, 0.14);
+}
+
+.role-card.is-selected {
+  border-color: var(--nt-primary);
+  background: linear-gradient(180deg, #ffffff, #f4fdf6);
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.14), 0 12px 26px rgba(21, 128, 61, 0.12);
+}
+
+.role-card.is-amber.is-selected {
+  border-color: var(--nt-accent);
+  background: linear-gradient(180deg, #ffffff, #fffaf0);
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.16), 0 12px 26px rgba(217, 119, 6, 0.12);
+}
+
+.role-check {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background: var(--nt-primary);
   color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s ease;
+}
+
+.is-amber .role-check {
+  background: var(--nt-accent);
+}
+
+.is-selected .role-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.role-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+  background: var(--nt-primary-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  margin-bottom: 0.25rem;
+}
+
+.is-amber .role-icon {
+  background: var(--nt-accent-soft);
+}
+
+.role-name {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--nt-text);
+}
+
+.role-summary {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--nt-muted);
+  flex-grow: 1;
+}
+
+.role-hint {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--nt-primary-dark);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.18s ease;
+}
+
+.is-amber .role-hint {
+  color: var(--nt-accent-dark);
+}
+
+.role-card:hover .role-hint,
+.role-card.is-selected .role-hint {
+  opacity: 1;
+  transform: none;
+}
+
+.flow-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: var(--nt-primary-soft);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.flow-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  counter-reset: flow;
+}
+
+.flow-list li {
+  position: relative;
+  padding: 0 0 1.25rem 3rem;
+  color: #334155;
+  opacity: 0;
+  animation: ntStepIn 0.4s ease forwards;
+  animation-delay: calc(var(--i, 1) * 70ms);
+}
+
+.flow-list li:last-child {
+  padding-bottom: 0;
+}
+
+.flow-list li::before {
+  counter-increment: flow;
+  content: counter(flow);
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 50%;
+  background: var(--nt-primary);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flow-list li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 0.9rem;
+  top: 1.9rem;
+  bottom: 0.15rem;
+  width: 2px;
+  background: var(--nt-primary-soft);
+}
+
+.onboarding-callout {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--nt-radius-control);
+  background: var(--nt-accent-soft);
+  color: var(--nt-accent-dark);
+  font-size: 0.85rem;
+}
+
+.credential-card {
+  border: 1px solid var(--nt-border);
+  border-radius: var(--nt-radius-card);
+  overflow: hidden;
+}
+
+.credential-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+}
+
+.credential-row + .credential-row {
+  border-top: 1px solid var(--nt-border);
+  background: #fafcfa;
+}
+
+.credential-label {
+  width: 5.5rem;
+  flex-shrink: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--nt-muted);
+}
+
+.credential-value {
+  flex-grow: 1;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--nt-primary-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.onboarding-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+/* Login — halaman mandiri, fokus ke form */
+.login-wrap {
+  max-width: 460px;
+  margin: 0 auto;
+  padding-top: 1.5rem;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.login-brand-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  background: var(--nt-primary);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 8px 18px rgba(21, 128, 61, 0.22);
+}
+
+.login-brand-name {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.login-card-clean {
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+.login-card-body {
+  padding: 2rem;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field .form-control {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.45rem;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: var(--nt-muted);
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  line-height: 1;
+}
+
+.password-toggle:hover {
+  background: var(--nt-primary-soft);
+  color: var(--nt-primary-dark);
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  color: var(--nt-muted);
+  font-size: 0.78rem;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--nt-border);
 }
 
 /* Footer */
@@ -508,11 +830,36 @@ a:hover {
     font-size: 0.78rem;
   }
 
-  .guide-role-card {
-    padding: 1.1rem !important;
+  .onboarding-head {
+    flex-direction: column;
+  }
+
+  .onboarding-head .btn {
+    align-self: flex-start;
+  }
+
+  .onboarding-dot-label {
+    display: none;
+  }
+
+  .onboarding-panel {
+    padding: 1.1rem;
+  }
+
+  .login-card-body {
+    padding: 1.4rem;
   }
 
   .table {
     font-size: 0.84rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

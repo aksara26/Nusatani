@@ -3,59 +3,83 @@
 {% block title %}Masuk — NusaTani{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-12 col-lg-9 col-xl-8">
-    <div class="login-card">
+<div class="login-wrap">
+  <div class="login-brand" aria-hidden="true">
+    <span class="login-brand-icon">🌱</span>
+    <span class="login-brand-name">NusaTani</span>
+  </div>
 
-      <div class="login-aside p-4 p-md-5">
-        <div class="section-kicker text-white-50">Selamat datang</div>
-        <h1 class="h3 mb-2 text-white">Masuk ke NusaTani</h1>
-        <p class="mb-4">
-          Marketplace microgreens untuk petani, HOREKA, konsumen, QC, mentor, dan mitra pembiayaan.
-        </p>
-        <div class="guide-demo mb-3">
-          Belum tahu harus mulai dari mana? <strong>Pilih peran Anda di halaman panduan.</strong>
+  <div class="card login-card-clean">
+    <div class="login-card-body">
+      <span class="section-kicker">Halaman masuk</span>
+      <h1 class="h3 mt-2 mb-2">Selamat datang kembali</h1>
+      <p class="small text-secondary mb-4">Masukkan kredensial akun Anda untuk membuka dashboard.</p>
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
         </div>
-        <a class="btn btn-light btn-sm" href="{% url 'accounts:guide' %}">Lihat panduan penggunaan</a>
-      </div>
+      {% endif %}
 
-      <div class="p-4 p-md-5 bg-white">
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-          </div>
-        {% endif %}
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
 
-        <form method="post" novalidate>
-          {% csrf_token %}
-          <input type="hidden" name="next" value="{{ next }}">
+        <div class="mb-3">
+          <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+          <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+                 class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}"
+                 value="{{ form.username.value|default:'' }}" autocomplete="username" required autofocus>
+          {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
 
-          <div class="mb-3">
-            <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-            <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
-                   class="form-control {% if form.username.errors %}is-invalid{% endif %}"
-                   value="{{ form.username.value|default:'' }}" autocomplete="username" required autofocus>
-            {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+        <div class="mb-4">
+          <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+          <div class="password-field">
             <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
-                   class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                   class="form-control form-control-lg {% if form.password.errors %}is-invalid{% endif %}"
                    autocomplete="current-password" required>
-            {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            <button type="button" class="password-toggle" data-toggle-password
+                    aria-label="Tampilkan password" aria-pressed="false">👁</button>
           </div>
+          {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
 
-          <button type="submit" class="btn btn-success w-100">Masuk</button>
-        </form>
+        <button type="submit" class="btn btn-success btn-lg w-100">Masuk ke dashboard <span aria-hidden="true">→</span></button>
+      </form>
 
-        <p class="small text-secondary text-center mt-3 mb-0">
-          Akun demo menggunakan kata sandi <code>password123</code>.
-          <a href="{% url 'accounts:guide' %}">Lihat panduan peran</a>.
-        </p>
-      </div>
+      <div class="login-divider"><span>atau</span></div>
 
+      <a class="btn btn-outline-secondary w-100" href="{% url 'accounts:guide' %}">
+        <span aria-hidden="true">🧭</span> Belum tahu peran saya? Buka panduan
+      </a>
+
+      <p class="small text-secondary text-center mt-4 mb-0">
+        Semua akun demo memakai password <code>password123</code>.
+      </p>
     </div>
   </div>
+
+  <p class="login-footnote text-center small text-secondary mt-4 mb-0">
+    🔒 Pembayaran, kurir, dan pembiayaan bersifat simulasi pada MVP.
+  </p>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  const toggle = document.querySelector("[data-toggle-password]");
+  if (!toggle) return;
+  const input = document.getElementById(toggle.closest(".password-field").querySelector("input").id);
+  toggle.addEventListener("click", function () {
+    const reveal = input.type === "password";
+    input.type = reveal ? "text" : "password";
+    toggle.textContent = reveal ? "🙈" : "👁";
+    toggle.setAttribute("aria-label", reveal ? "Sembunyikan password" : "Tampilkan password");
+    toggle.setAttribute("aria-pressed", String(reveal));
+    input.focus();
+  });
+})();
+</script>
 {% endblock %}
