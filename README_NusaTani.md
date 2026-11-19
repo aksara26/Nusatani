@@ -442,6 +442,9 @@ nusatani/
 │   ├── asgi.py
 │   └── wsgi.py
 │
+├── deploy/
+│   └── pythonanywhere_wsgi.py
+│
 ├── accounts/
 ├── farmers/
 ├── products/
@@ -474,6 +477,7 @@ nusatani/
 ├── manage.py
 ├── build.sh
 ├── .env.example
+├── .env.pythonanywhere.example
 ├── .gitignore
 └── README.md
 ```
@@ -706,6 +710,34 @@ python manage.py createsuperuser
 ```
 
 Jalankan melalui fasilitas Shell jika tersedia pada layanan yang digunakan. Jika tidak tersedia, jalankan perintah dari komputer lokal yang sudah terhubung ke database Supabase.
+
+### Alternatif tanpa kartu: PythonAnywhere
+
+Jika Render tetap meminta kartu pada paket Free, **PythonAnywhere Beginner** dapat dipakai untuk MVP ini tanpa kartu. Perbedaannya, aplikasi dijalankan lewat WSGI (bukan gunicorn) dan memakai SQLite karena akun gratis baru tidak menyediakan PostgreSQL.
+
+1. Buat akun Beginner di https://www.pythonanywhere.com/registration/register/beginner/
+2. Di Bash console PythonAnywhere, jalankan:
+
+   ```bash
+   git clone https://github.com/aksara26/Nusatani.git
+   cd Nusatani
+   python3.12 -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   python manage.py migrate
+   python manage.py collectstatic --noinput
+   python manage.py createsuperuser
+   ```
+
+3. Salin `.env.pythonanywhere.example` menjadi `.env`, lalu ganti `<username>` dengan username PythonAnywhere Anda. `SECURE_SSL_REDIRECT` dibiarkan `False` karena HTTPS diurus PythonAnywhere.
+4. Di tab **Web**, pilih **Add a new web app → Manual configuration → Python 3.12** (3.13 juga didukung).
+5. Isi **Source code** dan **Working directory** dengan `/home/<username>/Nusatani`, serta **Virtualenv** dengan `/home/<username>/Nusatani/.venv`.
+6. Salin isi `deploy/pythonanywhere_wsgi.py` ke `/var/www/<username>_pythonanywhere_com_wsgi.py`, lalu ganti `<username>` pada variabel `path`.
+7. Tambahkan mapping **Static files**: URL `/static/` → `/home/<username>/Nusatani/staticfiles` dan URL `/media/` → `/home/<username>/Nusatani/media`.
+8. Aktifkan **Force HTTPS**, lalu klik **Reload**.
+9. Verifikasi `https://<username>.pythonanywhere.com/health/` menampilkan `{"status":"ok","database":"ok"}`, lalu uji login sesuai Skenario 1–3.
+
+Catatan: `build.sh` tidak dipakai pada jalur PythonAnywhere. Web app gratis kedaluwarsa setelah sekitar satu bulan; perpanjang melalui tombol **Run until ...** di tab Web.
 
 ---
 
