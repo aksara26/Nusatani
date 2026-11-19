@@ -370,17 +370,22 @@ a:hover {
   z-index: 1;
 }
 
-/* Public pages: foto sawah + gunung nyata di pita atas. Tidak ada teks di atas foto,
-   jadi gambar tidak pernah menutupi atau mengganggu keterbacaan formulir. */
+/* Public pages: pita sawah sebagai panel kaca, menyatu dengan latar global. */
 .public-hero {
-  height: clamp(180px, 22vw, 300px);
-  background-color: var(--nt-bg);
+  height: clamp(150px, 19vw, 250px);
+  width: min(100% - 1.5rem, 1320px);
+  margin: 0.85rem auto 0;
+  border: 1px solid var(--nt-glass-border);
+  border-radius: 20px;
+  box-shadow: var(--nt-glass-shadow);
+  background-color: transparent;
   background-image:
-    linear-gradient(180deg, rgba(248, 250, 248, 0) 58%, rgba(248, 250, 248, 0.82) 86%, var(--nt-bg) 100%),
+    linear-gradient(180deg, rgba(248, 250, 248, 0.08) 0%, rgba(248, 250, 248, 0.3) 54%, rgba(248, 250, 248, 0.9) 100%),
     url("../images/highland-sawah.jpg");
   background-repeat: no-repeat;
   background-position: center 45%, center 42%;
   background-size: cover, cover;
+  overflow: hidden;
 }
 
 body.is-public main {
@@ -1249,7 +1254,7 @@ body.is-workspace main > * {
 }
 
 .public-hero {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
 }
 
 @media (max-width: 768px) {
