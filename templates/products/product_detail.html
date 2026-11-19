@@ -58,9 +58,19 @@
         <a class="btn btn-outline-secondary btn-sm" href="{% url 'products:my_products' %}">Kembali ke produk saya</a>
       </div>
     {% else %}
-      <div class="alert alert-info small mb-0">
-        Pemesanan produk tersedia pada tahap berikutnya. Untuk sekarang, Anda dapat menjelajahi katalog dan stok yang tercatat.
-      </div>
+      {% if user.role == 'horeca' %}
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-success btn-sm" href="{% url 'orders:preorder_create' %}">Buat pre-order</a>
+          <a class="btn btn-outline-success btn-sm" href="{% url 'orders:my_orders' %}">Pesanan saya</a>
+        </div>
+      {% elif user.role == 'consumer' and product.is_surplus %}
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-success btn-sm" href="{% url 'orders:surplus_create' %}">Pesan produk surplus</a>
+          <a class="btn btn-outline-success btn-sm" href="{% url 'orders:my_orders' %}">Pesanan saya</a>
+        </div>
+      {% else %}
+        <div class="alert alert-info small mb-0">Pemesanan tersedia untuk akun HOREKA dan konsumen.</div>
+      {% endif %}
     {% endif %}
   </div>
 </div>

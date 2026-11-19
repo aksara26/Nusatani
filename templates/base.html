@@ -19,6 +19,9 @@
           <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'products:surplus' %}">Surplus</a>
           {% if user.role == 'farmer' %}
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'products:my_products' %}">Produk Saya</a>
+            <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'orders:incoming' %}">Pesanan Masuk</a>
+          {% elif user.role == 'horeca' or user.role == 'consumer' %}
+            <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'orders:my_orders' %}">Pesanan Saya</a>
           {% endif %}
           <span class="badge rounded-pill text-bg-success">{{ user.get_role_display }}</span>
           <span class="small text-secondary d-none d-sm-inline">{{ user.get_username }}</span>

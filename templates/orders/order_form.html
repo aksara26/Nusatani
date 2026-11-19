@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} — NusaTani{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-1">{{ title }}</h1>
+        <p class="small text-secondary mb-4">
+          {% if order_type == 'preorder' %}
+            Pre-order dipakai untuk kebutuhan 7–14 hari ke depan. Produk diproduksi setelah pesanan diterima petani.
+          {% else %}
+            Produk surplus diambil dari stok yang tersedia. Stok akan berkurang saat pesanan dicatat.
+          {% endif %}
+        </p>
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+              {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+            </div>
+          {% endfor %}
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <button type="submit" class="btn btn-success">Kirim pesanan</button>
+            {% if order_type == 'preorder' %}
+              <a class="btn btn-outline-secondary" href="{% url 'orders:my_orders' %}">Batal</a>
+            {% else %}
+              <a class="btn btn-outline-secondary" href="{% url 'products:surplus' %}">Batal</a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

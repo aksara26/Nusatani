@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Pesanan Masuk — NusaTani{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h1 class="h3 mb-1">Pesanan Masuk</h1>
+  <p class="small text-secondary mb-0">Terima pesanan dan jalankan statusnya sesuai tahap produksi.</p>
+</div>
+
+{% if orders %}
+  {% include "orders/_order_table.html" with perspective="farmer" %}
+{% else %}
+  <div class="alert alert-info">Belum ada pesanan yang masuk untuk Anda.</div>
+{% endif %}
+
+<div class="alert alert-warning small mt-4 mb-0" role="alert">
+  <strong>Aturan kualitas:</strong> status pengiriman hanya bisa dijalankan setelah produk dinyatakan lolos QC pada tahap berikutnya.
+</div>
+{% endblock %}

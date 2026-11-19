@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Pesanan Saya — NusaTani{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">Pesanan Saya</h1>
+    <p class="small text-secondary mb-0">Pantau status pesanan Anda dari awal hingga selesai.</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-sm btn-success" href="{% url 'orders:preorder_create' %}">+ Pre-order</a>
+    <a class="btn btn-sm btn-outline-success" href="{% url 'products:surplus' %}">Beli surplus</a>
+  </div>
+</div>
+
+{% if orders %}
+  {% include "orders/_order_table.html" with perspective="buyer" %}
+{% else %}
+  <div class="alert alert-info">
+    Anda belum memiliki pesanan. Mulai dengan <strong>Pre-order</strong> atau membeli produk di <strong>Marketplace Surplus</strong>.
+  </div>
+{% endif %}
+{% endblock %}
