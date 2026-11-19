@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Performaku — NusaTani{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h1 class="h3 mb-1">Performaku</h1>
+  <p class="small text-secondary mb-0">Ringkasan pesanan, kualitas, aset, dan indikator simulasi usaha Anda.</p>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100"><div class="card-body">
+      <div class="small text-secondary">Pesanan aktif</div>
+      <div class="fs-3 fw-bold">{{ performance.total_orders }}</div>
+    </div></div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100"><div class="card-body">
+      <div class="small text-secondary">Pesanan selesai</div>
+      <div class="fs-3 fw-bold">{{ performance.completed_orders }}</div>
+    </div></div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100"><div class="card-body">
+      <div class="small text-secondary">Total nilai pesanan</div>
+      <div class="fs-3 fw-bold">Rp{{ performance.total_order_value|floatformat:0 }}</div>
+    </div></div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card border-0 shadow-sm h-100"><div class="card-body">
+      <div class="small text-secondary">Aset tercatat</div>
+      <div class="fs-3 fw-bold">{{ performance.asset_count }}</div>
+    </div></div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-5">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body p-4">
+        <h2 class="h6 fw-bold mb-3">Indikator simulasi</h2>
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="display-6 fw-bold">{{ assessment.total_score|floatformat:0 }}</div>
+          <div>
+            <span class="badge {{ assessment.eligibility_badge_class }}">{{ assessment.get_eligibility_display }}</span>
+            <div class="small text-secondary">dari 100 (simulasi)</div>
+          </div>
+        </div>
+        <dl class="row small mb-0">
+          <dt class="col-7 text-secondary">Pemenuhan pesanan</dt>
+          <dd class="col-5 text-end">{{ assessment.fulfillment_score|floatformat:0 }}/30</dd>
+          <dt class="col-7 text-secondary">Kualitas QC</dt>
+          <dd class="col-5 text-end">{{ assessment.quality_score|floatformat:0 }}/25</dd>
+          <dt class="col-7 text-secondary">Data aset</dt>
+          <dd class="col-5 text-end">{{ assessment.asset_score|floatformat:0 }}/20</dd>
+          <dt class="col-7 text-secondary">Pendampingan</dt>
+          <dd class="col-5 text-end">{{ assessment.mentorship_score|floatformat:0 }}/15</dd>
+          <dt class="col-7 text-secondary">Pembayaran simulasi</dt>
+          <dd class="col-5 text-end">{{ assessment.payment_score|floatformat:0 }}/10</dd>
+        </dl>
+        <div class="alert alert-warning small mt-3 mb-0">{{ assessment.notes }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-7">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body p-4">
+        <h2 class="h6 fw-bold mb-3">Riwayat pesanan</h2>
+        {% if orders %}
+          <div class="table-responsive">
+            <table class="table small align-middle mb-0">
+              <thead class="table-light">
+                <tr><th>No. pesanan</th><th>Pembeli</th><th>Status</th><th class="text-end">Nilai</th></tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                  <tr>
+                    <td>{{ order.order_number }}</td>
+                    <td>{{ order.buyer.username }}</td>
+                    <td>{{ order.get_status_display }}</td>
+                    <td class="text-end">Rp{{ order.total|floatformat:0 }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="alert alert-info small mb-0">Belum ada pesanan yang tercatat.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

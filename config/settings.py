@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +30,17 @@ DEBUG = _env_bool("DEBUG", True)
 ALLOWED_HOSTS = _env_list("ALLOWED_HOSTS", "localhost,127.0.0.1,testserver")
 CSRF_TRUSTED_ORIGINS = _env_list("CSRF_TRUSTED_ORIGINS")
 
+# PythonAnywhere tidak memakai SECURE_SSL_REDIRECT karena HTTPS ditangani platform,
+# tetapi secret key bawaan tidak boleh sampai terpakai di alamat publik.
+if (
+    not DEBUG
+    and any("pythonanywhere.com" in host for host in ALLOWED_HOSTS)
+    and SECRET_KEY.startswith("django-insecure-")
+):
+    raise ImproperlyConfigured(
+        "SECRET_KEY bawaan tidak boleh dipakai di produksi. Isi SECRET_KEY di file .env."
+    )
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -44,6 +56,7 @@ INSTALLED_APPS = [
     "deliveries",
     "assets",
     "mentorship",
+    "bankku",
 ]
 
 MIDDLEWARE = [
@@ -143,3 +156,8 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = "DENY"
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SECURE_REFERRER_POLICY = "same-origin"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"

@@ -23,6 +23,7 @@
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'deliveries:list' %}">Pengiriman</a>
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'assets:list' %}">Asetku</a>
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'mentorship:list' %}">Mentorku</a>
+            <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'bankku:my_performance' %}">Performaku</a>
           {% elif user.role == 'horeca' or user.role == 'consumer' %}
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'orders:my_orders' %}">Pesanan Saya</a>
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'deliveries:list' %}">Pengiriman</a>
@@ -30,9 +31,12 @@
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'quality_control:queue' %}">Antrean QC</a>
           {% elif user.role == 'mentor' %}
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'mentorship:list' %}">Mentorku</a>
+          {% elif user.role == 'bank' %}
+            <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'bankku:dashboard' %}">BANKKU</a>
           {% elif user.role == 'admin' %}
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'assets:list' %}">Asetku</a>
             <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'mentorship:list' %}">Mentorku</a>
+            <a class="btn btn-outline-success btn-sm d-none d-sm-inline-block" href="{% url 'bankku:dashboard' %}">BANKKU</a>
           {% endif %}
           <span class="badge rounded-pill text-bg-success">{{ user.get_role_display }}</span>
           <span class="small text-secondary d-none d-sm-inline">{{ user.get_username }}</span>
