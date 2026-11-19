@@ -10,12 +10,13 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.cache import never_cache
 
-from .forms import ProfileForm, RegistrationForm
+from .forms import NusaTaniAuthenticationForm, ProfileForm, RegistrationForm
 from .roles import ROLE_DASHBOARDS, ROLE_GUIDES, SELF_REGISTER_ROLES, Role
 
 
 class NusaTaniLoginView(LoginView):
     template_name = "registration/login.html"
+    authentication_form = NusaTaniAuthenticationForm
     redirect_authenticated_user = True
 
     def get_initial(self):

@@ -1,9 +1,22 @@
-"""Form profil dan pendaftaran pengguna."""
+"""Form profil, pendaftaran, dan autentikasi pengguna."""
 
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 from .models import CustomUser
 from .roles import Role
+
+
+class NusaTaniAuthenticationForm(AuthenticationForm):
+    """Pesan error yang jujur: username memaafkan spasi/kapital, password tidak."""
+
+    error_messages = {
+        "invalid_login": (
+            "Username atau password salah. Username tidak peka huruf besar/kecil "
+            "dan spasi diabaikan, tetapi password harus sama persis."
+        ),
+        "inactive": "Akun ini sedang tidak aktif.",
+    }
 
 
 class ProfileForm(forms.ModelForm):

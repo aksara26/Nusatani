@@ -127,7 +127,8 @@ class DemoLoginTests(TestCase):
             {"username": "petani1", "password": "salah"},
         )
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "sandi yang benar")
+        self.assertContains(response, "Username atau password salah")
+        self.assertContains(response, "password harus sama persis")
 
     def test_login_tolerates_spaces_and_capitalization(self):
         for typed_username in ("petani 1", " Petani1 ", "PETANI1"):
@@ -245,6 +246,10 @@ class GuideAndProfileTests(TestCase):
 
         guide = self.client.get(reverse("accounts:guide"))
         self.assertContains(guide, "Lewati panduan, langsung masuk")
+
+        login = self.client.get(reverse("accounts:login"))
+        self.assertContains(login, 'autocapitalize="none"')
+        self.assertContains(login, "Spasi diabaikan")
 
     def test_login_prefills_username_from_guide(self):
         response = self.client.get(reverse("accounts:login"), {"username": "petani1"})

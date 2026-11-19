@@ -135,7 +135,14 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        # Saat DEBUG, pakai URL static apa adanya supaya perubahan CSS langsung
+        # terlihat di runserver tanpa perlu collectstatic. Di produksi tetap
+        # memakai nama file ber-hash + kompresi dari WhiteNoise.
+        "BACKEND": (
+            "django.contrib.staticfiles.storage.StaticFilesStorage"
+            if DEBUG
+            else "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
     },
 }
 
