@@ -64,9 +64,14 @@ a:hover {
 }
 
 .navbar .nav-link:hover,
-.navbar .nav-link:focus {
+.navbar .nav-link:focus,
+.navbar .nav-link.active {
   color: var(--nt-primary-dark);
   background-color: var(--nt-primary-soft);
+}
+
+.navbar .nav-link.active {
+  font-weight: 600;
 }
 
 .navbar .dropdown-menu {
@@ -372,6 +377,139 @@ body.is-workspace main > * {
   padding: 2rem;
   text-align: center;
   color: var(--nt-muted);
+}
+
+/* Dashboard — ringkasan hidup per peran */
+.dashboard-hero-mark {
+  width: 96px;
+  height: 96px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--nt-border);
+  font-size: 2.75rem;
+  box-shadow: var(--nt-shadow);
+}
+
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--nt-primary), #4ade80);
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: #bbf7d0;
+  box-shadow: 0 10px 28px rgba(21, 128, 61, 0.12);
+}
+
+.stat-label {
+  color: var(--nt-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stat-icon {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--nt-primary-soft);
+  font-size: 1rem;
+}
+
+.stat-number {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 0.35rem;
+  letter-spacing: -0.03em;
+}
+
+.stat-hint {
+  color: var(--nt-muted);
+  font-size: 0.78rem;
+}
+
+.card-lift {
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-3px);
+  border-color: #bbf7d0;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.09);
+}
+
+.dashboard-recent {
+  border: 0;
+  border-left: 3px solid transparent;
+  padding: 0.9rem 1rem;
+  transition: background-color 160ms ease, border-color 160ms ease, padding-left 160ms ease;
+}
+
+.dashboard-recent + .dashboard-recent {
+  border-top: 1px solid var(--nt-border);
+}
+
+.dashboard-recent:hover,
+.dashboard-recent:focus {
+  background-color: #f6fdf8;
+  border-left-color: var(--nt-primary);
+  padding-left: 1.15rem;
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
+@keyframes nt-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-stats .col-6,
+.dashboard-actions,
+.dashboard-recent {
+  animation: nt-rise 420ms ease both;
+}
+
+.dashboard-stats .col-6:nth-child(2) {
+  animation-delay: 40ms;
+}
+
+.dashboard-stats .col-6:nth-child(3) {
+  animation-delay: 80ms;
+}
+
+.dashboard-stats .col-6:nth-child(4) {
+  animation-delay: 120ms;
 }
 
 /* Product cards */

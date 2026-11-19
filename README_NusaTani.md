@@ -606,6 +606,22 @@ python manage.py seed_demo_users --check
 
 > Akun uji ini tidak ditampilkan pada panduan maupun halaman masuk pengguna.
 
+### Data demo untuk pengecekan desain
+
+Setelah akun uji dibuat, isi data contoh agar dashboard tiap peran tidak kosong:
+
+```bash
+python manage.py seed_demo_data
+```
+
+Perintah ini membuat 4 produk petani, 5 pesanan dengan status berbeda, pemeriksaan QC, 2 pengiriman, 4 aset, 2 pendampingan, serta indikator performa untuk `petani1`. Aman dijalankan berulang kali karena memakai penanda tetap.
+
+Untuk membersihkan seluruh data demo sebelum memakai data sungguhan:
+
+```bash
+python manage.py purge_demo_data --yes
+```
+
 ---
 
 ## 12. Persiapan Database Supabase

@@ -23,7 +23,7 @@
   <div class="row g-3">
     {% for product in products %}
       <div class="col-12 col-md-6 col-lg-4">
-        <div class="card h-100 shadow-sm border-0 overflow-hidden">
+        <div class="card card-lift h-100 shadow-sm border-0 overflow-hidden">
           {% if product.photo_url %}
             <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="card-img-top product-media">
           {% else %}

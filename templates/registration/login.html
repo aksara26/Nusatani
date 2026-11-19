@@ -11,9 +11,17 @@
 
   <div class="card login-card-clean">
     <div class="login-card-body">
-      <span class="section-kicker">Halaman masuk</span>
-      <h1 class="h3 mt-2 mb-2">Selamat datang kembali</h1>
+      <span class="section-kicker">{% if user.is_authenticated %}Ganti akun{% else %}Halaman masuk{% endif %}</span>
+      <h1 class="h3 mt-2 mb-2">{% if user.is_authenticated %}Masuk sebagai akun lain{% else %}Selamat datang kembali{% endif %}</h1>
       <p class="small text-secondary mb-4">Masukkan kredensial akun Anda untuk membuka dashboard.</p>
+
+      {% if user.is_authenticated %}
+        <div class="alert alert-success small" role="status">
+          Anda sudah masuk sebagai <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).
+          Masukkan akun lain di bawah untuk berganti, atau
+          <a class="alert-link" href="{% url 'accounts:dashboard' %}">kembali ke dashboard</a>.
+        </div>
+      {% endif %}
 
       {% if form.non_field_errors %}
         <div class="alert alert-danger" role="alert">

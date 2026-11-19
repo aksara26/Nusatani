@@ -171,4 +171,5 @@ class BankkuTests(TestCase):
         response = self.client.get(reverse("accounts:dashboard"))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Dashboard Administrator")
-        self.assertContains(response, "Tahap 7")
+        self.assertContains(response, "Pengguna")
+        self.assertContains(response, "Antrean QC")

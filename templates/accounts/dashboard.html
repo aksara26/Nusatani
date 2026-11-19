@@ -3,43 +3,108 @@
 {% block title %}{{ dashboard.label }} — NusaTani{% endblock %}
 
 {% block content %}
-<div class="hero-soft p-4 p-md-5 mb-4">
+<div class="hero-soft p-4 p-md-5 mb-4 dashboard-hero">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div>
-      <div class="section-kicker mb-2">Dashboard NusaTani</div>
+      <div class="section-kicker mb-2">Dashboard NusaTani · {% now "j F Y" %}</div>
       <span class="badge text-bg-success mb-3">{{ role_label }}</span>
       <h1 class="h2 mb-2">{{ dashboard.label }}</h1>
       <p class="lead mb-2">{{ dashboard.subtitle }}</p>
       <p class="mb-0 text-secondary">{{ dashboard.description }}</p>
     </div>
-    <div class="d-none d-lg-block text-center" aria-hidden="true" style="font-size:4.5rem;opacity:.35">🌱</div>
+    <div class="dashboard-hero-mark d-none d-lg-flex" aria-hidden="true">🌱</div>
   </div>
 </div>
 
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-  <div>
-    <h2 class="h5 mb-0">Fokus peran Anda</h2>
-    <p class="small text-secondary mb-0">Langkah yang paling sering digunakan sesuai hak akses Anda.</p>
-  </div>
-  <span class="badge text-bg-light border">Tahap 7 — BANKKU &amp; Pengujian Akhir</span>
-</div>
-
-<div class="row g-3">
-  {% for focus in dashboard.focus_areas %}
-    <div class="col-12 col-md-6 col-lg-4">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body p-4">
-          <div class="d-flex align-items-start gap-3">
-            <span class="guide-role-icon flex-shrink-0" aria-hidden="true">{% cycle '📦' '✅' '🌱' %}</span>
-            <div>
-              <h3 class="h6 fw-bold mb-1">{{ focus.title }}</h3>
-              <p class="small text-secondary mb-0">{{ focus.body }}</p>
-            </div>
+{% if dashboard_data.stats %}
+<div class="row g-3 mb-4 dashboard-stats">
+  {% for stat in dashboard_data.stats %}
+    <div class="col-6 col-lg-3">
+      <div class="card stat-card h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-start justify-content-between gap-2">
+            <span class="stat-label">{{ stat.label }}</span>
+            <span class="stat-icon" aria-hidden="true">{{ stat.icon }}</span>
           </div>
+          <div class="stat-number">{{ stat.value }}</div>
+          <div class="stat-hint">{{ stat.hint }}</div>
         </div>
       </div>
     </div>
   {% endfor %}
+</div>
+{% endif %}
+
+{% if dashboard_data.actions %}
+<div class="dashboard-actions mb-4" aria-label="Aksi cepat">
+  {% for action in dashboard_data.actions %}
+    <a class="btn {% if action.style == 'success' %}btn-success{% elif action.style == 'orange' %}btn-amber{% else %}btn-outline-success{% endif %}"
+       href="{{ action.url }}">
+      <span aria-hidden="true">{{ action.icon }}</span> {{ action.label }}
+    </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-12 col-xl-6">
+    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+      <div>
+        <h2 class="h5 mb-0">Fokus peran Anda</h2>
+        <p class="small text-secondary mb-0">Langkah yang paling sering digunakan sesuai hak akses Anda.</p>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      {% for focus in dashboard.focus_areas %}
+        <div class="col-12 col-md-6 col-xl-12">
+          <div class="card card-lift h-100">
+            <div class="card-body p-3 p-md-4">
+              <div class="d-flex align-items-start gap-3">
+                <span class="guide-role-icon flex-shrink-0" aria-hidden="true">{% cycle '📦' '✅' '🌱' %}</span>
+                <div>
+                  <h3 class="h6 fw-bold mb-1">{{ focus.title }}</h3>
+                  <p class="small text-secondary mb-0">{{ focus.body }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="col-12 col-xl-6">
+    <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+      <h2 class="h5 mb-0">{{ dashboard_data.recent_title }}</h2>
+      {% if dashboard_data.recent_url %}
+        <a class="small text-decoration-none" href="{{ dashboard_data.recent_url }}">Lihat semua →</a>
+      {% endif %}
+    </div>
+
+    {% if dashboard_data.recent %}
+      <div class="card overflow-hidden">
+        <div class="list-group list-group-flush">
+          {% for item in dashboard_data.recent %}
+            <a class="list-group-item list-group-item-action dashboard-recent" href="{{ item.url }}">
+              <div class="d-flex align-items-start justify-content-between gap-3">
+                <div class="min-w-0">
+                  <div class="fw-semibold text-truncate">{{ item.title }}</div>
+                  <div class="small text-secondary">{{ item.meta }}</div>
+                </div>
+                <span class="badge flex-shrink-0 {{ item.badge_class }}">{{ item.badge }}</span>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <div class="empty-state h-100 d-flex flex-column justify-content-center">
+        <div class="fs-3 mb-2" aria-hidden="true">🌿</div>
+        <p class="mb-0">{{ dashboard_data.recent_empty }}</p>
+      </div>
+    {% endif %}
+  </div>
 </div>
 
 <div class="alert alert-info mt-4 mb-0" role="alert">

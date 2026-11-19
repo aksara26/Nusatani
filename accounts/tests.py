@@ -29,6 +29,17 @@ DEMO_ACCOUNTS = [
     ("bank1", "bank", False),
 ]
 
+# Penanda bahwa dashboard benar-benar berbeda per peran, bukan template generik.
+DASHBOARD_MARKERS = {
+    "admin": "Pengguna",
+    "farmer": "Produk aktif",
+    "horeca": "Buat pre-order",
+    "consumer": "Pesanan surplus",
+    "qc": "Antrean QC",
+    "mentor": "Petani dibimbing",
+    "bank": "Rata-rata skor",
+}
+
 
 class DemoLoginTests(TestCase):
     def test_all_demo_accounts_can_login_and_open_own_dashboard(self):
@@ -47,6 +58,7 @@ class DemoLoginTests(TestCase):
                 dashboard = self.client.get(reverse("accounts:dashboard"))
                 self.assertEqual(dashboard.status_code, 200)
                 self.assertContains(dashboard, ROLE_DASHBOARDS[role]["label"])
+                self.assertContains(dashboard, DASHBOARD_MARKERS[role])
 
     def test_seed_command_repairs_existing_account_with_bad_password(self):
         broken, _ = User.objects.update_or_create(
@@ -66,6 +78,30 @@ class DemoLoginTests(TestCase):
             {"username": "petani1", "password": "password123"},
         )
         self.assertRedirects(response, reverse("accounts:dashboard"))
+
+    def test_seed_demo_data_is_idempotent_and_fills_each_area(self):
+        call_command("seed_demo_users", verbosity=0)
+        call_command("seed_demo_data", verbosity=0)
+        call_command("seed_demo_data", verbosity=0)
+
+        self.assertEqual(
+            Product.objects.filter(farmer__username="petani1").count(), 4
+        )
+        self.assertEqual(
+            Order.objects.filter(order_number__startswith="NT-DEMO").count(), 5
+        )
+        self.assertEqual(Asset.objects.filter(owner__username="petani1").count(), 4)
+        self.assertEqual(
+            Mentorship.objects.filter(mentor__username="mentor1").count(), 2
+        )
+        self.assertTrue(
+            FarmerPerformance.objects.filter(farmer__username="petani1").exists()
+        )
+        self.assertTrue(
+            FinancingAssessment.objects.filter(
+                performance__farmer__username="petani1"
+            ).exists()
+        )
 
     def test_guide_links_to_real_registration_not_demo_credentials(self):
         guide = self.client.get(reverse("accounts:guide"))
@@ -255,6 +291,31 @@ class GuideAndProfileTests(TestCase):
         response = self.client.get(reverse("accounts:login"), {"username": "petani1"})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'value="petani1"')
+
+    def test_authenticated_user_can_open_login_and_switch_account(self):
+        call_command("seed_demo_users", verbosity=0)
+        self.client.login(username="petani1", password="password123")
+
+        login_page = self.client.get(reverse("accounts:login"))
+        self.assertEqual(login_page.status_code, 200)
+        self.assertContains(login_page, "Masuk sebagai akun lain")
+        self.assertContains(login_page, "Ganti akun")
+
+        switched = self.client.post(
+            reverse("accounts:login"),
+            {"username": "admin", "password": "password123"},
+        )
+        self.assertRedirects(switched, reverse("accounts:dashboard"))
+        self.assertContains(
+            self.client.get(reverse("accounts:dashboard")),
+            "Dashboard Administrator",
+        )
+
+    def test_favicon_and_theme_color_are_declared(self):
+        response = self.client.get(reverse("accounts:guide"))
+        self.assertContains(response, "favicon")
+        self.assertContains(response, "apple-touch-icon")
+        self.assertContains(response, 'name="theme-color" content="#15803D"')
 
     def test_authenticated_user_can_update_profile(self):
         user = User.objects.create_user(
