@@ -568,6 +568,32 @@ Buka:
 http://127.0.0.1:8000/
 ```
 
+### Akun demo & pemulihan login
+
+Tujuh akun demo dapat dibuat atau diperbaiki kapan saja dengan perintah berikut. Perintah ini aman dijalankan berulang kali (idempoten) dan **selalu menyetel ulang password ke `password123`**:
+
+```bash
+python manage.py seed_demo_users
+```
+
+Untuk hanya memeriksa kondisi akun tanpa mengubahnya:
+
+```bash
+python manage.py seed_demo_users --check
+```
+
+| Username | Peran |
+|---|---|
+| `admin` | Administrator |
+| `petani1` | Petani |
+| `horeca1` | HOREKA |
+| `konsumen1` | Konsumen Rumah Tangga |
+| `qc1` | Petugas Quality Control |
+| `mentor1` | Mentor |
+| `bank1` | Bank / Mitra Pembiayaan |
+
+> Jika login demo gagal setelah deploy, jalankan `seed_demo_users` lalu reload aplikasi. Penyebab umumnya adalah akun lama yang password-nya tersimpan tanpa hash yang valid.
+
 ---
 
 ## 12. Persiapan Database Supabase

@@ -32,21 +32,10 @@ DEMO_ACCOUNTS = [
 
 class DemoLoginTests(TestCase):
     def test_all_demo_accounts_can_login_and_open_own_dashboard(self):
-        for username, role, is_admin in DEMO_ACCOUNTS:
-            with self.subTest(username=username):
-                user, _ = User.objects.update_or_create(
-                    username=username,
-                    defaults={
-                        "email": f"{username}@example.com",
-                        "role": role,
-                        "is_staff": is_admin,
-                        "is_superuser": is_admin,
-                        "is_active": True,
-                    },
-                )
-                user.set_password("password123")
-                user.save()
+        call_command("seed_demo_users", verbosity=0)
 
+        for username, role, _is_admin in DEMO_ACCOUNTS:
+            with self.subTest(username=username):
                 self.client.logout()
                 response = self.client.post(
                     reverse("accounts:login"),
@@ -58,6 +47,36 @@ class DemoLoginTests(TestCase):
                 dashboard = self.client.get(reverse("accounts:dashboard"))
                 self.assertEqual(dashboard.status_code, 200)
                 self.assertContains(dashboard, ROLE_DASHBOARDS[role]["label"])
+
+    def test_seed_command_repairs_existing_account_with_bad_password(self):
+        broken = User.objects.create_user(username="petani1", role="farmer")
+        broken.password = "plaintext-tanpa-hash"
+        broken.save(update_fields=["password"])
+        self.assertFalse(broken.check_password("password123"))
+
+        call_command("seed_demo_users", verbosity=0)
+        broken.refresh_from_db()
+        self.assertTrue(broken.check_password("password123"))
+
+        self.client.logout()
+        response = self.client.post(
+            reverse("accounts:login"),
+            {"username": "petani1", "password": "password123"},
+        )
+        self.assertRedirects(response, reverse("accounts:dashboard"))
+
+    def test_guide_to_login_flow_authenticates_farmer(self):
+        guide = self.client.get(reverse("accounts:guide"))
+        self.assertEqual(guide.status_code, 200)
+        self.assertContains(guide, 'data-username="petani1"')
+        self.assertContains(guide, "data-finish")
+
+        call_command("seed_demo_users", verbosity=0)
+        response = self.client.post(
+            reverse("accounts:login"),
+            {"username": "petani1", "password": "password123", "next": ""},
+        )
+        self.assertRedirects(response, reverse("accounts:dashboard"))
 
     def test_wrong_password_is_rejected(self):
         User.objects.create_user(username="petani1", password="password123", role="farmer")
