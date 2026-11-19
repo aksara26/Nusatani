@@ -3,25 +3,39 @@
 {% block title %}{{ dashboard.label }} — NusaTani{% endblock %}
 
 {% block content %}
-<div class="p-4 p-md-5 mb-4 rounded-4 bg-success-subtle border border-success-subtle">
-  <span class="badge text-bg-success mb-3">{{ role_label }}</span>
-  <h1 class="h2 mb-2">{{ dashboard.label }}</h1>
-  <p class="lead mb-2">{{ dashboard.subtitle }}</p>
-  <p class="mb-0 text-secondary">{{ dashboard.description }}</p>
+<div class="hero-soft p-4 p-md-5 mb-4">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <div class="section-kicker mb-2">Dashboard NusaTani</div>
+      <span class="badge text-bg-success mb-3">{{ role_label }}</span>
+      <h1 class="h2 mb-2">{{ dashboard.label }}</h1>
+      <p class="lead mb-2">{{ dashboard.subtitle }}</p>
+      <p class="mb-0 text-secondary">{{ dashboard.description }}</p>
+    </div>
+    <div class="d-none d-lg-block text-center" aria-hidden="true" style="font-size:4.5rem;opacity:.35">🌱</div>
+  </div>
 </div>
 
-<div class="d-flex align-items-center justify-content-between mb-3">
-  <h2 class="h5 mb-0">Fokus peran Anda</h2>
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+  <div>
+    <h2 class="h5 mb-0">Fokus peran Anda</h2>
+    <p class="small text-secondary mb-0">Langkah yang paling sering digunakan sesuai hak akses Anda.</p>
+  </div>
   <span class="badge text-bg-light border">Tahap 7 — BANKKU &amp; Pengujian Akhir</span>
 </div>
 
 <div class="row g-3">
   {% for focus in dashboard.focus_areas %}
     <div class="col-12 col-md-6 col-lg-4">
-      <div class="card h-100 shadow-sm border-0">
-        <div class="card-body">
-          <h3 class="h6 fw-bold">{{ focus.title }}</h3>
-          <p class="small text-secondary mb-0">{{ focus.body }}</p>
+      <div class="card h-100 shadow-sm">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start gap-3">
+            <span class="guide-role-icon flex-shrink-0" aria-hidden="true">{% cycle '📦' '✅' '🌱' %}</span>
+            <div>
+              <h3 class="h6 fw-bold mb-1">{{ focus.title }}</h3>
+              <p class="small text-secondary mb-0">{{ focus.body }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

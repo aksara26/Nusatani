@@ -55,7 +55,7 @@ class QualityInspection(models.Model):
     @property
     def result_badge_class(self):
         return {
-            QcStatus.MENUNGGU.value: "text-bg-secondary",
+            QcStatus.MENUNGGU.value: "text-bg-warning",
             QcStatus.DIPERIKSA.value: "text-bg-info",
             QcStatus.LOLOS.value: "text-bg-success",
             QcStatus.DITOLAK.value: "text-bg-danger",

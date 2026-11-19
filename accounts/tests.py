@@ -121,3 +121,46 @@ class PurgeDemoDataTests(TestCase):
         self.assertFalse(Product.objects.exists())
         self.assertTrue(User.objects.filter(username="petaniuji").exists())
         self.assertTrue(Variety.objects.exists())
+
+
+class GuideAndProfileTests(TestCase):
+    def test_new_visitor_is_guided_before_login(self):
+        response = self.client.get(reverse("home"))
+        self.assertRedirects(response, reverse("accounts:guide"))
+
+        guide = self.client.get(reverse("accounts:guide"))
+        self.assertEqual(guide.status_code, 200)
+        self.assertContains(guide, "Sebelum masuk, pilih peran Anda")
+        self.assertContains(guide, "petani1")
+        self.assertContains(guide, "Lewati panduan")
+
+    def test_skip_guide_remembers_choice(self):
+        response = self.client.get(reverse("accounts:guide"), {"skip": "1"})
+        self.assertRedirects(response, reverse("accounts:login"))
+        self.assertTrue(self.client.session.get("nt_guide_seen"))
+
+        response = self.client.get(reverse("home"))
+        self.assertRedirects(response, reverse("accounts:login"))
+
+    def test_login_prefills_username_from_guide(self):
+        response = self.client.get(reverse("accounts:login"), {"username": "petani1"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'value="petani1"')
+
+    def test_authenticated_user_can_update_profile(self):
+        user = User.objects.create_user(
+            username="petaniuji", password="password123", role="farmer"
+        )
+        self.client.login(username="petaniuji", password="password123")
+        response = self.client.post(
+            reverse("accounts:profile"),
+            {
+                "first_name": "Sari",
+                "last_name": "Utami",
+                "email": "sari@example.com",
+            },
+        )
+        self.assertRedirects(response, reverse("accounts:profile"))
+        user.refresh_from_db()
+        self.assertEqual(user.first_name, "Sari")
+        self.assertEqual(user.email, "sari@example.com")

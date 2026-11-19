@@ -16,10 +16,10 @@
 <div class="row g-4">
   <div class="col-12 col-md-5">
     {% if product.photo_url %}
-      <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="img-fluid rounded-4 border w-100" style="object-fit:cover;">
+      <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="img-fluid rounded-4 border w-100 product-media">
     {% else %}
-      <div class="d-flex align-items-center justify-content-center rounded-4 bg-success-subtle border" style="min-height:260px;">
-        <span class="display-1">🌱</span>
+      <div class="product-placeholder d-flex align-items-center justify-content-center rounded-4 border">
+        <span class="display-1" aria-hidden="true">🌱</span>
       </div>
     {% endif %}
   </div>
@@ -35,7 +35,7 @@
     <div class="row g-3 mb-4">
       <div class="col-6 col-sm-4">
         <div class="small text-secondary">Harga</div>
-        <div class="fw-bold text-success">Rp{{ product.price|floatformat:0 }}</div>
+        <div class="fw-bold text-success tabular-nums">Rp{{ product.price|floatformat:0 }}</div>
       </div>
       <div class="col-6 col-sm-4">
         <div class="small text-secondary">Stok</div>

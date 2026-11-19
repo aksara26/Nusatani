@@ -25,23 +25,26 @@
       <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm border-0 overflow-hidden">
           {% if product.photo_url %}
-            <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="card-img-top" style="height:170px;object-fit:cover;">
+            <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="card-img-top product-media">
           {% else %}
-            <div class="d-flex align-items-center justify-content-center bg-success-subtle" style="height:170px;">
-              <span class="display-6">🌱</span>
+            <div class="product-placeholder d-flex align-items-center justify-content-center">
+              <span class="display-6" aria-hidden="true">🌱</span>
             </div>
           {% endif %}
           <div class="card-body d-flex flex-column">
             <div class="d-flex justify-content-between align-items-start gap-2">
               <h2 class="h6 fw-bold mb-1">{{ product.name }}</h2>
-              <span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span>
+              <div class="d-flex flex-column flex-sm-row gap-1">
+                {% if product.is_surplus %}<span class="badge text-bg-warning">Sisaku</span>{% endif %}
+                <span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span>
+              </div>
             </div>
             <p class="small text-secondary mb-2">{{ product.variety.name }} · {{ product.farmer.username }}</p>
             <p class="small text-secondary mb-3">{{ product.description|truncatechars:90|default:"Tidak ada deskripsi." }}</p>
             <div class="mt-auto d-flex align-items-end justify-content-between">
               <div>
-                <div class="fw-bold text-success">Rp{{ product.price|floatformat:0 }}</div>
-                <div class="small text-secondary">Stok {{ product.stock }}</div>
+                <div class="fw-bold text-success tabular-nums">Rp{{ product.price|floatformat:0 }}</div>
+                <div class="small text-secondary tabular-nums">Stok {{ product.stock }}</div>
               </div>
               <a class="btn btn-sm btn-outline-success" href="{% url 'products:detail' product.pk %}">Detail</a>
             </div>

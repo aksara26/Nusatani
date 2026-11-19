@@ -38,7 +38,7 @@ class Delivery(models.Model):
     @property
     def status_badge_class(self):
         return {
-            DeliveryStatus.DISIAPKAN.value: "text-bg-secondary",
+            DeliveryStatus.DISIAPKAN.value: "text-bg-warning",
             DeliveryStatus.DIKIRIM.value: "text-bg-info",
             DeliveryStatus.DITERIMA.value: "text-bg-success",
         }.get(self.status, "text-bg-secondary")

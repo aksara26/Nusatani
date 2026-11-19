@@ -4,12 +4,22 @@
 
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-12 col-md-8 col-lg-5">
-    <div class="card shadow-sm mt-3">
-      <div class="card-body p-4">
-        <h1 class="h4 mb-1">Masuk ke NusaTani</h1>
-        <p class="text-secondary small mb-4">Gunakan akun yang telah dibuat oleh administrator.</p>
+  <div class="col-12 col-lg-9 col-xl-8">
+    <div class="login-card">
 
+      <div class="login-aside p-4 p-md-5">
+        <div class="section-kicker text-white-50">Selamat datang</div>
+        <h1 class="h3 mb-2 text-white">Masuk ke NusaTani</h1>
+        <p class="mb-4">
+          Marketplace microgreens untuk petani, HOREKA, konsumen, QC, mentor, dan mitra pembiayaan.
+        </p>
+        <div class="guide-demo mb-3">
+          Belum tahu harus mulai dari mana? <strong>Pilih peran Anda di halaman panduan.</strong>
+        </div>
+        <a class="btn btn-light btn-sm" href="{% url 'accounts:guide' %}">Lihat panduan penggunaan</a>
+      </div>
+
+      <div class="p-4 p-md-5 bg-white">
         {% if form.non_field_errors %}
           <div class="alert alert-danger" role="alert">
             {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
@@ -19,6 +29,7 @@
         <form method="post" novalidate>
           {% csrf_token %}
           <input type="hidden" name="next" value="{{ next }}">
+
           <div class="mb-3">
             <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
             <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
@@ -26,6 +37,7 @@
                    value="{{ form.username.value|default:'' }}" autocomplete="username" required autofocus>
             {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
           </div>
+
           <div class="mb-3">
             <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
             <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
@@ -33,9 +45,16 @@
                    autocomplete="current-password" required>
             {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
           </div>
+
           <button type="submit" class="btn btn-success w-100">Masuk</button>
         </form>
+
+        <p class="small text-secondary text-center mt-3 mb-0">
+          Akun demo menggunakan kata sandi <code>password123</code>.
+          <a href="{% url 'accounts:guide' %}">Lihat panduan peran</a>.
+        </p>
       </div>
+
     </div>
   </div>
 </div>

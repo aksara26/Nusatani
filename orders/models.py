@@ -136,14 +136,14 @@ class Order(models.Model):
         return {
             OrderStatus.MENUNGGU_KONFIRMASI.value: "text-bg-warning",
             OrderStatus.DIKONFIRMASI.value: "text-bg-info",
-            OrderStatus.DALAM_PRODUKSI.value: "text-bg-primary",
-            OrderStatus.MENUNGGU_QC.value: "text-bg-secondary",
+            OrderStatus.DALAM_PRODUKSI.value: "text-bg-warning",
+            OrderStatus.MENUNGGU_QC.value: "text-bg-warning",
             OrderStatus.QC_LOLOS.value: "text-bg-success",
             OrderStatus.QC_DITOLAK.value: "text-bg-danger",
             OrderStatus.SIAP_DIKIRIM.value: "text-bg-success",
             OrderStatus.DALAM_PENGIRIMAN.value: "text-bg-info",
             OrderStatus.SELESAI.value: "text-bg-success",
-            OrderStatus.DIBATALKAN.value: "text-bg-dark",
+            OrderStatus.DIBATALKAN.value: "text-bg-danger",
         }.get(self.status, "text-bg-secondary")
 
     def can_transition_to(self, new_status):

@@ -173,3 +173,99 @@ ROLE_DASHBOARDS = {
         ],
     },
 }
+
+
+ROLE_GUIDES = {
+    Role.FARMER.value: {
+        "icon": "🌾",
+        "label": Role.FARMER.label,
+        "demo_username": "petani1",
+        "is_amber": False,
+        "summary": "Kelola produksi, stok, pesanan, kualitas, pengiriman, dan catatan usaha.",
+        "steps": [
+            "Buka <strong>Produk Saya</strong> untuk menambah produk dan memperbarui stok.",
+            "Di <strong>Pesanan Masuk</strong>, konfirmasi pesanan lalu mulai produksi.",
+            "Ajukan produk ke QC. Setelah <strong>Lolos QC</strong>, siapkan pengiriman lalu tandai selesai.",
+            "Catat rak, tray, dan alat di <strong>Asetku</strong>; lihat jadwal di <strong>Mentorku</strong>.",
+            "Pantau hasil usaha di <strong>Performaku</strong>.",
+        ],
+    },
+    Role.HORECA.value: {
+        "icon": "🍽️",
+        "label": Role.HORECA.label,
+        "demo_username": "horeca1",
+        "is_amber": True,
+        "summary": "Pesan microgreens terjadwal untuk hotel, restoran, dan kafe.",
+        "steps": [
+            "Buka <strong>Katalog</strong> lalu pilih produk yang dibutuhkan.",
+            "Buat <strong>pre-order</strong> 7–14 hari sebelum tanggal kebutuhan.",
+            "Pantau status pesanan sampai produk dikirim dan diterima.",
+            "Lihat kembali pesanan melalui menu <strong>Pesanan Saya</strong>.",
+        ],
+    },
+    Role.CONSUMER.value: {
+        "icon": "🥗",
+        "label": Role.CONSUMER.label,
+        "demo_username": "konsumen1",
+        "is_amber": True,
+        "summary": "Beli microgreens segar, termasuk produk surplus petani.",
+        "steps": [
+            "Buka <strong>Katalog</strong> atau <strong>Sisaku</strong> untuk melihat produk.",
+            "Pilih produk surplus yang masih tersedia lalu pesan.",
+            "Pantau status pesanan dan pengiriman simulasi.",
+            "Riwayat pembelian ada di menu <strong>Pesanan Saya</strong>.",
+        ],
+    },
+    Role.QC.value: {
+        "icon": "🔍",
+        "label": Role.QC.label,
+        "demo_username": "qc1",
+        "is_amber": False,
+        "summary": "Periksa kualitas produk sebelum pesanan boleh dikirim.",
+        "steps": [
+            "Buka <strong>Antrean QC</strong> untuk melihat produk yang diajukan petani.",
+            "Periksa visual, kebersihan, kesegaran, dan kesesuaian berat.",
+            "Tulis catatan perbaikan bila perlu, lalu pilih <strong>Lolos QC</strong> atau <strong>Tidak lolos QC</strong>.",
+            "Produk yang ditolak tidak dapat masuk proses pengiriman.",
+        ],
+    },
+    Role.MENTOR.value: {
+        "icon": "🧑‍🏫",
+        "label": Role.MENTOR.label,
+        "demo_username": "mentor1",
+        "is_amber": False,
+        "summary": "Berikan materi, jadwal, dan evaluasi pendampingan petani.",
+        "steps": [
+            "Buka <strong>Mentorku</strong> lalu pilih <strong>Tambah pendampingan</strong>.",
+            "Isi materi, detail, jadwal, dan petani yang dibimbing.",
+            "Ubah status menjadi <strong>Selesai</strong> setelah pendampingan berlangsung.",
+            "Catat kegiatan dan evaluasi agar riwayatnya tersimpan.",
+        ],
+    },
+    Role.BANK.value: {
+        "icon": "🏦",
+        "label": Role.BANK.label,
+        "demo_username": "bank1",
+        "is_amber": False,
+        "summary": "Pantau performa usaha dan indikator pembiayaan simulasi.",
+        "steps": [
+            "Buka <strong>BANKKU</strong> untuk melihat ringkasan seluruh petani.",
+            "Pilih petani untuk melihat detail performa dan riwayat pesanan.",
+            "Perhatikan komposisi skor: pemenuhan, kualitas, aset, pendampingan, dan pembayaran simulasi.",
+            "Ingat: indikator ini bukan keputusan kredit resmi.",
+        ],
+    },
+    Role.ADMIN.value: {
+        "icon": "⚙️",
+        "label": Role.ADMIN.label,
+        "demo_username": "admin",
+        "is_amber": False,
+        "summary": "Kelola akun, katalog, pesanan, QC, mentor, dan laporan platform.",
+        "steps": [
+            "Gunakan akun ini untuk mengelola peran dan hak akses pengguna.",
+            "Pastikan varietas dan produk di katalog tetap mutakhir.",
+            "Pantau pesanan, antrean QC, pendampingan, dan BANKKU dari satu tempat.",
+            "Akses admin juga tersedia di halaman <code>/admin/</code>.",
+        ],
+    },
+}

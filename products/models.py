@@ -94,7 +94,7 @@ class Product(models.Model):
         return {
             "Tersedia": "text-bg-success",
             "Akan tersedia": "text-bg-info",
-            "Stok habis": "text-bg-warning",
+            "Stok habis": "text-bg-danger",
             "Nonaktif": "text-bg-secondary",
         }.get(self.availability_status, "text-bg-secondary")
 

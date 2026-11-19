@@ -54,7 +54,7 @@ class Mentorship(models.Model):
         return {
             MentorshipStatus.DIJADWALKAN.value: "text-bg-info",
             MentorshipStatus.SELESAI.value: "text-bg-success",
-            MentorshipStatus.DIBATALKAN.value: "text-bg-secondary",
+            MentorshipStatus.DIBATALKAN.value: "text-bg-danger",
         }.get(self.status, "text-bg-secondary")
 
     @property
