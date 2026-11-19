@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none" role="img" aria-label="Siluet tiga lapis pegunungan landai">
+  <path fill="#DCFCE7" fill-opacity="0.95" d="M0 176 C 150 132 286 118 452 150 C 610 180 748 104 930 132 C 1110 160 1276 112 1440 148 L 1440 320 L 0 320 Z"/>
+  <path fill="#BBF7D0" fill-opacity="0.82" d="M0 222 C 176 184 338 206 520 178 C 698 150 858 218 1040 190 C 1218 162 1342 208 1440 188 L 1440 320 L 0 320 Z"/>
+  <path fill="#86EFAC" fill-opacity="0.52" d="M0 268 C 196 238 362 270 560 250 C 758 230 916 274 1118 250 C 1278 230 1360 264 1440 250 L 1440 320 L 0 320 Z"/>
+</svg>

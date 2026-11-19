@@ -568,9 +568,21 @@ Buka:
 http://127.0.0.1:8000/
 ```
 
-### Akun demo & pemulihan login
+### Cara daftar akun
 
-Tujuh akun demo dapat dibuat atau diperbaiki kapan saja dengan perintah berikut. Perintah ini aman dijalankan berulang kali (idempoten) dan **selalu menyetel ulang password ke `password123`**:
+Pengunjung yang belum punya akun mengikuti alur berikut di antarmuka:
+
+1. Buka `/` — panduan akan muncul lebih dulu.
+2. Pilih peran: **Petani**, **HOREKA**, atau **Konsumen Rumah Tangga**.
+3. Ikuti langkah pendaftaran, lalu klik **Lanjut ke pendaftaran**.
+4. Isi username, email, nama, dan password (minimal 8 karakter) di `/accounts/daftar/`.
+5. Setelah berhasil, masuk melalui `/accounts/login/`.
+
+Peran **QC, Mentor, Bank/Mitra Pembiayaan, dan Administrator** tidak tersedia untuk pendaftaran mandiri karena memerlukan penetapan hak akses oleh administrator.
+
+### Akun uji internal (opsional)
+
+Untuk keperluan pengujian peran internal, tujuh akun dapat dibuat atau diperbaiki dengan perintah berikut. Perintah ini aman dijalankan berulang kali (idempoten) dan **selalu menyetel ulang password ke `password123`**:
 
 ```bash
 python manage.py seed_demo_users
@@ -592,7 +604,7 @@ python manage.py seed_demo_users --check
 | `mentor1` | Mentor |
 | `bank1` | Bank / Mitra Pembiayaan |
 
-> Jika login demo gagal setelah deploy, jalankan `seed_demo_users` lalu reload aplikasi. Penyebab umumnya adalah akun lama yang password-nya tersimpan tanpa hash yang valid.
+> Akun uji ini tidak ditampilkan pada panduan maupun halaman masuk pengguna.
 
 ---
 

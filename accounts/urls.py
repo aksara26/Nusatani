@@ -6,12 +6,14 @@ from .views import (
     dashboard,
     guide,
     profile,
+    register,
 )
 
 app_name = "accounts"
 
 urlpatterns = [
     path("panduan/", guide, name="guide"),
+    path("daftar/", register, name="register"),
     path("login/", NusaTaniLoginView.as_view(), name="login"),
     path("logout/", NusaTaniLogoutView.as_view(), name="logout"),
     path("profil/", profile, name="profile"),

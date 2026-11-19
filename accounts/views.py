@@ -10,8 +10,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.cache import never_cache
 
-from .forms import ProfileForm
-from .roles import ROLE_DASHBOARDS, ROLE_GUIDES, Role
+from .forms import ProfileForm, RegistrationForm
+from .roles import ROLE_DASHBOARDS, ROLE_GUIDES, SELF_REGISTER_ROLES, Role
 
 
 class NusaTaniLoginView(LoginView):
@@ -45,7 +45,7 @@ def home(request):
 
 @never_cache
 def guide(request):
-    """Panduan singkat per role sebelum login; bisa dilewati."""
+    """Panduan pendaftaran sebelum login; bisa dilewati."""
     if request.user.is_authenticated:
         return redirect("accounts:dashboard")
     if request.GET.get("skip") == "1":
@@ -56,10 +56,46 @@ def guide(request):
         request,
         "accounts/guide.html",
         {
-            "guides": ROLE_GUIDES,
-            "demo_password": "password123",
+            "guides": {
+                key: ROLE_GUIDES[key] for key in SELF_REGISTER_ROLES
+            },
+            "assigned_roles": [
+                {
+                    "key": key,
+                    "label": ROLE_GUIDES[key]["label"],
+                    "summary": ROLE_GUIDES[key]["summary"],
+                }
+                for key in ROLE_GUIDES
+                if key not in SELF_REGISTER_ROLES
+            ],
         },
     )
+
+
+@never_cache
+def register(request):
+    """Pendaftaran mandiri untuk peran publik, lalu diarahkan ke halaman masuk."""
+    if request.user.is_authenticated:
+        return redirect("accounts:dashboard")
+
+    initial = {}
+    requested_role = request.GET.get("role", "")
+    if requested_role in dict(RegistrationForm.ROLE_CHOICES):
+        initial["role"] = requested_role
+
+    if request.method == "POST":
+        form = RegistrationForm(request.POST, initial=initial)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Pendaftaran berhasil. Silakan masuk menggunakan username dan password Anda.",
+            )
+            return redirect("accounts:login")
+    else:
+        form = RegistrationForm(initial=initial)
+
+    return render(request, "accounts/register.html", {"form": form})
 
 
 @login_required

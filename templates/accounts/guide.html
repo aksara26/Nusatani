@@ -1,16 +1,15 @@
 {% extends "base.html" %}
-{% load static %}
 
-{% block title %}Panduan Penggunaan — NusaTani{% endblock %}
+{% block title %}Cara Daftar — NusaTani{% endblock %}
 
 {% block content %}
 <div class="onboarding" data-onboarding>
   <header class="onboarding-head">
     <div>
-      <span class="section-kicker">Langkah 1 dari 3 · Kenalan dulu</span>
+      <span class="section-kicker">Langkah 1 dari 3 · Cara daftar</span>
       <h1 class="h2 mt-2 mb-2">Sebelum masuk, pilih peran Anda</h1>
       <p class="text-secondary mb-0">
-        Panduan singkat ini menunjukkan apa yang bisa Anda lakukan di NusaTani. Pilih peran, lihat alurnya, lalu lanjut ke halaman masuk.
+        Ikuti tiga langkah singkat untuk membuat akun NusaTani sesuai peran Anda, lalu lanjut ke formulir pendaftaran.
       </p>
     </div>
     <a class="btn btn-outline-secondary btn-sm flex-shrink-0" href="{% url 'accounts:guide' %}?skip=1">
@@ -24,10 +23,10 @@
         <span class="onboarding-dot">1</span><span class="onboarding-dot-label">Pilih peran</span>
       </li>
       <li data-step-dot="2">
-        <span class="onboarding-dot">2</span><span class="onboarding-dot-label">Lihat alur</span>
+        <span class="onboarding-dot">2</span><span class="onboarding-dot-label">Cara daftar</span>
       </li>
       <li data-step-dot="3">
-        <span class="onboarding-dot">3</span><span class="onboarding-dot-label">Siap masuk</span>
+        <span class="onboarding-dot">3</span><span class="onboarding-dot-label">Siap daftar</span>
       </li>
     </ol>
     <div class="onboarding-track" role="presentation">
@@ -38,26 +37,38 @@
   <div class="onboarding-panel card">
     <!-- LANGKAH 1 -->
     <section class="onboarding-step is-active" data-step="1" aria-labelledby="step1-title">
-      <h2 id="step1-title" class="h5 mb-1">Siapa Anda di NusaTani?</h2>
-      <p class="small text-secondary mb-4">Klik kartu peran untuk memilih. Anda bisa mengubahnya kapan saja.</p>
+      <h2 id="step1-title" class="h5 mb-1">Anda akan mendaftar sebagai apa?</h2>
+      <p class="small text-secondary mb-4">Pilih satu peran. Peran ini akan terisi otomatis di formulir pendaftaran.</p>
 
-      <div class="role-grid" role="radiogroup" aria-label="Pilih peran" data-role-group>
+      <div class="role-grid" role="radiogroup" aria-label="Pilih peran pendaftaran" data-role-group>
         {% for role_key, item in guides.items %}
           <button type="button" class="role-card {% if item.is_amber %}is-amber{% endif %}"
                   data-role-select
                   data-role="{{ role_key }}"
                   data-label="{{ item.label }}"
-                  data-username="{{ item.demo_username }}"
                   data-icon="{{ item.icon }}"
                   data-summary="{{ item.summary }}"
+                  data-register-url="{% url 'accounts:register' %}?role={{ role_key }}"
                   role="radio" aria-checked="false">
             <span class="role-check" aria-hidden="true">✓</span>
             <span class="role-icon" aria-hidden="true">{{ item.icon }}</span>
             <span class="role-name">{{ item.label }}</span>
             <span class="role-summary">{{ item.summary }}</span>
-            <span class="role-hint">Pilih peran ini <span aria-hidden="true">→</span></span>
+            <span class="role-hint">Daftar sebagai ini <span aria-hidden="true">→</span></span>
           </button>
         {% endfor %}
+      </div>
+
+      <div class="assigned-roles mt-4">
+        <span class="section-kicker">Peran dengan akses khusus</span>
+        <p class="small text-secondary mb-2 mt-1">
+          Akun untuk peran berikut dibuatkan oleh administrator setelah pendaftaran dan verifikasi.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          {% for item in assigned_roles %}
+            <span class="badge text-bg-light border">{{ item.label }}</span>
+          {% endfor %}
+        </div>
       </div>
     </section>
 
@@ -69,42 +80,44 @@
       <div class="d-flex align-items-center gap-3 mb-2">
         <span class="flow-icon" data-flow-icon aria-hidden="true">🌱</span>
         <div>
-          <h2 id="step2-title" class="h5 mb-0" data-flow-title>Alur kerja</h2>
+          <h2 id="step2-title" class="h5 mb-0" data-flow-title>Cara daftar</h2>
           <p class="small text-secondary mb-0" data-flow-summary></p>
         </div>
       </div>
-      <ol class="flow-list" data-flow-steps></ol>
-      <div class="onboarding-callout">
-        <span aria-hidden="true">💡</span>
-        <span>Semua status di atas dapat Anda coba langsung dengan akun demo yang tersedia di langkah berikutnya.</span>
+
+      <span class="section-kicker d-block mt-4 mb-3">Langkah pendaftaran</span>
+      <ol class="flow-list">
+        <li>Pilih peran di langkah pertama. Peran sudah tersimpan di formulir.</li>
+        <li>Isi username, email, dan nama Anda dengan data yang masih aktif.</li>
+        <li>Buat password minimal 8 karakter, lalu ketik ulang di kolom konfirmasi.</li>
+        <li>Klik <strong>Daftar</strong>, lalu masuk ke halaman masuk dengan akun yang baru dibuat.</li>
+      </ol>
+
+      <div class="after-register mt-4">
+        <span class="section-kicker">Langkah pertama setelah masuk</span>
+        <ol class="flow-list flow-list-compact" data-flow-steps></ol>
       </div>
     </section>
 
     <!-- LANGKAH 3 -->
     <section class="onboarding-step" data-step="3" aria-labelledby="step3-title" hidden>
       <button type="button" class="btn btn-link btn-sm ps-0 mb-2" data-goto="2">
-        <span aria-hidden="true">←</span> Lihat alur lagi
+        <span aria-hidden="true">←</span> Lihat cara daftar
       </button>
-      <span class="section-kicker">Akun demo siap dipakai</span>
-      <h2 id="step3-title" class="h5 mt-1 mb-2">Siap masuk sebagai <span data-flow-label>peran Anda</span></h2>
+      <span class="section-kicker">Hampir selesai</span>
+      <h2 id="step3-title" class="h5 mt-1 mb-2">Siap daftar sebagai <span data-flow-label>peran Anda</span></h2>
       <p class="small text-secondary mb-4">
-        Kami sudah menyiapkan username untuk peran Anda. Password sama untuk semua akun demo.
+        Pastikan semua data sudah siap sebelum membuka formulir pendaftaran.
       </p>
 
-      <div class="credential-card">
-        <div class="credential-row">
-          <span class="credential-label">Username</span>
-          <code class="credential-value" data-cred-user>—</code>
-        </div>
-        <div class="credential-row">
-          <span class="credential-label">Password</span>
-          <code class="credential-value" data-cred-pass>{{ demo_password }}</code>
-          <button type="button" class="btn btn-outline-secondary btn-sm" data-copy="{{ demo_password }}">Salin</button>
-        </div>
-      </div>
+      <ul class="check-list">
+        <li><span aria-hidden="true">✓</span> Username belum pernah dipakai</li>
+        <li><span aria-hidden="true">✓</span> Email aktif dan bisa dihubungi</li>
+        <li><span aria-hidden="true">✓</span> Password minimal 8 karakter</li>
+      </ul>
 
       <div class="alert alert-info small mt-4 mb-0" role="alert">
-        Anda akan dibawa ke <strong>halaman masuk terpisah</strong>. Tidak perlu mengisi Panduan lagi setelah ini.
+        Setelah formulir terkirim, Anda akan diarahkan ke <strong>halaman masuk</strong> untuk memakai akun yang baru dibuat.
       </div>
     </section>
   </div>
@@ -113,26 +126,21 @@
     <button type="button" class="btn btn-outline-secondary" data-back hidden>
       <span aria-hidden="true">←</span> Kembali
     </button>
-    <div class="ms-auto d-flex gap-2">
-      <button type="button" class="btn btn-success btn-lg" data-next disabled>
-        Pilih peran dulu
-      </button>
-      <a class="btn btn-success btn-lg" data-finish href="{% url 'accounts:login' %}" hidden data-base="{% url 'accounts:login' %}">
-        <span data-finish-label>Masuk</span> <span aria-hidden="true">→</span>
+    <div class="ms-auto d-flex flex-wrap gap-2">
+      <a class="btn btn-outline-secondary btn-lg" href="{% url 'accounts:login' %}">Sudah punya akun? Masuk</a>
+      <button type="button" class="btn btn-success btn-lg" data-next disabled>Pilih peran dulu</button>
+      <a class="btn btn-success btn-lg" data-finish href="{% url 'accounts:register' %}" hidden>
+        Lanjut ke pendaftaran <span aria-hidden="true">→</span>
       </a>
     </div>
   </footer>
-
-  <p class="onboarding-footnote text-center small text-secondary mt-4 mb-0">
-    Pembayaran, pengiriman kurir, dan pembiayaan pada MVP bersifat simulasi.
-  </p>
 </div>
 
 {# Data alur per peran dipakai wizard untuk mengisi langkah 2 tanpa reload. #}
 <div class="d-none" aria-hidden="true">
   {% for role_key, item in guides.items %}
     <div data-role-steps="{{ role_key }}">
-      <ol class="flow-list">
+      <ol class="flow-list flow-list-compact">
         {% for step in item.steps %}
           <li style="--i: {{ forloop.counter }}">{{ step|safe }}</li>
         {% endfor %}
@@ -160,9 +168,6 @@
   const flowSummary = root.querySelector("[data-flow-summary]");
   const flowSteps = root.querySelector("[data-flow-steps]");
   const flowLabel = root.querySelector("[data-flow-label]");
-  const credUser = root.querySelector("[data-cred-user]");
-  const finishLabel = root.querySelector("[data-finish-label]");
-  const copyBtn = root.querySelector("[data-copy]");
 
   let current = 1;
   let selected = null;
@@ -202,7 +207,7 @@
       candidate.setAttribute("aria-checked", isSelected ? "true" : "false");
     });
     nextBtn.disabled = false;
-    nextBtn.textContent = "Lihat alur " + button.dataset.label;
+    nextBtn.textContent = "Lihat cara daftar " + button.dataset.label;
   }
 
   function fillFlow() {
@@ -210,13 +215,11 @@
     const panel = document.querySelector('[data-role-steps="' + selected.dataset.role + '"]');
     const list = panel ? panel.querySelector(".flow-list") : null;
     flowIcon.textContent = selected.dataset.icon;
-    flowTitle.textContent = "Alur kerja: " + selected.dataset.label;
+    flowTitle.textContent = "Daftar sebagai " + selected.dataset.label;
     flowSummary.textContent = selected.dataset.summary;
     flowLabel.textContent = selected.dataset.label;
     flowSteps.innerHTML = list ? list.innerHTML : "";
-    credUser.textContent = selected.dataset.username;
-    finishLabel.textContent = "Masuk sebagai " + selected.dataset.label;
-    finishBtn.href = finishBtn.dataset.base + "?username=" + encodeURIComponent(selected.dataset.username);
+    finishBtn.href = selected.dataset.registerUrl;
   }
 
   roleButtons.forEach(function (button) {
@@ -251,19 +254,6 @@
       const target = Number(dot.dataset.stepDot);
       if (target <= current) { if (target === 2) fillFlow(); show(target, true); }
     });
-  });
-
-  copyBtn.addEventListener("click", function () {
-    const text = copyBtn.dataset.copy;
-    function done() {
-      copyBtn.textContent = "Tersalin ✓";
-      window.setTimeout(function () { copyBtn.textContent = "Salin"; }, 1600);
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done).catch(done);
-    } else {
-      done();
-    }
   });
 
   show(1, false);

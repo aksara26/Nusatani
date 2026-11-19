@@ -175,6 +175,15 @@ ROLE_DASHBOARDS = {
 }
 
 
+# Peran yang boleh mendaftar mandiri. Peran operasional/internal diberikan
+# oleh administrator agar hak akses tetap terkendali.
+SELF_REGISTER_ROLES = (
+    Role.FARMER.value,
+    Role.HORECA.value,
+    Role.CONSUMER.value,
+)
+
+
 ROLE_GUIDES = {
     Role.FARMER.value: {
         "icon": "🌾",

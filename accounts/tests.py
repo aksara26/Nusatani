@@ -65,18 +65,59 @@ class DemoLoginTests(TestCase):
         )
         self.assertRedirects(response, reverse("accounts:dashboard"))
 
-    def test_guide_to_login_flow_authenticates_farmer(self):
+    def test_guide_links_to_real_registration_not_demo_credentials(self):
         guide = self.client.get(reverse("accounts:guide"))
         self.assertEqual(guide.status_code, 200)
-        self.assertContains(guide, 'data-username="petani1"')
-        self.assertContains(guide, "data-finish")
+        self.assertContains(guide, 'data-role="farmer"')
+        self.assertContains(guide, 'data-register-url="/accounts/daftar/?role=farmer"')
+        self.assertContains(guide, "Lanjut ke pendaftaran")
+        self.assertNotContains(guide, "password123")
+        self.assertNotContains(guide, "Akun demo")
 
-        call_command("seed_demo_users", verbosity=0)
+    def test_registration_creates_account_then_login_works(self):
         response = self.client.post(
-            reverse("accounts:login"),
-            {"username": "petani1", "password": "password123", "next": ""},
+            reverse("accounts:register"),
+            {
+                "username": "petanibaru",
+                "email": "petanibaru@example.com",
+                "first_name": "Sari",
+                "last_name": "Utami",
+                "role": "farmer",
+                "password1": "password123",
+                "password2": "password123",
+            },
         )
-        self.assertRedirects(response, reverse("accounts:dashboard"))
+        self.assertRedirects(response, reverse("accounts:login"))
+
+        user = User.objects.get(username="petanibaru")
+        self.assertEqual(user.role, "farmer")
+        self.assertTrue(user.check_password("password123"))
+
+        login = self.client.post(
+            reverse("accounts:login"),
+            {"username": "petanibaru", "password": "password123"},
+        )
+        self.assertRedirects(login, reverse("accounts:dashboard"))
+
+    def test_registration_rejects_internal_roles_and_weak_password(self):
+        response = self.client.post(
+            reverse("accounts:register"),
+            {
+                "username": "qcbaru",
+                "email": "qcbaru@example.com",
+                "role": "qc",
+                "password1": "pendek",
+                "password2": "pendek",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(User.objects.filter(username="qcbaru").exists())
+        self.assertContains(response, "Password minimal 8 karakter")
+
+    def test_registration_form_prefills_role_from_guide(self):
+        response = self.client.get(reverse("accounts:register"), {"role": "horeca"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'value="horeca" selected')
 
     def test_wrong_password_is_rejected(self):
         User.objects.create_user(username="petani1", password="password123", role="farmer")
@@ -150,8 +191,9 @@ class GuideAndProfileTests(TestCase):
         guide = self.client.get(reverse("accounts:guide"))
         self.assertEqual(guide.status_code, 200)
         self.assertContains(guide, "Sebelum masuk, pilih peran Anda")
-        self.assertContains(guide, "petani1")
+        self.assertContains(guide, "Cara daftar")
         self.assertContains(guide, "Lewati panduan")
+        self.assertNotContains(guide, "password123")
 
     def test_skip_guide_remembers_choice(self):
         response = self.client.get(reverse("accounts:guide"), {"skip": "1"})
@@ -174,6 +216,8 @@ class GuideAndProfileTests(TestCase):
         self.assertContains(login, 'name="password"')
         self.assertNotContains(login, "Sebelum masuk, pilih peran Anda")
         self.assertContains(login, "Buka panduan")
+        self.assertContains(login, "Daftar sekarang")
+        self.assertNotContains(login, "password123")
 
     def test_login_prefills_username_from_guide(self):
         response = self.client.get(reverse("accounts:login"), {"username": "petani1"})
