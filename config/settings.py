@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "orders",
     "quality_control",
     "deliveries",
+    "assets",
+    "mentorship",
 ]
 
 MIDDLEWARE = [

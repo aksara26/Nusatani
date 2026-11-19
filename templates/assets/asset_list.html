@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Asetku — NusaTani{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+  <div>
+    <h1 class="h3 mb-1">Asetku</h1>
+    <p class="small text-secondary mb-0">Catat rak, tray, lampu, alat panen, pengemasan, serta simulasi pembiayaan aset.</p>
+  </div>
+  <a class="btn btn-success" href="{% url 'assets:create' %}">Tambah aset</a>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <div class="small text-secondary">Total aset tercatat</div>
+        <div class="fs-3 fw-bold">{{ assets|length }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <div class="small text-secondary">Aset starter kit</div>
+        <div class="fs-3 fw-bold">{{ starter_count }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body">
+        <div class="small text-secondary">Total cicilan ijarah simulasi</div>
+        <div class="fs-3 fw-bold">Rp{{ ijarah_total|floatformat:0 }}</div>
+        <div class="small text-secondary">{{ ijarah_count }} aset dengan skema ijarah</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if assets %}
+  <div class="table-responsive shadow-sm rounded-4 border bg-white">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Nama aset</th>
+          <th>Kategori</th>
+          <th>Jumlah</th>
+          <th>Kondisi</th>
+          <th>Skema</th>
+          <th class="text-end">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for asset in assets %}
+          <tr>
+            <td class="fw-semibold">{{ asset.name }}</td>
+            <td>{{ asset.get_category_display }}</td>
+            <td>{{ asset.quantity }} {{ asset.unit }}</td>
+            <td><span class="badge {{ asset.condition_badge_class }}">{{ asset.get_condition_display }}</span></td>
+            <td>
+              <span class="badge text-bg-light border">{{ asset.get_financing_scheme_display }}</span>
+              {% if asset.is_ijarah and asset.ijarah_total %}
+                <div class="small text-secondary mt-1">Rp{{ asset.ijarah_total|floatformat:0 }} total simulasi</div>
+              {% endif %}
+            </td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-success" href="{% url 'assets:detail' asset.pk %}">Detail</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">Belum ada aset yang dicatat. Klik <strong>Tambah aset</strong> untuk mulai.</div>
+{% endif %}
+
+<div class="alert alert-warning small mt-4 mb-0" role="alert">
+  Skema ijarah pada MVP hanya simulasi pencatatan, bukan layanan pembiayaan atau keputusan kredit.
+</div>
+{% endblock %}

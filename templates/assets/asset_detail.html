@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}{{ asset.name }} — NusaTani{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'assets:list' %}">Asetku</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ asset.name }}</li>
+  </ol>
+</nav>
+
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+  <div>
+    <h1 class="h3 mb-1">{{ asset.name }}</h1>
+    <p class="small text-secondary mb-0">{{ asset.get_category_display }} · {{ asset.quantity }} {{ asset.unit }}</p>
+  </div>
+  <span class="badge {{ asset.condition_badge_class }} fs-6">{{ asset.get_condition_display }}</span>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+        <h2 class="h6 fw-bold mb-3">Informasi aset</h2>
+        <dl class="row mb-0 small">
+          <dt class="col-5 col-md-4 text-secondary">Kategori</dt>
+          <dd class="col-7 col-md-8">{{ asset.get_category_display }}</dd>
+          <dt class="col-5 col-md-4 text-secondary">Jumlah</dt>
+          <dd class="col-7 col-md-8">{{ asset.quantity }} {{ asset.unit }}</dd>
+          <dt class="col-5 col-md-4 text-secondary">Kondisi</dt>
+          <dd class="col-7 col-md-8">{{ asset.get_condition_display }}</dd>
+          <dt class="col-5 col-md-4 text-secondary">Tanggal diperoleh</dt>
+          <dd class="col-7 col-md-8">{{ asset.acquisition_date|default:"—" }}</dd>
+          <dt class="col-5 col-md-4 text-secondary">Skema perolehan</dt>
+          <dd class="col-7 col-md-8">{{ asset.get_financing_scheme_display }}</dd>
+          <dt class="col-5 col-md-4 text-secondary">Dicatat oleh</dt>
+          <dd class="col-7 col-md-8">{{ asset.owner.username }}</dd>
+        </dl>
+        {% if asset.notes %}
+          <hr>
+          <h3 class="h6 fw-bold mb-2">Catatan</h3>
+          <p class="small text-secondary mb-0">{{ asset.notes|linebreaksbr }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if asset.is_ijarah %}
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h2 class="h6 fw-bold mb-3">Simulasi ijarah</h2>
+          <dl class="row mb-0 small">
+            <dt class="col-5 col-md-4 text-secondary">Tenor</dt>
+            <dd class="col-7 col-md-8">{{ asset.ijarah_duration_months }} bulan</dd>
+            <dt class="col-5 col-md-4 text-secondary">Cicilan per bulan</dt>
+            <dd class="col-7 col-md-8">Rp{{ asset.ijarah_monthly_payment|floatformat:0 }}</dd>
+            <dt class="col-5 col-md-4 text-secondary">Total simulasi</dt>
+            <dd class="col-7 col-md-8 fw-semibold">Rp{{ asset.ijarah_total|floatformat:0 }}</dd>
+          </dl>
+          <div class="alert alert-warning small mt-3 mb-0">Data ini hanya simulasi dan bukan tagihan atau keputusan pembiayaan.</div>
+        </div>
+      </div>
+    {% elif asset.is_starter_kit %}
+      <div class="alert alert-info small mb-0">Aset ini tercatat sebagai bagian dari starter kit usaha.</div>
+    {% endif %}
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h2 class="h6 fw-bold mb-3">Kelola aset</h2>
+        <div class="d-grid gap-2">
+          <a class="btn btn-success btn-sm" href="{% url 'assets:update' asset.pk %}">Ubah data</a>
+          <form method="post" action="{% url 'assets:delete' asset.pk %}"
+                onsubmit="return confirm('Hapus aset ini dari catatan?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm w-100">Hapus aset</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

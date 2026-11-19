@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}{{ mentorship.topic }} — NusaTani{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'mentorship:list' %}">Mentorku</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ mentorship.topic }}</li>
+  </ol>
+</nav>
+
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
+  <div>
+    <h1 class="h3 mb-1">{{ mentorship.topic }}</h1>
+    <p class="small text-secondary mb-0">Mentor {{ mentorship.mentor.username }} · petani {{ mentorship.farmer.username }}</p>
+  </div>
+  <span class="badge {{ mentorship.status_badge_class }} fs-6">{{ mentorship.get_status_display }}</span>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-body p-4">
+        <h2 class="h6 fw-bold mb-3">Detail pendampingan</h2>
+        <dl class="row small mb-0">
+          <dt class="col-4 col-md-3 text-secondary">Jadwal</dt>
+          <dd class="col-8 col-md-9">{{ mentorship.scheduled_at|date:"d M Y H:i" }}</dd>
+          <dt class="col-4 col-md-3 text-secondary">Materi</dt>
+          <dd class="col-8 col-md-9">{{ mentorship.description|default:"—"|linebreaksbr }}</dd>
+          <dt class="col-4 col-md-3 text-secondary">Evaluasi</dt>
+          <dd class="col-8 col-md-9">{{ mentorship.evaluation|default:"Belum ada catatan evaluasi."|linebreaksbr }}</dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+          <h2 class="h6 fw-bold mb-0">Riwayat kegiatan</h2>
+          <a class="btn btn-success btn-sm" href="{% url 'mentorship:activity_create' mentorship.pk %}">Tambah kegiatan</a>
+        </div>
+
+        {% if activities %}
+          <ol class="list-group list-group-numbered">
+            {% for activity in activities %}
+              <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                  <div>
+                    <div class="fw-semibold">{{ activity.description|linebreaksbr }}</div>
+                    <div class="small text-secondary mt-1">{{ activity.activity_date|date:"d M Y H:i" }} · {{ activity.author.username|default:"—" }}</div>
+                    {% if activity.evaluation %}
+                      <div class="small mt-2"><strong>Evaluasi:</strong> {{ activity.evaluation|linebreaksbr }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ol>
+        {% else %}
+          <div class="alert alert-info small mb-0">Belum ada kegiatan yang dicatat untuk pendampingan ini.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h2 class="h6 fw-bold mb-3">Aksi</h2>
+        <div class="d-grid gap-2">
+          {% if can_manage %}
+            <a class="btn btn-success btn-sm" href="{% url 'mentorship:update' mentorship.pk %}">Ubah pendampingan</a>
+          {% endif %}
+          <a class="btn btn-outline-success btn-sm" href="{% url 'mentorship:activity_create' mentorship.pk %}">Catat kegiatan</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
