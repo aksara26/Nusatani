@@ -230,6 +230,22 @@ class GuideAndProfileTests(TestCase):
         self.assertContains(login, "Daftar sekarang")
         self.assertNotContains(login, "password123")
 
+    def test_login_is_always_discoverable_on_public_pages(self):
+        for url in (
+            reverse("accounts:guide"),
+            reverse("accounts:login"),
+            reverse("accounts:register"),
+        ):
+            with self.subTest(url=url):
+                response = self.client.get(url)
+                self.assertContains(response, 'class="public-hero"')
+                self.assertContains(response, "d-lg-none")
+                self.assertContains(response, 'href="/accounts/login/"')
+                self.assertContains(response, "Foto sawah:")
+
+        guide = self.client.get(reverse("accounts:guide"))
+        self.assertContains(guide, "Lewati panduan, langsung masuk")
+
     def test_login_prefills_username_from_guide(self):
         response = self.client.get(reverse("accounts:login"), {"username": "petani1"})
         self.assertEqual(response.status_code, 200)

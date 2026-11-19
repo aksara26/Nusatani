@@ -20,10 +20,17 @@
         <span class="d-none d-md-inline small fw-medium text-secondary ms-1">microgreens</span>
       </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-              aria-controls="mainNav" aria-expanded="false" aria-label="Buka navigasi">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+      <div class="d-flex align-items-center gap-2 ms-auto d-lg-none">
+        {% if user.is_authenticated %}
+          <a class="btn btn-outline-success btn-sm" href="{% url 'accounts:dashboard' %}">Dashboard</a>
+        {% else %}
+          <a class="btn btn-success btn-sm" href="{% url 'accounts:login' %}">Masuk</a>
+        {% endif %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Buka navigasi">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
 
       <div class="collapse navbar-collapse" id="mainNav">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -81,6 +88,11 @@
     </div>
   </nav>
 
+  {% if not user.is_authenticated %}
+  <div class="public-hero" role="img"
+       aria-label="Sawah terasering hijau dengan latar pegunungan dataran tinggi Nusantara"></div>
+  {% endif %}
+
   <main id="main-content" class="container flex-grow-1 py-4">
     {% if messages %}
       <div class="mb-3">
@@ -129,7 +141,16 @@
             </p>
           </div>
         </div>
-        <div class="border-top pt-3 mt-4 small text-secondary">© 2026 NusaTani · MODE: MVP DEMO</div>
+        <div class="border-top pt-3 mt-4 d-flex flex-wrap justify-content-between gap-2 small text-secondary">
+          <span>© 2026 NusaTani · MODE: MVP DEMO</span>
+          <span>
+            Foto sawah:
+            <a href="https://commons.wikimedia.org/wiki/File:1_bali_jatiluwih_rice_terrace_panorama.jpg"
+               target="_blank" rel="noopener noreferrer">chensiyuan</a>
+            · <a href="https://creativecommons.org/licenses/by-sa/4.0/"
+                 target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>
+          </span>
+        </div>
       </div>
     </footer>
   {% endif %}
