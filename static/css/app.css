@@ -315,6 +315,7 @@ a:hover {
 /* Public pages: gunung terlihat jelas di area atas. */
 body.is-public main {
   position: relative;
+  overflow-x: clip;
 }
 
 body.is-public .login-wrap {
@@ -325,15 +326,14 @@ body.is-public .login-wrap {
 body.is-public .login-wrap::before {
   content: "";
   position: absolute;
-  top: -2rem;
-  left: -2rem;
-  right: -2rem;
-  height: 300px;
-  background-image: url("../images/highland.svg");
+  top: -2.5rem;
+  left: -50vw;
+  right: -50vw;
+  height: 250px;
+  background-image: url("../images/highland-hero.svg");
   background-repeat: no-repeat;
-  background-position: bottom center;
+  background-position: top center;
   background-size: 100% 100%;
-  opacity: 0.4;
   z-index: -1;
   pointer-events: none;
 }

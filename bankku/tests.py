@@ -132,7 +132,9 @@ class BankkuTests(TestCase):
     def test_bank_dashboard_is_limited_to_bank_and_admin(self):
         self.make_order()
         self.client.login(username="bankuji", password="password123")
-        response = self.client.get(reverse("bankku:dashboard"))
+        response = self.client.get(
+            reverse("bankku:dashboard"), {"petani": self.farmer.pk}
+        )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "petaniuji")
         self.assertContains(response, "Indikator — petaniuji")

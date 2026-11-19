@@ -49,7 +49,9 @@ class DemoLoginTests(TestCase):
                 self.assertContains(dashboard, ROLE_DASHBOARDS[role]["label"])
 
     def test_seed_command_repairs_existing_account_with_bad_password(self):
-        broken = User.objects.create_user(username="petani1", role="farmer")
+        broken, _ = User.objects.update_or_create(
+            username="petani1", defaults={"role": "farmer"}
+        )
         broken.password = "plaintext-tanpa-hash"
         broken.save(update_fields=["password"])
         self.assertFalse(broken.check_password("password123"))
@@ -120,13 +122,22 @@ class DemoLoginTests(TestCase):
         self.assertContains(response, 'value="horeca" selected')
 
     def test_wrong_password_is_rejected(self):
-        User.objects.create_user(username="petani1", password="password123", role="farmer")
         response = self.client.post(
             reverse("accounts:login"),
             {"username": "petani1", "password": "salah"},
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "sandi yang benar")
+
+    def test_login_tolerates_spaces_and_capitalization(self):
+        for typed_username in ("petani 1", " Petani1 ", "PETANI1"):
+            with self.subTest(typed_username=typed_username):
+                self.client.logout()
+                response = self.client.post(
+                    reverse("accounts:login"),
+                    {"username": typed_username, "password": "password123"},
+                )
+                self.assertRedirects(response, reverse("accounts:dashboard"))
 
 
 class PurgeDemoDataTests(TestCase):
