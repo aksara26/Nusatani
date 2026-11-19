@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ dashboard.label }} — NusaTani{% endblock %}
+
+{% block content %}
+<div class="p-4 p-md-5 mb-4 rounded-4 bg-success-subtle border border-success-subtle">
+  <span class="badge text-bg-success mb-3">{{ role_label }}</span>
+  <h1 class="h2 mb-2">{{ dashboard.label }}</h1>
+  <p class="lead mb-2">{{ dashboard.subtitle }}</p>
+  <p class="mb-0 text-secondary">{{ dashboard.description }}</p>
+</div>
+
+<div class="d-flex align-items-center justify-content-between mb-3">
+  <h2 class="h5 mb-0">Fokus peran Anda</h2>
+  <span class="badge text-bg-light border">Tahap 1 — Fondasi &amp; Akses</span>
+</div>
+
+<div class="row g-3">
+  {% for focus in dashboard.focus_areas %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body">
+          <h3 class="h6 fw-bold">{{ focus.title }}</h3>
+          <p class="small text-secondary mb-0">{{ focus.body }}</p>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="alert alert-info mt-4 mb-0" role="alert">
+  <strong>Catatan MVP:</strong> pembayaran, pengiriman kurir, dan penilaian pembiayaan masih berupa simulasi.
+</div>
+{% endblock %}
