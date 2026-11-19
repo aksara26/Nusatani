@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Produk Saya — NusaTani{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
+  <div>
+    <h1 class="h3 mb-1">Produk Saya</h1>
+    <p class="small text-secondary mb-0">Kelola produk dan stok usaha Anda.</p>
+  </div>
+  <a class="btn btn-success btn-sm" href="{% url 'products:create' %}">+ Tambah produk</a>
+</div>
+
+{% if products %}
+  <div class="table-responsive shadow-sm rounded-4 border bg-white">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Produk</th>
+          <th>Varietas</th>
+          <th>Harga</th>
+          <th>Stok</th>
+          <th>Status</th>
+          <th class="text-end">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+          <tr>
+            <td>
+              <div class="fw-semibold">{{ product.name }}</div>
+              {% if product.is_surplus %}<span class="badge text-bg-warning">Surplus</span>{% endif %}
+            </td>
+            <td>{{ product.variety.name }}</td>
+            <td>Rp{{ product.price|floatformat:0 }}</td>
+            <td>{{ product.stock }}</td>
+            <td><span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-success" href="{% url 'products:detail' product.pk %}">Detail</a>
+              <a class="btn btn-sm btn-outline-secondary" href="{% url 'products:update' product.pk %}">Ubah</a>
+              <a class="btn btn-sm btn-outline-secondary" href="{% url 'products:inventory_update' product.pk %}">Stok</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">
+    Anda belum memiliki produk. Klik <strong>Tambah produk</strong> untuk membuat produk pertama dan membuatnya muncul di katalog.
+  </div>
+{% endif %}
+
+<div class="mt-4">
+  <a class="btn btn-sm btn-outline-success" href="{% url 'products:catalog' %}">Lihat katalog</a>
+  <a class="btn btn-sm btn-outline-success" href="{% url 'products:surplus' %}">Lihat marketplace surplus</a>
+</div>
+{% endblock %}

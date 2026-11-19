@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} — NusaTani{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-1">{{ title }}</h1>
+        <p class="small text-secondary mb-4">
+          Isi informasi produk dengan benar. Produk yang aktif akan langsung muncul di katalog.
+        </p>
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger" role="alert">
+            {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+            <div class="mb-3 {% if field.field.widget.input_type == 'checkbox' %}form-check{% endif %}">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+              {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+            </div>
+          {% endfor %}
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <button type="submit" class="btn btn-success">Simpan</button>
+            {% if product %}
+              <a class="btn btn-outline-secondary" href="{% url 'products:detail' product.pk %}">Batal</a>
+            {% else %}
+              <a class="btn btn-outline-secondary" href="{% url 'products:my_products' %}">Batal</a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

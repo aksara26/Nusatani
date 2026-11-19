@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} — NusaTani{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb small mb-0">
+    <li class="breadcrumb-item"><a href="{% url 'products:catalog' %}">Katalog</a></li>
+    {% if product.is_surplus %}
+      <li class="breadcrumb-item"><a href="{% url 'products:surplus' %}">Surplus</a></li>
+    {% endif %}
+    <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+  </ol>
+</nav>
+
+<div class="row g-4">
+  <div class="col-12 col-md-5">
+    {% if product.photo_url %}
+      <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="img-fluid rounded-4 border w-100" style="object-fit:cover;">
+    {% else %}
+      <div class="d-flex align-items-center justify-content-center rounded-4 bg-success-subtle border" style="min-height:260px;">
+        <span class="display-1">🌱</span>
+      </div>
+    {% endif %}
+  </div>
+  <div class="col-12 col-md-7">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+      <span class="badge text-bg-light border">{{ product.variety.name }}</span>
+      {% if product.is_surplus %}<span class="badge text-bg-warning">Produk Surplus</span>{% endif %}
+      <span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span>
+    </div>
+    <h1 class="h3 mb-2">{{ product.name }}</h1>
+    <p class="text-secondary mb-4">{{ product.description|default:"Belum ada deskripsi untuk produk ini." }}</p>
+
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-sm-4">
+        <div class="small text-secondary">Harga</div>
+        <div class="fw-bold text-success">Rp{{ product.price|floatformat:0 }}</div>
+      </div>
+      <div class="col-6 col-sm-4">
+        <div class="small text-secondary">Stok</div>
+        <div class="fw-bold">{{ product.stock }}</div>
+      </div>
+      <div class="col-6 col-sm-4">
+        <div class="small text-secondary">Tersedia sejak</div>
+        <div class="fw-bold">{{ product.available_from|date:"d M Y" }}</div>
+      </div>
+      <div class="col-6 col-sm-4">
+        <div class="small text-secondary">Petani</div>
+        <div class="fw-bold">{{ product.farmer.username }}</div>
+      </div>
+    </div>
+
+    {% if can_manage %}
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-success btn-sm" href="{% url 'products:update' product.pk %}">Ubah produk</a>
+        <a class="btn btn-outline-success btn-sm" href="{% url 'products:inventory_update' product.pk %}">Perbarui stok</a>
+        <a class="btn btn-outline-secondary btn-sm" href="{% url 'products:my_products' %}">Kembali ke produk saya</a>
+      </div>
+    {% else %}
+      <div class="alert alert-info small mb-0">
+        Pemesanan produk tersedia pada tahap berikutnya. Untuk sekarang, Anda dapat menjelajahi katalog dan stok yang tercatat.
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
