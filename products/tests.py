@@ -22,7 +22,9 @@ class CatalogAndStockTests(TestCase):
         self.buyer = User.objects.create_user(
             username="pembeliuji", password="TestPass123!", role="consumer"
         )
-        self.variety = Variety.objects.create(name="Sawi Putih", slug="sawi-putih")
+        self.variety, _created = Variety.objects.get_or_create(
+            slug="sawi-putih", defaults={"name": "Sawi Putih"}
+        )
         self.client.login(username="petaniuji", password="TestPass123!")
 
     def payload(self, **overrides):
