@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Pengiriman — NusaTani{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+  <h1 class="h3 mb-1">Pengiriman</h1>
+  <p class="small text-secondary mb-0">Pantau status pengiriman simulasi pesanan Anda.</p>
+</div>
+
+{% if deliveries %}
+  <div class="table-responsive shadow-sm rounded-4 border bg-white">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>No. Pesanan</th><th>Petani</th><th>Pembeli</th><th>Kurir</th><th>Status</th><th class="text-end">Aksi</th></tr>
+      </thead>
+      <tbody>
+        {% for delivery in deliveries %}
+          <tr>
+            <td>{{ delivery.order.order_number }}</td>
+            <td>{{ delivery.order.farmer.username }}</td>
+            <td>{{ delivery.order.buyer.username }}</td>
+            <td>{{ delivery.courier_name }}</td>
+            <td><span class="badge {{ delivery.status_badge_class }}">{{ delivery.get_status_display }}</span></td>
+            <td class="text-end"><a class="btn btn-sm btn-outline-success" href="{% url 'deliveries:detail' delivery.pk %}">Detail</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <div class="alert alert-info">Belum ada pengiriman yang dicatat.</div>
+{% endif %}
+{% endblock %}

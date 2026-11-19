@@ -9,9 +9,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from accounts.roles import Role
 from accounts.views import role_required
 from products.models import Inventory
+from quality_control.models import QcStatus, QualityInspection
 
 from .forms import OrderForm, OrderStatusForm, PaymentForm
-from .models import Order, OrderItem, OrderType, PaymentRecord
+from .models import Order, OrderItem, OrderStatus, OrderType, PaymentRecord
 
 
 def _order_queryset():
@@ -112,6 +113,12 @@ def incoming_orders(request):
 def order_detail(request, pk):
     order = _get_order(request, pk)
     is_farmer = order.farmer_id == request.user.pk or request.user.is_superuser
+    pending_inspection = None
+    if request.user.role == Role.QC.value:
+        pending_inspection = QualityInspection.objects.filter(
+            order_item__order=order,
+            result__in=[QcStatus.MENUNGGU.value, QcStatus.DIPERIKSA.value],
+        ).select_related("order_item__product").first()
     return render(
         request,
         "orders/order_detail.html",
@@ -119,6 +126,13 @@ def order_detail(request, pk):
             "order": order,
             "is_farmer": is_farmer,
             "status_form": OrderStatusForm(order=order, is_admin=request.user.is_superuser),
+            "can_submit_qc": is_farmer and order.status == OrderStatus.DALAM_PRODUKSI.value,
+            "can_prepare_delivery": (
+                is_farmer
+                and order.status == OrderStatus.QC_LOLOS.value
+                and order.qc_ready
+            ),
+            "pending_inspection": pending_inspection,
         },
     )
 

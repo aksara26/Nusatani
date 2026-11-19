@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "accounts",
     "products",
     "orders",
+    "quality_control",
+    "deliveries",
 ]
 
 MIDDLEWARE = [

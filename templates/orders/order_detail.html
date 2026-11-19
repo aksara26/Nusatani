@@ -72,6 +72,49 @@
         </div>
       </div>
     {% endif %}
+
+    {% if can_submit_qc %}
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+          <h2 class="h6 fw-bold mb-3">Ajukan ke Quality Control</h2>
+          <p class="small text-secondary">Produk akan menunggu pemeriksaan petugas QC sebelum dapat dikirim.</p>
+          <form method="post" action="{% url 'quality_control:submit_to_qc' order.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-sm">Ajukan ke QC</button>
+          </form>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if can_prepare_delivery %}
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+          <h2 class="h6 fw-bold mb-3">Pengiriman</h2>
+          <p class="small text-secondary">Semua produk sudah lolos QC. Siapkan data kurir simulasi.</p>
+          <a class="btn btn-success btn-sm" href="{% url 'deliveries:prepare' order.pk %}">Siapkan pengiriman</a>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if order.delivery %}
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+          <h2 class="h6 fw-bold mb-3">Status pengiriman</h2>
+          <p class="small mb-2"><span class="badge text-bg-light border">{{ order.delivery.get_status_display }}</span></p>
+          <a class="btn btn-outline-success btn-sm" href="{% url 'deliveries:detail' order.delivery.pk %}">Lihat pengiriman</a>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if pending_inspection %}
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+          <h2 class="h6 fw-bold mb-3">Pemeriksaan QC</h2>
+          <p class="small text-secondary mb-2">{{ pending_inspection.product.name }} menunggu pemeriksaan Anda.</p>
+          <a class="btn btn-success btn-sm" href="{% url 'quality_control:inspect' pending_inspection.pk %}">Periksa produk</a>
+        </div>
+      </div>
+    {% endif %}
   </div>
 
   <div class="col-12 col-lg-4">
