@@ -1,7 +1,9 @@
 """Verifikasi alur login dan dashboard untuk seluruh akun demo NusaTani."""
 
 from decimal import Decimal
+from pathlib import Path
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -316,6 +318,60 @@ class GuideAndProfileTests(TestCase):
         self.assertContains(response, "favicon")
         self.assertContains(response, "apple-touch-icon")
         self.assertContains(response, 'name="theme-color" content="#15803D"')
+
+    def test_actions_show_toast_and_confirmation_modal(self):
+        call_command("seed_demo_users", verbosity=0)
+
+        login = self.client.post(
+            reverse("accounts:login"),
+            {"username": "petani1", "password": "password123"},
+            follow=True,
+        )
+        self.assertContains(login, "Selamat datang")
+        self.assertContains(login, 'id="toastContainer"')
+        self.assertContains(login, 'class="toast nt-toast')
+        self.assertContains(login, 'id="confirmActionModal"')
+        self.assertContains(login, 'data-confirm="Keluar dari akun ini?')
+        self.assertContains(login, 'data-confirm-title="Keluar dari akun"')
+
+        logout = self.client.post(reverse("accounts:logout"), follow=True)
+        self.assertContains(logout, "Anda telah keluar dari akun")
+        self.assertContains(logout, 'id="toastContainer"')
+
+    def test_glassmorphism_and_rice_field_background_are_applied(self):
+        css = (Path(settings.BASE_DIR) / "static/css/app.css").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("highland-sawah.jpg", css)
+        self.assertIn("backdrop-filter", css)
+        self.assertIn(".nt-toast", css)
+        self.assertIn(".confirm-modal", css)
+        self.assertIn(".glass-panel", css)
+
+    def test_critical_forms_ask_for_confirmation(self):
+        templates = (
+            "accounts/profile.html",
+            "accounts/register.html",
+            "products/product_form.html",
+            "products/inventory_form.html",
+            "orders/order_form.html",
+            "orders/order_detail.html",
+            "orders/status_form.html",
+            "orders/payment_form.html",
+            "quality_control/inspection_form.html",
+            "deliveries/delivery_form.html",
+            "deliveries/delivery_detail.html",
+            "assets/asset_form.html",
+            "assets/asset_detail.html",
+            "mentorship/mentorship_form.html",
+            "mentorship/activity_form.html",
+        )
+        for name in templates:
+            with self.subTest(template=name):
+                content = (
+                    Path(settings.BASE_DIR) / "templates" / name
+                ).read_text(encoding="utf-8")
+                self.assertIn("data-confirm", content)
 
     def test_authenticated_user_can_update_profile(self):
         user = User.objects.create_user(

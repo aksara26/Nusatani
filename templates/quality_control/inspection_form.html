@@ -20,7 +20,11 @@
           </div>
         {% endif %}
 
-        <form method="post" novalidate>
+        <form method="post" novalidate
+              data-confirm="Simpan hasil pemeriksaan QC ini? Hasil akan mengubah status pesanan."
+              data-confirm-title="Simpan hasil QC"
+              data-confirm-ok="Ya, simpan hasil"
+              data-confirm-variant="warning">
           {% csrf_token %}
           <h2 class="h6 fw-bold mb-3">Aspek yang dinilai</h2>
           {% for field in form %}

@@ -38,9 +38,26 @@ class NusaTaniLoginView(LoginView):
         """Arahkan ke tujuan `next` yang valid, jika tidak ke dashboard."""
         return self.get_redirect_url() or reverse("accounts:dashboard")
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.request.user
+        name = user.get_full_name() or user.get_username()
+        messages.success(
+            self.request,
+            f"Selamat datang, {name}. Anda masuk sebagai {user.get_role_display()}.",
+        )
+        return response
+
 
 class NusaTaniLogoutView(LogoutView):
     next_page = reverse_lazy("accounts:login")
+
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        messages.success(
+            request, "Anda telah keluar dari akun. Sampai jumpa kembali."
+        )
+        return response
 
 
 def home(request):

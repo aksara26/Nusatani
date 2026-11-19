@@ -60,7 +60,11 @@
         <div class="card-body p-4">
           <h2 class="h6 fw-bold mb-3">Perbarui status</h2>
           <p class="small text-secondary">Status saat ini: <strong>{{ order.get_status_display }}</strong></p>
-          <form method="post" action="{% url 'orders:update_status' order.pk %}" novalidate>
+          <form method="post" action="{% url 'orders:update_status' order.pk %}" novalidate
+                data-confirm="Simpan status baru untuk pesanan {{ order.order_number }}?"
+                data-confirm-title="Ubah status pesanan"
+                data-confirm-ok="Ya, simpan status"
+                data-confirm-variant="warning">
             {% csrf_token %}
             <div class="mb-3">
               <label for="{{ status_form.status.id_for_label }}" class="form-label">{{ status_form.status.label }}</label>
@@ -78,7 +82,10 @@
         <div class="card-body p-4">
           <h2 class="h6 fw-bold mb-3">Ajukan ke Quality Control</h2>
           <p class="small text-secondary">Produk akan menunggu pemeriksaan petugas QC sebelum dapat dikirim.</p>
-          <form method="post" action="{% url 'quality_control:submit_to_qc' order.pk %}">
+          <form method="post" action="{% url 'quality_control:submit_to_qc' order.pk %}"
+                data-confirm="Ajukan pesanan {{ order.order_number }} ke pemeriksaan Quality Control?"
+                data-confirm-title="Ajukan ke QC"
+                data-confirm-ok="Ya, ajukan">
             {% csrf_token %}
             <button type="submit" class="btn btn-success btn-sm">Ajukan ke QC</button>
           </form>

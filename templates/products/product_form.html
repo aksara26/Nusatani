@@ -18,7 +18,10 @@
           </div>
         {% endif %}
 
-        <form method="post" novalidate>
+        <form method="post" novalidate
+              data-confirm="Simpan produk ini ke katalog NusaTani?"
+              data-confirm-title="Simpan produk"
+              data-confirm-ok="Ya, simpan produk">
           {% csrf_token %}
           {% for field in form %}
             <div class="mb-3 {% if field.field.widget.input_type == 'checkbox' %}form-check{% endif %}">

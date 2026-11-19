@@ -90,7 +90,11 @@
           {% if user.is_authenticated %}
             <span class="badge rounded-pill text-bg-success">{{ user.get_role_display }}</span>
             <span class="small text-secondary d-none d-lg-inline">{{ user.get_username }}</span>
-            <form method="post" action="{% url 'accounts:logout' %}" class="m-0">
+            <form method="post" action="{% url 'accounts:logout' %}" class="m-0"
+                  data-confirm="Keluar dari akun ini? Anda dapat masuk kembali kapan saja."
+                  data-confirm-title="Keluar dari akun"
+                  data-confirm-ok="Ya, keluar"
+                  data-confirm-variant="danger">
               {% csrf_token %}
               <button type="submit" class="btn btn-outline-secondary btn-sm">Keluar</button>
             </form>
@@ -110,11 +114,22 @@
 
   <main id="main-content" class="container flex-grow-1 py-4">
     {% if messages %}
-      <div class="mb-3">
+      <div class="toast-container position-fixed bottom-0 end-0 p-3" id="toastContainer" aria-live="polite" aria-atomic="true">
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Tutup"></button>
+          <div class="toast nt-toast nt-toast-{{ message.tags|default:'info' }}"
+               role="status" aria-live="polite" aria-atomic="true"
+               data-bs-delay="6500" data-bs-autohide="true">
+            <div class="toast-header">
+              <span class="nt-toast-icon" aria-hidden="true">
+                {% if message.tags == 'success' %}✅{% elif message.tags == 'error' %}⛔{% elif message.tags == 'warning' %}⚠️{% elif message.tags == 'debug' %}🐞{% else %}ℹ️{% endif %}
+              </span>
+              <strong class="me-auto">
+                {% if message.tags == 'success' %}Berhasil{% elif message.tags == 'error' %}Gagal{% elif message.tags == 'warning' %}Perhatian{% elif message.tags == 'debug' %}Debug{% else %}Informasi{% endif %}
+              </strong>
+              <small class="text-secondary">baru saja</small>
+              <button type="button" class="btn-close ms-2" data-bs-dismiss="toast" aria-label="Tutup"></button>
+            </div>
+            <div class="toast-body">{{ message }}</div>
           </div>
         {% endfor %}
       </div>
@@ -170,7 +185,125 @@
     </footer>
   {% endif %}
 
-  {% block extra_js %}{% endblock %}
+  <div class="modal fade" id="confirmActionModal" tabindex="-1" aria-labelledby="confirmActionTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content confirm-modal">
+        <div class="modal-header border-0 pb-0">
+          <h2 class="modal-title h5" id="confirmActionTitle">Konfirmasi</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body pt-2">
+          <p class="mb-0" id="confirmActionMessage">Lanjutkan aksi ini?</p>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" id="confirmActionCancel">Batal</button>
+          <button type="button" class="btn btn-success" id="confirmActionButton">Ya, lanjutkan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+  <script>
+  (function () {
+    "use strict";
+
+    document.querySelectorAll(".nt-toast").forEach(function (toastEl) {
+      if (window.bootstrap) {
+        window.bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 6500 }).show();
+      } else {
+        toastEl.classList.add("show");
+      }
+    });
+
+    var modalEl = document.getElementById("confirmActionModal");
+    if (!modalEl || !window.bootstrap) return;
+
+    var modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+    var titleEl = document.getElementById("confirmActionTitle");
+    var messageEl = document.getElementById("confirmActionMessage");
+    var confirmBtn = document.getElementById("confirmActionButton");
+    var cancelBtn = document.getElementById("confirmActionCancel");
+    var pending = null;
+
+    function setButtonVariant(variant) {
+      confirmBtn.classList.remove("btn-success", "btn-danger", "btn-warning");
+      if (variant === "danger") {
+        confirmBtn.classList.add("btn-danger");
+      } else if (variant === "warning") {
+        confirmBtn.classList.add("btn-warning");
+      } else {
+        confirmBtn.classList.add("btn-success");
+      }
+    }
+
+    function openConfirm(config) {
+      titleEl.textContent = config.title || "Konfirmasi";
+      messageEl.textContent = config.message || "Lanjutkan aksi ini?";
+      confirmBtn.textContent = config.ok || "Ya, lanjutkan";
+      setButtonVariant(config.variant || "success");
+      modal.show();
+    }
+
+    document.addEventListener("submit", function (event) {
+      var form = event.target;
+      if (!(form instanceof HTMLFormElement) || !form.hasAttribute("data-confirm")) return;
+      if (form.dataset.confirmBypass === "1") {
+        delete form.dataset.confirmBypass;
+        return;
+      }
+      event.preventDefault();
+      pending = { type: "form", form: form, submitter: event.submitter || null };
+      openConfirm({
+        title: form.dataset.confirmTitle,
+        message: form.dataset.confirm,
+        ok: form.dataset.confirmOk,
+        variant: form.dataset.confirmVariant
+      });
+    }, true);
+
+    document.addEventListener("click", function (event) {
+      var link = event.target.closest("a[data-confirm]");
+      if (!link || link.target === "_blank") return;
+      event.preventDefault();
+      pending = { type: "link", href: link.href };
+      openConfirm({
+        title: link.dataset.confirmTitle,
+        message: link.dataset.confirm,
+        ok: link.dataset.confirmOk,
+        variant: link.dataset.confirmVariant
+      });
+    });
+
+    confirmBtn.addEventListener("click", function () {
+      if (!pending) return;
+      var action = pending;
+      pending = null;
+      modal.hide();
+
+      if (action.type === "form") {
+        action.form.dataset.confirmBypass = "1";
+        if (action.submitter) {
+          action.form.requestSubmit(action.submitter);
+        } else if (typeof action.form.requestSubmit === "function") {
+          action.form.requestSubmit();
+        } else {
+          action.form.submit();
+        }
+      } else if (action.type === "link") {
+        window.location.href = action.href;
+      }
+    });
+
+    modalEl.addEventListener("shown.bs.modal", function () {
+      cancelBtn.focus();
+    });
+
+    modalEl.addEventListener("hidden.bs.modal", function () {
+      pending = null;
+    });
+  })();
+  </script>
 </body>
 </html>

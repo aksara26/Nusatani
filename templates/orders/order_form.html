@@ -22,7 +22,10 @@
           </div>
         {% endif %}
 
-        <form method="post" novalidate>
+        <form method="post" novalidate
+              data-confirm="Kirim pesanan ini ke petani sekarang?"
+              data-confirm-title="Konfirmasi pesanan"
+              data-confirm-ok="Ya, kirim pesanan">
           {% csrf_token %}
           {% for field in form %}
             <div class="mb-3">

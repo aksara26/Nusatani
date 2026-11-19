@@ -72,7 +72,10 @@
         <div class="d-grid gap-2">
           <a class="btn btn-success btn-sm" href="{% url 'assets:update' asset.pk %}">Ubah data</a>
           <form method="post" action="{% url 'assets:delete' asset.pk %}"
-                onsubmit="return confirm('Hapus aset ini dari catatan?');">
+                data-confirm="Hapus aset ini dari catatan? Tindakan ini tidak dapat dibatalkan."
+                data-confirm-title="Hapus aset"
+                data-confirm-ok="Ya, hapus aset"
+                data-confirm-variant="danger">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-danger btn-sm w-100">Hapus aset</button>
           </form>

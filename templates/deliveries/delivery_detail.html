@@ -51,13 +51,19 @@
           <h2 class="h6 fw-bold mb-3">Perbarui status</h2>
           <div class="d-flex flex-wrap gap-2">
             {% if delivery.status == 'disiapkan' %}
-              <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}">
+              <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}"
+                    data-confirm="Tandai pengiriman {{ order.order_number }} sebagai sedang dikirim?"
+                    data-confirm-title="Tandai dikirim"
+                    data-confirm-ok="Ya, tandai dikirim">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="dikirim">
                 <button type="submit" class="btn btn-success btn-sm">Tandai dikirim</button>
               </form>
             {% elif delivery.status == 'dikirim' %}
-              <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}">
+              <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}"
+                    data-confirm="Tandai pesanan {{ order.order_number }} sudah diterima dan selesai?"
+                    data-confirm-title="Tandai diterima"
+                    data-confirm-ok="Ya, selesaikan pesanan">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="diterima">
                 <button type="submit" class="btn btn-success btn-sm">Tandai diterima</button>

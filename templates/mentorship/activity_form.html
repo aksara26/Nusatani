@@ -18,7 +18,10 @@
           </div>
         {% endif %}
 
-        <form method="post" novalidate>
+        <form method="post" novalidate
+              data-confirm="Simpan catatan kegiatan pendampingan ini?"
+              data-confirm-title="Simpan kegiatan"
+              data-confirm-ok="Ya, simpan">
           {% csrf_token %}
           {% for field in form %}
             <div class="mb-3">

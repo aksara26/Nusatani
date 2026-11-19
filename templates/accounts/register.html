@@ -21,7 +21,10 @@
         </div>
       {% endif %}
 
-      <form method="post" novalidate>
+      <form method="post" novalidate
+            data-confirm="Buat akun NusaTani dengan data yang sudah Anda isi?"
+            data-confirm-title="Daftar akun"
+            data-confirm-ok="Ya, daftar">
         {% csrf_token %}
 
         <div class="mb-3">

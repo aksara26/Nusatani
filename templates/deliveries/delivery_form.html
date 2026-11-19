@@ -16,7 +16,10 @@
           <div class="alert alert-danger" role="alert">{{ error }}</div>
         {% endfor %}
 
-        <form method="post" novalidate>
+        <form method="post" novalidate
+              data-confirm="Simpan data kurir dan tandai pesanan siap dikirim?"
+              data-confirm-title="Siapkan pengiriman"
+              data-confirm-ok="Ya, siapkan">
           {% csrf_token %}
           {% for field in form %}
             <div class="mb-3">
