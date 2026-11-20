@@ -1,0 +1,56 @@
+/* NusaTani — Token CSS (dari design-spec.md) */
+:root {
+  --ink:#0F2A1D;
+  --ink-muted:#3F5A4B;
+  --green-900:#0B3D2A;
+  --green-800:#166534;
+  --green-700:#15803D;
+  --green-600:#16A34A;
+  --green-500:#22C55E;
+  --mint-50:#F0FDF4;
+  --mint-100:#DCFCE7;
+  --lime-300:#BEF264;
+  --cream:#FEF9E7;
+  --amber-100:#FEF3C7;
+  --amber-700:#B45309;
+  --blue-100:#E0F2FE;
+  --blue-700:#0369A1;
+  --red-100:#FEE2E2;
+  --red-700:#B91C1C;
+  --sky-top:#E8F8EE;
+  --sky-bottom:#FFFBEA;
+  --mtn-far:#CDEBD6;
+  --mtn-mid:#9ED2B2;
+  --mtn-near:#5FAF84;
+  --mtn-front:#2F8A5E;
+  --glass-light:rgba(255,255,255,.62);
+  --glass-strong:rgba(255,255,255,.82);
+  --glass-dark:rgba(11,61,42,.62);
+  --glass-border:rgba(255,255,255,.6);
+  --glass-shadow:0 8px 32px rgba(11,61,42,.14);
+  --blur-sm:8px;
+  --blur-md:14px;
+  --blur-max:16px;
+  --radius-sm:10px;
+  --radius-md:14px;
+  --radius-lg:20px;
+  --radius-xl:28px;
+  --radius-pill:999px;
+  --space-1:4px;
+  --space-2:8px;
+  --space-3:12px;
+  --space-4:16px;
+  --space-6:24px;
+  --space-8:32px;
+  --space-12:48px;
+  --space-16:64px;
+  --accent:#15803D;
+}
+
+/* Aksen berbeda per role melalui <body data-role="...">.
+   Sisanya identik (base hijam). Qc dan mentor pakai base default. */
+body[data-role="farmer"]   { --accent:#15803D; }   /* petani */
+body[data-role="consumer"] { --accent:#0F766E; }   /* konsumen */
+body[data-role="horeca"]   { --accent:#B45309; }   /* HOREKA */
+body[data-role="bank"]     { --accent:#1D4ED8; }   /* bank */
+body[data-role="admin"]    { --accent:#1F3A33; }   /* administrator */

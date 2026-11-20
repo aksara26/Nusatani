@@ -1,0 +1,704 @@
+/* NusaTani — Komponen UI (dari docs/design-spec.md)
+   Muat setelah tokens.css dan app.css. Semua warna pakai CSS variabel token. */
+
+/* =========================
+   1. Gelas / Glass variants
+   ========================= */
+.glass {
+  background: var(--glass-light);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.glass-strong {
+  background: var(--glass-strong);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.glass-dark {
+  background: var(--glass-dark);
+  color: #ffffff;
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: var(--radius-lg);
+}
+
+.glass-dark a { color: var(--mint-100); }
+.glass-dark a:hover { color: #ffffff; }
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.95);
+  }
+  .glass-dark {
+    background: rgba(11, 61, 42, 0.95);
+  }
+}
+
+/* =========================
+   2. Navbar melayang
+   ========================= */
+.navbar {
+  position: sticky;
+  top: var(--space-3);            /* 12px */
+  z-index: 1030;
+  height: 64px;
+  border-radius: var(--radius-xl);
+  margin: 0 var(--space-4);
+  background: var(--glass-light);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.navbar .container {
+  height: 100%;
+}
+
+.navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  font-weight: 800;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.navbar-brand .brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: var(--glass-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  border: 1px solid var(--glass-border);
+}
+
+.navbar-brand small {
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+/* Nav links */
+.navbar .nav-link {
+  color: var(--ink-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  padding: 0.45rem 0.7rem;
+  transition: 150ms ease-out;
+  text-decoration: none;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar .nav-link.active {
+  color: var(--accent);
+  background-color: rgba(47, 138, 94, 0.10);
+}
+
+/* Dropdown role menu */
+.navbar .dropdown-menu {
+  background: var(--glass-strong);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--glass-shadow);
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.navbar .dropdown-item {
+  color: var(--ink);
+  font-size: 0.9rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radius-md);
+  transition: 150ms ease-out;
+  text-decoration: none;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background-color: rgba(47, 138, 94, 0.10);
+  color: var(--accent);
+}
+
+/* Role badge di navbar (satu tempat saja) */
+.navbar .role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: rgba(47, 138, 94, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(47, 138, 94, 0.25);
+  margin-left: 0.5rem;
+}
+
+.navbar .role-badge .role-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+
+/* =========================
+   3. Tombol
+   ========================= */
+.btn {
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 150ms ease-out;
+}
+
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.82rem; height: auto; }
+.btn-lg { padding: 0.7rem 1.5rem; font-size: 1rem; height: auto; }
+
+/* Primer: isi --accent, teks putih */
+.btn-primary-green {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+.btn-primary-green:hover,
+.btn-primary-green:focus {
+  background: var(--green-800);
+  border-color: var(--green-800);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Sekunder: outline accent, latar glass */
+.btn-outline-green {
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  background: transparent;
+}
+.btn-outline-green:hover,
+.btn-outline-green:focus {
+  color: #ffffff;
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Ghost */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--ink-muted);
+}
+.btn-ghost:hover,
+.btn-ghost:focus {
+  background: rgba(47, 138, 94, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Bootstrap btn-success overrides */
+.btn-success {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--green-800);
+  --bs-btn-hover-border-color: var(--green-800);
+  --bs-btn-active-bg: var(--green-800);
+  --bs-btn-active-border-color: var(--green-800);
+  --bs-btn-disabled-bg: var(--accent);
+  --bs-btn-disabled-border-color: var(--accent);
+  color: #ffffff;
+}
+
+.btn-outline-success {
+  --bs-btn-color: var(--green-800);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-active-bg: var(--green-800);
+  --bs-btn-active-border-color: var(--green-800);
+  color: var(--green-800);
+}
+
+.btn:focus-visible {
+  outline: 3px solid rgba(21, 128, 61, 0.4);
+  outline-offset: 2px;
+}
+
+/* =========================
+   4. Chip status
+   ========================= */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.28rem 0.65rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
+}
+
+.chip svg { width: 14px; height: 14px; fill: currentColor; }
+
+.chip--menunggu { background: rgba(217, 119, 6, 0.12); color: var(--amber-700); border-color: rgba(217, 119, 6, 0.25); }
+.chip--qc { background: rgba(180, 83, 9, 0.12); color: #78350f; border-color: rgba(180, 83, 9, 0.25); }
+.chip--produksi { background: rgba(3, 105, 161, 0.12); color: var(--blue-700); border-color: rgba(3, 105, 161, 0.25); }
+.chip--siap { background: rgba(22, 163, 74, 0.12); color: var(--green-700); border-color: rgba(22, 163, 74, 0.25); }
+.chip--dikirim { background: rgba(6, 78, 59, 0.12); color: #0f766e; border-color: rgba(6, 78, 59, 0.25); }
+.chip--selesai { background: rgba(11, 61, 42, 0.15); color: var(--green-900); border-color: rgba(11, 61, 42, 0.3); }
+.chip--dibatalkan { background: rgba(185, 28, 28, 0.12); color: var(--red-700); border-color: rgba(185, 28, 28, 0.25); }
+
+/* =========================
+   5. Form field
+   ========================= */
+.form-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  margin-bottom: 0.35rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: var(--radius-control);
+  border: 1px solid rgba(148, 163, 184, 0.38);
+  background-color: var(--glass-strong);
+  color: var(--ink);
+  padding: 0.55rem 0.8rem;
+  height: 44px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: 150ms ease-out;
+  font-size: 0.9rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--accent);
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 0 0 0.2rem rgba(21, 128, 61, 0.12);
+  outline: none;
+}
+
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--red-700);
+  background-color: rgba(254, 226, 226, 0.4);
+}
+
+.invalid-feedback {
+  color: var(--red-700);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.form-text {
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+}
+
+/* =========================
+   6. Tabel
+   ========================= */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-border-color: rgba(148, 163, 184, 0.24);
+  --bs-table-hover-bg: rgba(220, 252, 231, 0.34);
+  background-color: transparent;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.table > tbody > tr > *,
+.table > tfoot > tr > * {
+  background-color: transparent !important;
+}
+
+.table thead th {
+  color: var(--ink-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  background-color: rgba(248, 250, 252, 0.5) !important;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.75rem 0.9rem;
+}
+
+.table td, .table th {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================
+   7. Modal
+   ========================= */
+.modal-backdrop.show {
+  opacity: 0.28;
+  background-color: #14532d;
+}
+
+.modal-content {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  background: var(--glass-strong);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  box-shadow: var(--glass-shadow);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.modal-title {
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.25rem;
+  opacity: 0.6;
+}
+.btn-close:hover { opacity: 1; }
+
+/* =========================
+   8. Toast
+   ========================= */
+.toast-container {
+  z-index: 1095;
+}
+
+.nt-toast {
+  width: min(380px, calc(100vw - 2rem));
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 20px 50px rgba(11, 61, 42, 0.18);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  overflow: hidden;
+}
+
+.nt-toast .toast-header {
+  gap: 0.35rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(255, 255, 255, 0.58);
+  padding: 0.6rem 0.8rem;
+}
+
+.nt-toast .toast-body {
+  padding: 0.8rem 0.9rem;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.nt-toast-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 9px;
+  background: var(--mint-100);
+  font-size: 0.95rem;
+  color: var(--green-800);
+}
+
+/* =========================
+   9. Empty state
+   ========================= */
+.empty-state {
+  border: 1px dashed rgba(148, 163, 184, 0.4);
+  border-radius: var(--radius-card);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+.empty-state .empty-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-lg);
+  background: rgba(47, 138, 94, 0.12);
+  margin: 0 auto 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.empty-state h3,
+.empty-state .h3 {
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.5rem;
+}
+
+.empty-state p {
+  margin: 0 0 1.5rem;
+  color: var(--ink-muted);
+}
+
+/* =========================
+   10. Skeleton loading
+   ========================= */
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(229, 231, 235, 0.6) 25%,
+    rgba(229, 231, 235, 0.3) 50%,
+    rgba(229, 231, 235, 0.6) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+  border-radius: var(--radius-md);
+  color: transparent;
+}
+
+@keyframes skeleton-pulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-text {
+  height: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+.skeleton-text.w-75 { width: 75%; }
+.skeleton-text.w-50 { width: 50%; }
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.skeleton-title { height: 1.2rem; width: 60%; }
+.skeleton-body { height: 1rem; width: 100%; }
+.skeleton-line { height: 0.9rem; width: 100%; margin: 0.5rem 0; }
+
+/* =========================
+   11. Footer
+   ========================= */
+footer {
+  margin-top: auto;
+}
+
+.footer-dashboard {
+  background: var(--glass-light);
+  backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  border-top: 1px solid var(--glass-border);
+}
+
+.footer-public {
+  background: var(--glass-light);
+  backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  border-top: 1px solid var(--glass-border);
+}
+
+.footer-title {
+  font-family: "Plus Jakarta Sans", "Inter", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.footer-title .footer-mark {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--glass-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  border: 1px solid var(--glass-border);
+  margin-right: 0.4rem;
+}
+
+/* Placeholder gambar produk (Sisaku/katalog) */
+.product-placeholder-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  opacity: 0.75;
+}
+
+/* =========================
+   12. Dasbor (design-spec)
+   ========================= */
+.nt-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+/* Hero dasbor: gelap (teks putih) di atas latar gunung */
+.dashboard-hero.glass-dark {
+  padding: var(--space-6) var(--space-8);
+}
+.dashboard-hero.glass-dark .section-kicker {
+  color: var(--mint-100);
+  font-size: 0.78rem;
+}
+.dashboard-hero.glass-dark h1,
+.dashboard-hero.glass-dark .h2 {
+  color: #ffffff;
+}
+.dashboard-hero.glass-dark p,
+.dashboard-hero.glass-dark .lead {
+  color: rgba(255, 255, 255, 0.9);
+}
+.dashboard-hero.glass-dark .lead {
+  color: rgba(255, 255, 255, 0.95);
+}
+.dashboard-hero-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid var(--glass-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-hero-mark .nt-icon {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+/* KPI card: ikon SVG 40px, label 12px uppercase, angka 32px, keterangan 14px */
+.dashboard-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.dashboard-stats > .col-6,
+.dashboard-stats > .col-lg-3 {
+  display: flex;
+}
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  background: var(--glass-light);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(var(--blur-md)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
+}
+.kpi-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.kpi-icon .nt-icon {
+  color: var(--accent);
+  width: 20px;
+  height: 20px;
+}
+.kpi-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+.kpi-number {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.kpi-hint {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin-top: auto;
+}
+
+/* Aksi cepat */
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Fokus peran & pesanan terbaru (2 kolom) */
+.focus-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: rgba(47, 138, 94, 0.12);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+/* Chip status di daftar pesanan (teks + ikon) */
+.chip-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.dashboard-recent .chip {
+  font-size: 0.78rem;
+  padding: 0.28rem 0.65rem;
+}
