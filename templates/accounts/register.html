@@ -1,89 +1,79 @@
-{% extends "base.html" %}
+{% extends "accounts/auth_base.html" %}
 
 {% block title %}Daftar Akun — NusaTani{% endblock %}
+{% block auth_panel_label %}Formulir pendaftaran akun NusaTani{% endblock %}
 
-{% block content %}
-<div class="login-wrap register-wrap">
-  <div class="login-brand" aria-hidden="true">
-    <span class="login-brand-icon">🌱</span>
-    <span class="login-brand-name">NusaTani</span>
+{% block auth_body %}
+<span class="section-kicker">Pendaftaran akun</span>
+<h1 class="h3 mb-2">Buat akun NusaTani</h1>
+<p class="small text-secondary mb-4">Isi data di bawah ini untuk mulai menggunakan platform.</p>
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+  </div>
+{% endif %}
+
+<form method="post" novalidate
+      data-confirm="Buat akun NusaTani dengan data yang sudah Anda isi?"
+      data-confirm-title="Daftar akun"
+      data-confirm-ok="Ya, daftar">
+  {% csrf_token %}
+
+  <div class="mb-3">
+    <label for="{{ form.role.id_for_label }}" class="form-label">{{ form.role.label }}</label>
+    {{ form.role }}
+    {% for error in form.role.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
   </div>
 
-  <div class="card login-card-clean">
-    <div class="login-card-body">
-      <span class="section-kicker">Pendaftaran akun</span>
-      <h1 class="h3 mt-2 mb-2">Buat akun NusaTani</h1>
-      <p class="small text-secondary mb-4">Isi data di bawah ini untuk mulai menggunakan platform.</p>
-
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger" role="alert">
-          {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-        </div>
-      {% endif %}
-
-      <form method="post" novalidate
-            data-confirm="Buat akun NusaTani dengan data yang sudah Anda isi?"
-            data-confirm-title="Daftar akun"
-            data-confirm-ok="Ya, daftar">
-        {% csrf_token %}
-
-        <div class="mb-3">
-          <label for="{{ form.role.id_for_label }}" class="form-label">{{ form.role.label }}</label>
-          {{ form.role }}
-          {% for error in form.role.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-        </div>
-
-        <div class="row g-3">
-          <div class="col-12 col-sm-6">
-            <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
-            {{ form.first_name }}
-            {% for error in form.first_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-          </div>
-          <div class="col-12 col-sm-6">
-            <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
-            {{ form.last_name }}
-            {% for error in form.last_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-          </div>
-        </div>
-
-        <div class="mb-3 mt-3">
-          <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
-          {{ form.username }}
-          {% for error in form.username.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-        </div>
-
-        <div class="mb-3">
-          <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
-          {{ form.email }}
-          {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-        </div>
-
-        <div class="row g-3 mb-4">
-          <div class="col-12 col-sm-6">
-            <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label }}</label>
-            {{ form.password1 }}
-            {% for error in form.password1.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-          </div>
-          <div class="col-12 col-sm-6">
-            <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label }}</label>
-            {{ form.password2 }}
-            {% for error in form.password2.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-          </div>
-        </div>
-
-        <button type="submit" class="btn btn-success btn-lg w-100">Daftar <span aria-hidden="true">→</span></button>
-      </form>
-
-      <div class="login-divider"><span>atau</span></div>
-
-      <a class="btn btn-outline-secondary w-100" href="{% url 'accounts:guide' %}">
-        <span aria-hidden="true">🧭</span> Lihat cara daftar dulu
-      </a>
-
-      <p class="small text-secondary text-center mt-4 mb-0">
-        Sudah punya akun? <a href="{% url 'accounts:login' %}">Masuk di sini</a>.
-      </p>
+  <div class="row g-3">
+    <div class="col-12 col-sm-6">
+      <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
+      {{ form.first_name }}
+      {% for error in form.first_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="col-12 col-sm-6">
+      <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
+      {{ form.last_name }}
+      {% for error in form.last_name.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
     </div>
   </div>
-</div>
+
+  <div class="mb-3 mt-3">
+    <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+    {{ form.username }}
+    {% for error in form.username.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+  </div>
+
+  <div class="mb-3">
+    <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+    {{ form.email }}
+    {% for error in form.email.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6">
+      <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label }}</label>
+      {{ form.password1 }}
+      {% for error in form.password1.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="col-12 col-sm-6">
+      <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label }}</label>
+      {{ form.password2 }}
+      {% for error in form.password2.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-success btn-lg w-100">Daftar <span aria-hidden="true">→</span></button>
+</form>
+
+<div class="auth-divider"><span>atau</span></div>
+
+<a class="btn btn-outline-secondary w-100" href="{% url 'accounts:guide' %}">
+  <span aria-hidden="true">🧭</span> Lihat cara daftar dulu
+</a>
+
+<p class="small text-secondary text-center mt-4 mb-0">
+  Sudah punya akun? <a href="{% url 'accounts:login' %}">Masuk di sini</a>.
+</p>
 {% endblock %}

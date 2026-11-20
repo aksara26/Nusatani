@@ -1,5 +1,6 @@
 """Autentikasi, panduan awal, profil, pengalihan, dan dashboard per peran."""
 
+from datetime import timedelta
 from decimal import Decimal
 from functools import wraps
 
@@ -7,14 +8,21 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import PermissionDenied
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST
 
 from .forms import NusaTaniAuthenticationForm, ProfileForm, RegistrationForm
-from .roles import ROLE_DASHBOARDS, ROLE_GUIDES, SELF_REGISTER_ROLES, Role
+from .roles import (
+    DEMO_ROLE_ACCOUNTS,
+    ROLE_DASHBOARDS,
+    ROLE_GUIDES,
+    SELF_REGISTER_ROLES,
+    Role,
+)
 
 
 class NusaTaniLoginView(LoginView):
@@ -38,6 +46,34 @@ class NusaTaniLoginView(LoginView):
         """Arahkan ke tujuan `next` yang valid, jika tidak ke dashboard."""
         return self.get_redirect_url() or reverse("accounts:dashboard")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        requested_role = (
+            self.request.POST.get("role")
+            or self.request.GET.get("role")
+            or ""
+        ).strip()
+        username = (
+            self.request.POST.get("username")
+            or self.request.GET.get("username")
+            or ""
+        ).strip()
+
+        if requested_role not in DEMO_ROLE_ACCOUNTS:
+            requested_role = next(
+                (
+                    config["role"]
+                    for config in DEMO_ROLE_ACCOUNTS.values()
+                    if config["username"].lower() == username.lower()
+                ),
+                Role.FARMER.value,
+            )
+
+        context["demo_roles"] = list(DEMO_ROLE_ACCOUNTS.values())
+        context["selected_role"] = requested_role
+        context["selected_role_config"] = DEMO_ROLE_ACCOUNTS[requested_role]
+        return context
+
     def form_valid(self, form):
         response = super().form_valid(form)
         user = self.request.user
@@ -58,6 +94,41 @@ class NusaTaniLogoutView(LogoutView):
             request, "Anda telah keluar dari akun. Sampai jumpa kembali."
         )
         return response
+
+
+@never_cache
+@require_POST
+def demo_login(request):
+    """Masuk cepat sebagai akun demo yang dipilih dari halaman login.
+
+    Endpoint ini sengaja hanya menerima enam role demo publik. Administrator
+    tidak termasuk agar tidak bisa diakses lewat tombol demo.
+    """
+    from django.contrib.auth import get_user_model, login
+
+    config = DEMO_ROLE_ACCOUNTS.get(request.POST.get("role", "").strip())
+    if config is None:
+        messages.error(request, "Peran demo tidak dikenal. Pilih salah satu role yang tersedia.")
+        return redirect("accounts:login")
+
+    user = (
+        get_user_model()
+        .objects.filter(username=config["username"], is_active=True)
+        .first()
+    )
+    if user is None:
+        messages.error(
+            request,
+            "Akun demo belum tersedia. Jalankan `python manage.py seed_demo_users` terlebih dahulu.",
+        )
+        return redirect("accounts:login")
+
+    login(request, user, backend="accounts.backends.ForgivingModelBackend")
+    messages.success(
+        request,
+        f"Mode demo aktif: masuk sebagai {user.get_role_display()}.",
+    )
+    return redirect("accounts:dashboard")
 
 
 def home(request):
@@ -158,6 +229,91 @@ def _rupiah(value):
     return "Rp" + "{:,.0f}".format(amount).replace(",", ".")
 
 
+HARI_SINGKAT = ("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min")
+
+
+def _smooth_path(points):
+    """Ubah titik menjadi kurva Bezier halus untuk grafik SVG."""
+    if not points:
+        return ""
+    if len(points) == 1:
+        return f"M {points[0][0]},{points[0][1]}"
+
+    path = f"M {points[0][0]},{points[0][1]}"
+    for index in range(len(points) - 1):
+        p0 = points[index - 1] if index > 0 else points[index]
+        p1 = points[index]
+        p2 = points[index + 1]
+        p3 = points[index + 2] if index + 2 < len(points) else p2
+        cp1x = p1[0] + (p2[0] - p0[0]) / 6
+        cp1y = p1[1] + (p2[1] - p0[1]) / 6
+        cp2x = p2[0] - (p3[0] - p1[0]) / 6
+        cp2y = p2[1] - (p3[1] - p1[1]) / 6
+        path += (
+            f" C {cp1x:.2f},{cp1y:.2f} "
+            f"{cp2x:.2f},{cp2y:.2f} {p2[0]:.2f},{p2[1]:.2f}"
+        )
+    return path
+
+
+def _curve_chart(
+    queryset,
+    date_field,
+    title,
+    caption,
+    unit="aktivitas",
+    tone="green",
+):
+    """Bangun data kurva tujuh hari terakhir dari queryset Django."""
+    today = timezone.localdate()
+    start = today - timedelta(days=6)
+    date_lookup = f"{date_field}__date"
+    rows = (
+        queryset.filter(
+            **{
+                f"{date_lookup}__gte": start,
+                f"{date_lookup}__lte": today,
+            }
+        )
+        .order_by()
+        .values(date_lookup)
+        .annotate(total=Count("pk"))
+    )
+    counts = {row[date_lookup]: row["total"] for row in rows}
+    days = [start + timedelta(days=offset) for offset in range(7)]
+    values = [counts.get(day, 0) for day in days]
+    max_value = max(values) or 1
+
+    points = []
+    for index, (day, value) in enumerate(zip(days, values)):
+        points.append(
+            {
+                "x": round(index * 100 / 6, 2),
+                "y": round(38 - (value / max_value) * 32, 2),
+                "value": value,
+                "short": HARI_SINGKAT[day.weekday()],
+                "date": day.strftime("%d/%m"),
+            }
+        )
+
+    line_path = _smooth_path([(point["x"], point["y"]) for point in points])
+    total = sum(values)
+    return {
+        "title": title,
+        "caption": caption,
+        "unit": unit,
+        "tone": tone,
+        "kicker": "Tren 7 hari",
+        "total": total,
+        "average": f"{total / 7:.1f}".replace(".", ","),
+        "peak": max(values),
+        "points": points,
+        "path": line_path,
+        "area": f"{line_path} L 100,44 L 0,44 Z",
+        "has_data": total > 0,
+    }
+
+
 def _order_activity(order, meta_prefix=""):
     return {
         "title": order.order_number,
@@ -201,6 +357,13 @@ def _farmer_dashboard(user):
         "recent": recent,
         "recent_url": reverse("orders:incoming"),
         "recent_empty": "Belum ada pesanan masuk. Produk yang aktif akan muncul di katalog pembeli.",
+        "chart": _curve_chart(
+            orders,
+            "created_at",
+            "Pesanan masuk",
+            "Pesanan yang masuk ke usaha Anda dalam tujuh hari terakhir.",
+            unit="pesanan",
+        ),
     }
 
 
@@ -265,6 +428,13 @@ def _buyer_dashboard(user, is_horeca):
         ],
         "recent_url": reverse("orders:my_orders"),
         "recent_empty": "Belum ada pesanan. Mulai dari katalog untuk memilih produk.",
+        "chart": _curve_chart(
+            Order.objects.filter(buyer=user),
+            "created_at",
+            "Pesanan Anda",
+            "Pesanan yang Anda buat dalam tujuh hari terakhir.",
+            unit="pesanan",
+        ),
     }
 
 
@@ -307,6 +477,13 @@ def _qc_dashboard(user):
         "recent": recent,
         "recent_url": reverse("quality_control:queue"),
         "recent_empty": "Antrean bersih. Produk yang diajukan petani akan muncul di sini.",
+        "chart": _curve_chart(
+            inspected,
+            "inspected_at",
+            "Pemeriksaan QC",
+            "Pemeriksaan yang Anda selesaikan dalam tujuh hari terakhir.",
+            unit="pemeriksaan",
+        ),
     }
 
 
@@ -340,6 +517,13 @@ def _mentor_dashboard(user):
         "recent": recent,
         "recent_url": reverse("mentorship:list"),
         "recent_empty": "Belum ada jadwal pendampingan. Tambahkan satu untuk memulai.",
+        "chart": _curve_chart(
+            MentorshipActivity.objects.filter(mentorship__mentor=user),
+            "activity_date",
+            "Kegiatan pendampingan",
+            "Catatan kegiatan yang Anda buat dalam tujuh hari terakhir.",
+            unit="kegiatan",
+        ),
     }
 
 
@@ -347,6 +531,7 @@ def _bank_dashboard(user):
     from django.contrib.auth import get_user_model
 
     from bankku.models import EligibilityBand, FinancingAssessment
+    from orders.models import Order
 
     User = get_user_model()
     farmers = User.objects.filter(role=Role.FARMER.value)
@@ -378,6 +563,14 @@ def _bank_dashboard(user):
         "recent": recent,
         "recent_url": reverse("bankku:dashboard"),
         "recent_empty": "Belum ada data performa petani yang dapat ditampilkan.",
+        "chart": _curve_chart(
+            Order.objects.filter(farmer__role=Role.FARMER.value),
+            "created_at",
+            "Aktivitas pesanan petani",
+            "Pesanan dari petani mitra dalam tujuh hari terakhir.",
+            unit="pesanan",
+            tone="amber",
+        ),
     }
 
 
@@ -414,6 +607,13 @@ def _admin_dashboard(user):
         ],
         "recent_url": reverse("orders:my_orders"),
         "recent_empty": "Belum ada pesanan di platform.",
+        "chart": _curve_chart(
+            orders,
+            "created_at",
+            "Pesanan platform",
+            "Pesanan yang masuk ke seluruh platform dalam tujuh hari terakhir.",
+            unit="pesanan",
+        ),
     }
 
 

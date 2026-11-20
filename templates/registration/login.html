@@ -1,81 +1,98 @@
-{% extends "base.html" %}
+{% extends "accounts/auth_base.html" %}
 
 {% block title %}Masuk — NusaTani{% endblock %}
+{% block auth_panel_label %}Formulir masuk NusaTani{% endblock %}
 
-{% block content %}
-<div class="login-wrap">
-  <div class="login-brand" aria-hidden="true">
-    <span class="login-brand-icon">🌱</span>
-    <span class="login-brand-name">NusaTani</span>
+{% block auth_body %}
+{% if user.is_authenticated %}
+  <div class="alert alert-success small" role="status">
+    Anda sudah masuk sebagai <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).
+    <a class="alert-link" href="{% url 'accounts:dashboard' %}">Kembali ke dashboard</a>.
+  </div>
+{% endif %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+  </div>
+{% endif %}
+
+<span class="section-kicker">Halaman masuk</span>
+<h1 class="h3 mb-2">Selamat datang kembali</h1>
+<p class="small text-secondary mb-4">Masukkan kredensial akun Anda untuk membuka dashboard.</p>
+
+<form method="post" novalidate id="loginForm">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}">
+
+  <div class="mb-3">
+    <label for="{{ form.username.id_for_label }}" class="form-label" id="usernameLabel">Username</label>
+    <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
+           class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}"
+           value="{{ form.username.value|default:'' }}" autocomplete="username"
+           autocapitalize="none" autocorrect="off" spellcheck="false" required autofocus
+           placeholder="{{ selected_role_config.placeholder|default:'contoh: petani1' }}">
+    <div class="form-text" id="usernameHint">Tidak peka huruf besar/kecil. Spasi diabaikan.</div>
+    {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
   </div>
 
-  <div class="card login-card-clean">
-    <div class="login-card-body">
-      <span class="section-kicker">{% if user.is_authenticated %}Ganti akun{% else %}Halaman masuk{% endif %}</span>
-      <h1 class="h3 mt-2 mb-2">{% if user.is_authenticated %}Masuk sebagai akun lain{% else %}Selamat datang kembali{% endif %}</h1>
-      <p class="small text-secondary mb-4">Masukkan kredensial akun Anda untuk membuka dashboard.</p>
-
-      {% if user.is_authenticated %}
-        <div class="alert alert-success small" role="status">
-          Anda sudah masuk sebagai <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).
-          Masukkan akun lain di bawah untuk berganti, atau
-          <a class="alert-link" href="{% url 'accounts:dashboard' %}">kembali ke dashboard</a>.
-        </div>
-      {% endif %}
-
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger" role="alert">
-          {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-        </div>
-      {% endif %}
-
-      <form method="post" novalidate>
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next }}">
-
-        <div class="mb-3">
-          <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-          <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
-                 class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}"
-                 value="{{ form.username.value|default:'' }}" autocomplete="username"
-                 autocapitalize="none" autocorrect="off" spellcheck="false" required autofocus>
-          <div class="form-text">Tidak peka huruf besar/kecil. Spasi diabaikan.</div>
-          {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-        </div>
-
-        <div class="mb-4">
-          <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-          <div class="password-field">
-            <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
-                   class="form-control form-control-lg {% if form.password.errors %}is-invalid{% endif %}"
-                   autocomplete="current-password" autocapitalize="none" autocorrect="off"
-                   spellcheck="false" required>
-            <button type="button" class="password-toggle" data-toggle-password
-                    aria-label="Tampilkan password" aria-pressed="false">👁</button>
-          </div>
-          {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
-        </div>
-
-        <button type="submit" class="btn btn-success btn-lg w-100">Masuk ke dashboard <span aria-hidden="true">→</span></button>
-      </form>
-
-      <div class="login-divider"><span>atau</span></div>
-
-      <a class="btn btn-outline-secondary w-100" href="{% url 'accounts:guide' %}">
-        <span aria-hidden="true">🧭</span> Belum tahu peran saya? Buka panduan
-      </a>
-
-      <p class="small text-secondary text-center mt-4 mb-0">
-        Belum punya akun? <a href="{% url 'accounts:register' %}">Daftar sekarang</a>.
-      </p>
+  <div class="mb-4">
+    <label for="{{ form.password.id_for_label }}" class="form-label">Kata sandi</label>
+    <div class="password-field">
+      <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
+             class="form-control form-control-lg {% if form.password.errors %}is-invalid{% endif %}"
+             autocomplete="current-password" autocapitalize="none" autocorrect="off"
+             spellcheck="false" required placeholder="Masukkan kata sandi">
+      <button type="button" class="password-toggle" data-toggle-password
+              aria-label="Tampilkan kata sandi" aria-pressed="false">👁</button>
     </div>
+    {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
   </div>
 
-  <p class="login-footnote text-center small text-secondary mt-4 mb-0">
-    🔒 Pembayaran, kurir, dan pembiayaan bersifat simulasi pada MVP.
-  </p>
+  <button type="submit" class="btn btn-success btn-lg w-100 mb-3">Masuk ke dashboard <span aria-hidden="true">→</span></button>
+</form>
+
+<div class="auth-divider"><span>atau masuk sebagai demo</span></div>
+
+<div class="demo-roles" role="radiogroup" aria-label="Pilih akun demo">
+  {% for cfg in demo_roles %}
+    {% with key=cfg.role %}
+    <label class="demo-role {% if selected_role == key %}is-selected{% endif %}">
+      <input type="radio" name="demo_role" value="{{ key }}"
+             {% if selected_role == key %}checked{% endif %} class="sr-only"
+             data-label="{{ cfg.label }}"
+             data-placeholder="{{ cfg.placeholder }}"
+             data-input-label="{{ cfg.input_label }}"
+             data-hint="{{ cfg.hint }}">
+      <span class="demo-role-icon">{{ cfg.icon }}</span>
+      <span class="demo-role-name">{{ cfg.label }}</span>
+      <span class="demo-role-hint small">{{ cfg.hint }}</span>
+      <span class="demo-role-check" aria-hidden="true">✓</span>
+    </label>
+    {% endwith %}
+  {% endfor %}
 </div>
-{% endblock %}
+
+<form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
+  {% csrf_token %}
+  <input type="hidden" name="role" value="{{ selected_role }}">
+  <button type="submit" class="btn btn-outline-primary btn-lg w-100 demo-btn">
+    <span aria-hidden="true">⚡</span> Masuk sebagai {{ selected_role_config.label }}
+  </button>
+  <p class="small text-secondary text-center mt-2 mb-0">
+    Tidak perlu mengetik username dan kata sandi.
+  </p>
+</form>
+
+<div class="auth-divider mt-4"><span>atau</span></div>
+
+<a class="btn btn-outline-secondary w-100" href="{% url 'accounts:guide' %}">
+  <span aria-hidden="true">🧭</span> Belum tahu peran saya? Buka panduan
+</a>
+
+<p class="small text-secondary text-center mt-4 mb-0">
+  Belum punya akun? <a href="{% url 'accounts:register' %}">Daftar sekarang</a>.
+</p>
 
 {% block extra_js %}
 <script>
@@ -87,10 +104,49 @@
     const reveal = input.type === "password";
     input.type = reveal ? "text" : "password";
     toggle.textContent = reveal ? "🙈" : "👁";
-    toggle.setAttribute("aria-label", reveal ? "Sembunyikan password" : "Tampilkan password");
+    toggle.setAttribute("aria-label", reveal ? "Sembunyikan kata sandi" : "Tampilkan kata sandi");
     toggle.setAttribute("aria-pressed", String(reveal));
     input.focus();
   });
+
+  const usernameInput = document.getElementById("{{ form.username.id_for_label }}");
+  const usernameLabel = document.getElementById("usernameLabel");
+  const usernameHint = document.getElementById("usernameHint");
+
+  function applyRole(cfg) {
+    if (!cfg) return;
+    usernameLabel.textContent = cfg.inputLabel || "Username";
+    usernameHint.textContent = cfg.hint || "";
+    usernameInput.placeholder = cfg.placeholder || "";
+  }
+
+  const selected = document.querySelector('input[name="demo_role"]:checked');
+  if (selected) {
+    applyRole({
+      label: selected.dataset.label || "",
+      placeholder: selected.dataset.placeholder || "",
+      inputLabel: selected.dataset.inputLabel || "Username",
+      hint: selected.dataset.hint || "",
+    });
+  }
+
+  document.querySelectorAll('input[name="demo_role"]').forEach(function (radio) {
+    radio.addEventListener("change", function () {
+      document.querySelectorAll('.demo-role').forEach(function (el) {
+        el.classList.toggle('is-selected', el.querySelector('input') === radio);
+      });
+      applyRole({
+        label: radio.dataset.label || "",
+        placeholder: radio.dataset.placeholder || "",
+        inputLabel: radio.dataset.inputLabel || "Username",
+        hint: radio.dataset.hint || "",
+      });
+      document.querySelector('input[name="role"]').value = radio.value;
+      const btn = document.querySelector('.demo-btn');
+      btn.innerHTML = '<span aria-hidden="true">⚡</span> Masuk sebagai ' + radio.dataset.label;
+    });
+  });
 })();
 </script>
+{% endblock %}
 {% endblock %}

@@ -184,6 +184,66 @@ SELF_REGISTER_ROLES = (
 )
 
 
+# Akun demo yang boleh dipakai untuk masuk cepat dari halaman login.
+# Administrator sengaja tidak dimasukkan agar tidak tampil sebagai tombol demo.
+DEMO_ROLE_ACCOUNTS = {
+    Role.FARMER.value: {
+        "role": Role.FARMER.value,
+        "username": "petani1",
+        "label": "Petani",
+        "icon": "🌾",
+        "input_label": "Username / ID Petani",
+        "placeholder": "contoh: petani1",
+        "hint": "Kelola produk, pesanan, kualitas, dan aset usaha.",
+    },
+    Role.HORECA.value: {
+        "role": Role.HORECA.value,
+        "username": "horeca1",
+        "label": "HOREKA",
+        "icon": "🍽️",
+        "input_label": "Username / Email usaha",
+        "placeholder": "contoh: horeca1",
+        "hint": "Pre-order terjadwal untuk hotel, restoran, dan kafe.",
+    },
+    Role.CONSUMER.value: {
+        "role": Role.CONSUMER.value,
+        "username": "konsumen1",
+        "label": "Konsumen",
+        "icon": "🥗",
+        "input_label": "Username / Email",
+        "placeholder": "contoh: konsumen1",
+        "hint": "Belanja microgreens segar untuk rumah tangga.",
+    },
+    Role.QC.value: {
+        "role": Role.QC.value,
+        "username": "qc1",
+        "label": "QC",
+        "icon": "🔍",
+        "input_label": "ID Petugas QC",
+        "placeholder": "contoh: qc1",
+        "hint": "Periksa dan putuskan kelayakan produk sebelum dikirim.",
+    },
+    Role.MENTOR.value: {
+        "role": Role.MENTOR.value,
+        "username": "mentor1",
+        "label": "Mentor",
+        "icon": "🧑‍🏫",
+        "input_label": "Username Mentor",
+        "placeholder": "contoh: mentor1",
+        "hint": "Jadwalkan dan catat pendampingan petani.",
+    },
+    Role.BANK.value: {
+        "role": Role.BANK.value,
+        "username": "bank1",
+        "label": "Bank",
+        "icon": "🏦",
+        "input_label": "Username / Email mitra",
+        "placeholder": "contoh: bank1",
+        "hint": "Pantau performa usaha dan indikator pembiayaan.",
+    },
+}
+
+
 ROLE_GUIDES = {
     Role.FARMER.value: {
         "icon": "🌾",
