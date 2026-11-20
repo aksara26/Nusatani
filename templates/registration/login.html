@@ -52,37 +52,43 @@
   <button type="submit" class="btn btn-success btn-lg w-100 mb-3">Masuk ke dashboard <span aria-hidden="true">→</span></button>
 </form>
 
-<div class="auth-divider"><span>atau masuk sebagai demo</span></div>
+<div class="auth-divider mb-4"><span>atau masuk sebagai demo</span></div>
 
-<div class="demo-roles" role="radiogroup" aria-label="Pilih akun demo">
-  {% for cfg in demo_roles %}
-    {% with key=cfg.role %}
-    <label class="demo-role {% if selected_role == key %}is-selected{% endif %}">
-      <input type="radio" name="demo_role" value="{{ key }}"
-             {% if selected_role == key %}checked{% endif %} class="sr-only"
-             data-label="{{ cfg.label }}"
-             data-placeholder="{{ cfg.placeholder }}"
-             data-input-label="{{ cfg.input_label }}"
-             data-hint="{{ cfg.hint }}">
-      <span class="demo-role-icon">{{ cfg.icon }}</span>
-      <span class="demo-role-name">{{ cfg.label }}</span>
-      <span class="demo-role-hint small">{{ cfg.hint }}</span>
-      <span class="demo-role-check" aria-hidden="true">✓</span>
-    </label>
-    {% endwith %}
-  {% endfor %}
+<div class="demo-picker mb-3">
+  <label class="form-label small fw-bold">Pilih peran demo</label>
+  <select class="form-select form-select-lg" id="demoRoleSelect">
+    {% for cfg in demo_roles %}
+      <option value="{{ cfg.role }}"
+              {% if selected_role == cfg.role %}selected{% endif %}
+              data-label="{{ cfg.label }}"
+              data-icon="{{ cfg.icon }}"
+              data-placeholder="{{ cfg.placeholder }}"
+              data-input-label="{{ cfg.input_label }}"
+              data-hint="{{ cfg.hint }}"
+              data-username="{{ cfg.username }}">
+        {{ cfg.label }}
+      </option>
+    {% endfor %}
+  </select>
 </div>
 
-<form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
-  {% csrf_token %}
-  <input type="hidden" name="role" value="{{ selected_role }}">
-  <button type="submit" class="btn btn-outline-primary btn-lg w-100 demo-btn">
-    <span aria-hidden="true">⚡</span> Masuk sebagai {{ selected_role_config.label }}
-  </button>
-  <p class="small text-secondary text-center mt-2 mb-0">
-    Tidak perlu mengetik username dan kata sandi.
-  </p>
-</form>
+<div class="demo-card">
+  <div class="demo-header d-flex align-items-center gap-2 mb-2">
+    <span class="demo-icon">{{ selected_role_config.icon }}</span>
+    <span class="demo-name fw-bold">{{ selected_role_config.label }}</span>
+  </div>
+  <p class="demo-hint small text-secondary mb-3">{{ selected_role_config.hint }}</p>
+  <form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
+    {% csrf_token %}
+    <input type="hidden" name="role" value="{{ selected_role }}">
+    <button type="submit" class="btn btn-outline-primary btn-lg w-100 demo-btn">
+      <span aria-hidden="true">⚡</span> Masuk sebagai {{ selected_role_config.label }}
+    </button>
+    <p class="small text-secondary text-center mt-2 mb-0">
+      Tidak perlu mengetik username dan kata sandi.
+    </p>
+  </form>
+</div>
 
 <div class="auth-divider mt-4"><span>atau</span></div>
 
@@ -112,6 +118,12 @@
   const usernameInput = document.getElementById("{{ form.username.id_for_label }}");
   const usernameLabel = document.getElementById("usernameLabel");
   const usernameHint = document.getElementById("usernameHint");
+  const demoSelect = document.getElementById("demoRoleSelect");
+  const demoIcon = document.querySelector(".demo-icon");
+  const demoName = document.querySelector(".demo-name");
+  const demoHint = document.querySelector(".demo-hint");
+  const demoRoleInput = document.querySelector('input[name="role"]');
+  const demoBtn = document.querySelector(".demo-btn");
 
   function applyRole(cfg) {
     if (!cfg) return;
@@ -120,31 +132,26 @@
     usernameInput.placeholder = cfg.placeholder || "";
   }
 
-  const selected = document.querySelector('input[name="demo_role"]:checked');
-  if (selected) {
+  function applyDemo(option) {
+    if (!option) return;
+    demoIcon.textContent = option.dataset.icon || "";
+    demoName.textContent = option.dataset.label || "";
+    demoHint.textContent = option.dataset.hint || "";
+    demoRoleInput.value = option.value;
+    demoBtn.innerHTML = '<span aria-hidden="true">⚡</span> Masuk sebagai ' + option.dataset.label;
     applyRole({
-      label: selected.dataset.label || "",
-      placeholder: selected.dataset.placeholder || "",
-      inputLabel: selected.dataset.inputLabel || "Username",
-      hint: selected.dataset.hint || "",
+      label: option.dataset.label || "",
+      placeholder: option.dataset.placeholder || "",
+      inputLabel: option.dataset.inputLabel || "Username",
+      hint: option.dataset.hint || "",
     });
   }
 
-  document.querySelectorAll('input[name="demo_role"]').forEach(function (radio) {
-    radio.addEventListener("change", function () {
-      document.querySelectorAll('.demo-role').forEach(function (el) {
-        el.classList.toggle('is-selected', el.querySelector('input') === radio);
-      });
-      applyRole({
-        label: radio.dataset.label || "",
-        placeholder: radio.dataset.placeholder || "",
-        inputLabel: radio.dataset.inputLabel || "Username",
-        hint: radio.dataset.hint || "",
-      });
-      document.querySelector('input[name="role"]').value = radio.value;
-      const btn = document.querySelector('.demo-btn');
-      btn.innerHTML = '<span aria-hidden="true">⚡</span> Masuk sebagai ' + radio.dataset.label;
-    });
+  const selectedOption = demoSelect.options[demoSelect.selectedIndex];
+  applyDemo(selectedOption);
+
+  demoSelect.addEventListener("change", function () {
+    applyDemo(this.options[this.selectedIndex]);
   });
 })();
 </script>
