@@ -11,7 +11,11 @@
 {% if orders %}
   {% include "orders/_order_table.html" with perspective="farmer" %}
 {% else %}
-  <div class="alert alert-info">Belum ada pesanan yang masuk untuk Anda.</div>
+  <div class="empty-state h-100 d-flex flex-column justify-content-center">
+    <div class="empty-icon" aria-hidden="true"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
+    <h3 class="h3 mb-0">Belum ada pesanan masuk</h3>
+    <p class="mb-0">Belum ada pesanan yang masuk untuk Anda.</p>
+  </div>
 {% endif %}
 
 <div class="alert alert-warning small mt-4 mb-0" role="alert">

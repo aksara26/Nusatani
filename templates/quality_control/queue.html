@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load dashboard_icons %}
 
 {% block title %}Antrean QC — NusaTani{% endblock %}
 
@@ -9,32 +10,32 @@
 </div>
 
 {% if inspections %}
-  <div class="table-responsive glass-panel border">
-    <table class="table align-middle mb-0">
-      <thead class="table-light">
+  <div class="table-responsive">
+    <table class="table table-stack align-middle mb-0">
+      <thead>
         <tr>
-          <th>Produk</th>
-          <th>No. Pesanan</th>
-          <th>Petani</th>
-          <th>Jumlah</th>
-          <th>Status QC</th>
-          <th class="text-end">Aksi</th>
+          <th data-label="Produk">Produk</th>
+          <th data-label="No. Pesanan">No. Pesanan</th>
+          <th data-label="Petani">Petani</th>
+          <th data-label="Jumlah">Jumlah</th>
+          <th data-label="Status QC">Status QC</th>
+          <th class="text-end" data-label="Aksi">Aksi</th>
         </tr>
       </thead>
       <tbody>
         {% for inspection in inspections %}
           <tr>
-            <td class="fw-semibold">{{ inspection.product.name }}</td>
-            <td>
+            <td data-label="Produk" class="fw-semibold">{{ inspection.product.name }}</td>
+            <td data-label="No. Pesanan">
               <a class="text-decoration-none" href="{% url 'orders:detail' inspection.order_item.order.pk %}">
                 {{ inspection.order_item.order.order_number }}
               </a>
             </td>
-            <td>{{ inspection.order_item.order.farmer.username }}</td>
-            <td>{{ inspection.order_item.quantity }}</td>
-            <td><span class="badge {{ inspection.result_badge_class }}">{{ inspection.get_result_display }}</span></td>
-            <td class="text-end">
-              <a class="btn btn-sm btn-success" href="{% url 'quality_control:inspect' inspection.pk %}">Periksa</a>
+            <td data-label="Petani">{{ inspection.order_item.order.farmer.username }}</td>
+            <td data-label="Jumlah">{{ inspection.order_item.quantity }}</td>
+            <td data-label="Status QC">{{ inspection.get_result_display|nt_chip|safe }}</td>
+            <td class="text-end" data-label="Aksi">
+              <a class="btn btn-sm btn-primary-green" href="{% url 'quality_control:inspect' inspection.pk %}">Periksa</a>
             </td>
           </tr>
         {% endfor %}
@@ -42,7 +43,11 @@
     </table>
   </div>
 {% else %}
-  <div class="alert alert-info">Belum ada produk yang menunggu pemeriksaan.</div>
+  <div class="empty-state h-100 d-flex flex-column justify-content-center">
+    <div class="empty-icon" aria-hidden="true"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
+    <h3 class="h3 mb-0">Antrean kosong</h3>
+    <p class="mb-0">Belum ada produk yang menunggu pemeriksaan.</p>
+  </div>
 {% endif %}
 
 <div class="alert alert-warning small mt-4 mb-0" role="alert">

@@ -5,37 +5,38 @@
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-12 col-lg-8">
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-4">
-        <h1 class="h4 mb-1">{{ title }}</h1>
-        <p class="small text-secondary mb-4">Isi informasi aset sesuai kondisi usaha Anda saat ini.</p>
+    <div class="glass-strong p-4 p-md-5">
+      <h1 class="h4 mb-1">{{ title }}</h1>
+      <p class="small text-secondary mb-4">Isi informasi aset sesuai kondisi usaha Anda saat ini.</p>
 
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
+          {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate
+            data-confirm="Simpan data aset usaha ini?"
+            data-confirm-title="Simpan aset"
+            data-confirm-ok="Ya, simpan aset">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+            {% for error in field.errors %}
+              <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+            {% endfor %}
           </div>
-        {% endif %}
+        {% endfor %}
 
-        <form method="post" novalidate
-              data-confirm="Simpan data aset usaha ini?"
-              data-confirm-title="Simpan aset"
-              data-confirm-ok="Ya, simpan aset">
-          {% csrf_token %}
-          {% for field in form %}
-            <div class="mb-3">
-              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-              {{ field }}
-              {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
-              {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-            </div>
-          {% endfor %}
-
-          <div class="d-flex flex-wrap gap-2">
-            <button type="submit" class="btn btn-success">Simpan aset</button>
-            <a class="btn btn-outline-secondary" href="{% if asset %}{% url 'assets:detail' asset.pk %}{% else %}{% url 'assets:list' %}{% endif %}">Batal</a>
-          </div>
-        </form>
-      </div>
+        <div class="btn-action-row mt-4">
+          <button type="submit" class="btn btn-primary-green">Simpan aset</button>
+          <a class="btn btn-outline-green" href="{% if asset %}{% url 'assets:detail' asset.pk %}{% else %}{% url 'assets:list' %}{% endif %}">Batal</a>
+        </div>
+      </form>
     </div>
   </div>
 </div>

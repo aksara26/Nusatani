@@ -1,57 +1,59 @@
 {% extends "base.html" %}
+{% load dashboard_icons %}
 
 {% block title %}Periksa {{ inspection.product.name }} — NusaTani{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-12 col-lg-8">
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-4">
-        <h1 class="h4 mb-1">Pemeriksaan Kualitas</h1>
-        <p class="small text-secondary mb-4">
-          {{ inspection.product.name }} · pesanan
-          <a href="{% url 'orders:detail' order.pk %}">{{ order.order_number }}</a>
-          · petani {{ order.farmer.username }}
-        </p>
+    <div class="glass-strong p-4 p-md-5">
+      <h1 class="h4 mb-1">Pemeriksaan Kualitas</h1>
+      <p class="small text-secondary mb-4">
+        {{ inspection.product.name }} · pesanan
+        <a href="{% url 'orders:detail' order.pk %}">{{ order.order_number }}</a>
+        · petani {{ order.farmer.username }}
+      </p>
 
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-          </div>
-        {% endif %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+          <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
+          {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+        </div>
+      {% endif %}
 
-        <form method="post" novalidate
-              data-confirm="Simpan hasil pemeriksaan QC ini? Hasil akan mengubah status pesanan."
-              data-confirm-title="Simpan hasil QC"
-              data-confirm-ok="Ya, simpan hasil"
-              data-confirm-variant="warning">
-          {% csrf_token %}
-          <h2 class="h6 fw-bold mb-3">Aspek yang dinilai</h2>
-          {% for field in form %}
-            {% if field.field.widget.input_type == 'checkbox' %}
-              <div class="form-check mb-2">
-                {{ field }}
-                <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-              </div>
-            {% else %}
-              <div class="mb-3">
-                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                {{ field }}
-                {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
-              </div>
-            {% endif %}
-          {% endfor %}
+      <form method="post" novalidate
+            data-confirm="Simpan hasil pemeriksaan QC ini? Hasil akan mengubah status pesanan."
+            data-confirm-title="Simpan hasil QC"
+            data-confirm-ok="Ya, simpan hasil"
+            data-confirm-variant="warning">
+        {% csrf_token %}
+        <h2 class="h6 fw-bold mb-3">Aspek yang dinilai</h2>
+        {% for field in form %}
+          {% if field.field.widget.input_type == 'checkbox' %}
+            <div class="form-check mb-2">
+              {{ field }}
+              <label class="form-label form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            </div>
+          {% else %}
+            <div class="form-group mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% for error in field.errors %}
+                <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endfor %}
 
-          <div class="alert alert-warning small" role="alert">
-            Memilih <strong>Tidak lolos QC</strong> akan menandai pesanan tidak dapat dikirim. Memilih <strong>Lolos QC</strong> akan melanjutkan pesanan bila semua produk dalam pesanan juga lolos.
-          </div>
+        <div class="alert alert-warning small" role="alert">
+          Memilih <strong>Tidak lolos QC</strong> akan menandai pesanan tidak dapat dikirim. Memilih <strong>Lolos QC</strong> akan melanjutkan pesanan bila semua produk dalam pesanan juga lolos.
+        </div>
 
-          <div class="d-flex flex-wrap gap-2">
-            <button type="submit" class="btn btn-success">Simpan hasil QC</button>
-            <a class="btn btn-outline-secondary" href="{% url 'quality_control:queue' %}">Kembali ke antrean</a>
-          </div>
-        </form>
-      </div>
+        <div class="btn-action-row mt-4">
+          <button type="submit" class="btn btn-primary-green">Simpan hasil QC</button>
+          <a class="btn btn-outline-green" href="{% url 'quality_control:queue' %}">Kembali ke antrean</a>
+        </div>
+      </form>
     </div>
   </div>
 </div>

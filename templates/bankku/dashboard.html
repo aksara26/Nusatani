@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load dashboard_icons %}
 
 {% block title %}BANKKU — NusaTani{% endblock %}
 
@@ -8,140 +9,148 @@
   <p class="small text-secondary mb-0">Pantau performa usaha petani dan indikator pembiayaan sebagai simulasi.</p>
 </div>
 
-<div class="row g-3 mb-4">
-  <div class="col-12 col-md-4">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body">
-        <div class="small text-secondary">Petani tercatat</div>
-        <div class="fs-3 fw-bold">{{ farmer_count }}</div>
-      </div>
+<div class="dashboard-stats mb-4">
+  <div class="col-6 col-lg-4">
+    <div class="kpi-card h-100">
+      <div class="kpi-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></div>
+      <div class="kpi-label">Petani tercatat</div>
+      <div class="kpi-number">{{ farmer_count }}</div>
+      <div class="kpi-hint">terdaftar</div>
     </div>
   </div>
-  <div class="col-12 col-md-4">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body">
-        <div class="small text-secondary">Total pesanan aktif</div>
-        <div class="fs-3 fw-bold">{{ total_orders }}</div>
-      </div>
+  <div class="col-6 col-lg-4">
+    <div class="kpi-card h-100">
+      <div class="kpi-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-search"></use></svg></div>
+      <div class="kpi-label">Total pesanan aktif</div>
+      <div class="kpi-number">{{ total_orders }}</div>
+      <div class="kpi-hint">seluruh platform</div>
     </div>
   </div>
-  <div class="col-12 col-md-4">
-    <div class="card border-0 shadow-sm h-100">
-      <div class="card-body">
-        <div class="small text-secondary">Total nilai pesanan</div>
-        <div class="fs-3 fw-bold">Rp{{ total_value|floatformat:0 }}</div>
-      </div>
+  <div class="col-6 col-lg-4">
+    <div class="kpi-card h-100">
+      <div class="kpi-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></div>
+      <div class="kpi-label">Total nilai pesanan</div>
+      <div class="kpi-number">Rp{{ total_value|floatformat:0 }}</div>
+      <div class="kpi-hint">simulasi</div>
     </div>
   </div>
 </div>
 
 {% if rows %}
-  <div class="card shadow-sm border-0 mb-4">
-    <div class="card-body p-4">
-      <h2 class="h6 fw-bold mb-3">Ringkasan petani</h2>
-      <div class="table-responsive">
-        <table class="table align-middle mb-0">
-          <thead class="table-light">
-            <tr>
-              <th>Petani</th>
-              <th>Pesanan</th>
-              <th>Nilai pesanan</th>
-              <th>Pemenuhan</th>
-              <th>Lolos QC</th>
-              <th>Indikator simulasi</th>
-              <th class="text-end">Aksi</th>
+  <div class="glass-strong p-4 p-md-5 mb-4">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h2 class="h6 fw-bold mb-0">Ringkasan petani</h2>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-stack align-middle mb-0">
+        <thead>
+          <tr>
+            <th data-label="Petani">Petani</th>
+            <th data-label="Pesanan">Pesanan</th>
+            <th data-label="Nilai pesanan">Nilai pesanan</th>
+            <th data-label="Pemenuhan">Pemenuhan</th>
+            <th data-label="Lolos QC">Lolos QC</th>
+            <th data-label="Indikator simulasi">Indikator simulasi</th>
+            <th class="text-end" data-label="Aksi">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+            <tr class="{% if selected_row and row.farmer.pk == selected_row.farmer.pk %}table-success{% endif %}">
+              <td data-label="Petani" class="fw-semibold">{{ row.farmer.username }}</td>
+              <td data-label="Pesanan">{{ row.performance.total_orders }}</td>
+              <td data-label="Nilai pesanan">Rp{{ row.performance.total_order_value|floatformat:0 }}</td>
+              <td data-label="Pemenuhan">{{ row.performance.fulfillment_rate|floatformat:0 }}%</td>
+              <td data-label="Lolos QC">{{ row.performance.quality_pass_rate|floatformat:0 }}%</td>
+              <td data-label="Indikator simulasi">
+                <span class="badge {{ row.assessment.eligibility_badge_class }}">{{ row.assessment.get_eligibility_display }}</span>
+                <div class="small text-secondary mt-1">{{ row.assessment.total_score|floatformat:0 }}/100</div>
+              </td>
+              <td class="text-end" data-label="Aksi">
+                <a class="btn btn-sm btn-outline-green" href="?petani={{ row.farmer.pk }}">Lihat</a>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {% for row in rows %}
-              <tr class="{% if selected_row and row.farmer.pk == selected_row.farmer.pk %}table-success{% endif %}">
-                <td class="fw-semibold">{{ row.farmer.username }}</td>
-                <td>{{ row.performance.total_orders }}</td>
-                <td>Rp{{ row.performance.total_order_value|floatformat:0 }}</td>
-                <td>{{ row.performance.fulfillment_rate|floatformat:0 }}%</td>
-                <td>{{ row.performance.quality_pass_rate|floatformat:0 }}%</td>
-                <td>
-                  <span class="badge {{ row.assessment.eligibility_badge_class }}">{{ row.assessment.get_eligibility_display }}</span>
-                  <div class="small text-secondary mt-1">{{ row.assessment.total_score|floatformat:0 }}/100</div>
-                </td>
-                <td class="text-end">
-                  <a class="btn btn-sm btn-outline-success" href="?petani={{ row.farmer.pk }}">Lihat</a>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 
   {% if selected_row %}
     <div class="row g-4">
       <div class="col-12 col-lg-5">
-        <div class="card shadow-sm border-0 h-100">
-          <div class="card-body p-4">
-            <h2 class="h6 fw-bold mb-1">Indikator — {{ selected_row.farmer.username }}</h2>
-            <p class="small text-secondary mb-3">
-              Dihitung {{ selected_row.assessment.calculated_at|date:"d M Y H:i"|default:"—" }}
-            </p>
-            <div class="d-flex align-items-center gap-3 mb-3">
-              <div class="display-6 fw-bold">{{ selected_row.assessment.total_score|floatformat:0 }}</div>
-              <div>
-                <span class="badge {{ selected_row.assessment.eligibility_badge_class }}">
-                  {{ selected_row.assessment.get_eligibility_display }}
-                </span>
-                <div class="small text-secondary">dari 100 (simulasi)</div>
-              </div>
+        <div class="glass-strong p-4 p-md-5 h-100">
+          <h2 class="h6 fw-bold mb-1">Indikator — {{ selected_row.farmer.username }}</h2>
+          <p class="small text-secondary mb-3">
+            Dihitung {{ selected_row.assessment.calculated_at|date:"d M Y H:i"|default:"—" }}
+          </p>
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="display-6 fw-bold">{{ selected_row.assessment.total_score|floatformat:0 }}</div>
+            <div>
+              <span class="badge {{ selected_row.assessment.eligibility_badge_class }}">
+                {{ selected_row.assessment.get_eligibility_display }}
+              </span>
+              <div class="small text-secondary">dari 100 (simulasi)</div>
             </div>
-            <dl class="row small mb-0">
-              <dt class="col-7 text-secondary">Pemenuhan pesanan</dt>
-              <dd class="col-5 text-end">{{ selected_row.assessment.fulfillment_score|floatformat:0 }}/30</dd>
-              <dt class="col-7 text-secondary">Kualitas QC</dt>
-              <dd class="col-5 text-end">{{ selected_row.assessment.quality_score|floatformat:0 }}/25</dd>
-              <dt class="col-7 text-secondary">Data aset</dt>
-              <dd class="col-5 text-end">{{ selected_row.assessment.asset_score|floatformat:0 }}/20</dd>
-              <dt class="col-7 text-secondary">Pendampingan</dt>
-              <dd class="col-5 text-end">{{ selected_row.assessment.mentorship_score|floatformat:0 }}/15</dd>
-              <dt class="col-7 text-secondary">Pembayaran simulasi</dt>
-              <dd class="col-5 text-end">{{ selected_row.assessment.payment_score|floatformat:0 }}/10</dd>
-            </dl>
-            <div class="alert alert-warning small mt-3 mb-0">{{ selected_row.assessment.notes }}</div>
           </div>
+          <dl class="row small mb-0">
+            <dt class="col-7 text-secondary">Pemenuhan pesanan</dt>
+            <dd class="col-5 text-end">{{ selected_row.assessment.fulfillment_score|floatformat:0 }}/30</dd>
+            <dt class="col-7 text-secondary">Kualitas QC</dt>
+            <dd class="col-5 text-end">{{ selected_row.assessment.quality_score|floatformat:0 }}/25</dd>
+            <dt class="col-7 text-secondary">Data aset</dt>
+            <dd class="col-5 text-end">{{ selected_row.assessment.asset_score|floatformat:0 }}/20</dd>
+            <dt class="col-7 text-secondary">Pendampingan</dt>
+            <dd class="col-5 text-end">{{ selected_row.assessment.mentorship_score|floatformat:0 }}/15</dd>
+            <dt class="col-7 text-secondary">Pembayaran simulasi</dt>
+            <dd class="col-5 text-end">{{ selected_row.assessment.payment_score|floatformat:0 }}/10</dd>
+          </dl>
+          <div class="alert alert-warning small mt-3 mb-0">{{ selected_row.assessment.notes }}</div>
         </div>
       </div>
 
       <div class="col-12 col-lg-7">
-        <div class="card shadow-sm border-0 h-100">
-          <div class="card-body p-4">
-            <h2 class="h6 fw-bold mb-3">Riwayat pesanan {{ selected_row.farmer.username }}</h2>
-            {% if orders %}
-              <div class="table-responsive">
-                <table class="table small align-middle mb-0">
-                  <thead class="table-light">
-                    <tr><th>No. pesanan</th><th>Pembeli</th><th>Status</th><th class="text-end">Nilai</th></tr>
-                  </thead>
-                  <tbody>
-                    {% for order in orders %}
-                      <tr>
-                        <td>{{ order.order_number }}</td>
-                        <td>{{ order.buyer.username }}</td>
-                        <td>{{ order.get_status_display }}</td>
-                        <td class="text-end">Rp{{ order.total|floatformat:0 }}</td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            {% else %}
-              <div class="alert alert-info small mb-0">Belum ada pesanan untuk petani ini.</div>
-            {% endif %}
-          </div>
+        <div class="glass-strong p-4 p-md-5 h-100">
+          <h2 class="h6 fw-bold mb-3">Riwayat pesanan {{ selected_row.farmer.username }}</h2>
+          {% if orders %}
+            <div class="table-responsive">
+              <table class="table table-stack small align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th data-label="No. pesanan">No. pesanan</th>
+                    <th data-label="Pembeli">Pembeli</th>
+                    <th data-label="Status">Status</th>
+                    <th class="text-end" data-label="Nilai">Nilai</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for order in orders %}
+                    <tr>
+                      <td data-label="No. pesanan">{{ order.order_number }}</td>
+                      <td data-label="Pembeli">{{ order.buyer.username }}</td>
+                      <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
+                      <td class="text-end" data-label="Nilai">Rp{{ order.total|floatformat:0 }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="empty-state h-100 d-flex flex-column justify-content-center">
+              <div class="empty-icon" aria-hidden="true"><svg width="32" height="32" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
+              <p class="mb-0">Belum ada pesanan untuk petani ini.</p>
+            </div>
+          {% endif %}
         </div>
       </div>
     </div>
   {% endif %}
 {% else %}
-  <div class="alert alert-info">Belum ada petani yang tercatat.</div>
+  <div class="empty-state h-100 d-flex flex-column justify-content-center">
+    <div class="empty-icon" aria-hidden="true"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
+    <h3 class="h3 mb-0">Belum ada petani</h3>
+    <p class="mb-0">Belum ada petani yang tercatat.</p>
+  </div>
 {% endif %}
 
 <div class="alert alert-warning small mt-4 mb-0" role="alert">

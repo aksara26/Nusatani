@@ -13,6 +13,7 @@
 
 {% if form.non_field_errors %}
   <div class="alert alert-danger" role="alert">
+    <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
     {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
   </div>
 {% endif %}
@@ -25,7 +26,7 @@
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ next }}">
 
-  <div class="mb-3">
+  <div class="form-group mb-3">
     <label for="{{ form.username.id_for_label }}" class="form-label" id="usernameLabel">Username</label>
     <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
            class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}"
@@ -33,10 +34,12 @@
            autocapitalize="none" autocorrect="off" spellcheck="false" required autofocus
            placeholder="{{ selected_role_config.placeholder|default:'contoh: petani1' }}">
     <div class="form-text" id="usernameHint">Tidak peka huruf besar/kecil. Spasi diabaikan.</div>
-    {% for error in form.username.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+    {% for error in form.username.errors %}
+      <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+    {% endfor %}
   </div>
 
-  <div class="mb-4">
+  <div class="form-group mb-4">
     <label for="{{ form.password.id_for_label }}" class="form-label">Kata sandi</label>
     <div class="password-field">
       <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
@@ -44,56 +47,65 @@
              autocomplete="current-password" autocapitalize="none" autocorrect="off"
              spellcheck="false" required placeholder="Masukkan kata sandi">
       <button type="button" class="password-toggle" data-toggle-password
-              aria-label="Tampilkan kata sandi" aria-pressed="false">👁</button>
+              aria-label="Tampilkan kata sandi" aria-pressed="false"><svg class="nt-icon" aria-hidden="true"><use href="#icon-eye"></use></svg></button>
     </div>
-    {% for error in form.password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+    {% for error in form.password.errors %}
+      <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+    {% endfor %}
   </div>
 
-  <button type="submit" class="btn btn-success btn-lg w-100 mb-3">Masuk ke dashboard <span aria-hidden="true">→</span></button>
+  <button type="submit" class="btn btn-primary-green btn-lg w-100 mb-3">Masuk ke dashboard <span aria-hidden="true"><svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-arrow-right"></use></svg></span></button>
 </form>
 
 <div class="auth-divider mb-4"><span>atau masuk sebagai demo</span></div>
 
 <div class="demo-picker mb-3">
   <label class="form-label small fw-bold">Pilih peran demo</label>
-  <select class="form-select form-select-lg" id="demoRoleSelect">
-    {% for cfg in demo_roles %}
-      <option value="{{ cfg.role }}"
-              {% if selected_role == cfg.role %}selected{% endif %}
-              data-label="{{ cfg.label }}"
-              data-icon="{{ cfg.icon }}"
-              data-placeholder="{{ cfg.placeholder }}"
-              data-input-label="{{ cfg.input_label }}"
-              data-hint="{{ cfg.hint }}"
-              data-username="{{ cfg.username }}">
-        {{ cfg.label }}
-      </option>
-    {% endfor %}
-  </select>
+  {% for cfg in demo_roles %}
+    {% if cfg.role != 'admin' %}
+    <a href="{% url 'accounts:demo_login' %}?role={{ cfg.role }}"
+       class="demo-role-card {% if selected_role == cfg.role %}is-selected{% endif %}"
+       aria-pressed="{% if selected_role == cfg.role %}true{% else %}false{% endif %}">
+      <span class="demo-role-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></span>
+      <div class="demo-role-info">
+        <span class="demo-role-name">{{ cfg.label }}</span>
+        <span class="demo-role-hint">{{ cfg.hint }}</span>
+      </div>
+      <span class="demo-role-check">{% if selected_role == cfg.role %}<svg class="nt-icon" aria-hidden="true"><use href="#icon-check-circle"></use></svg>{% else %}<svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{% endif %}</span>
+    </a>
+    {% endif %}
+  {% endfor %}
 </div>
 
 <div class="demo-card">
   <div class="demo-header d-flex align-items-center gap-2 mb-2">
-    <span class="demo-icon">{{ selected_role_config.icon }}</span>
+    <span class="demo-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></span>
     <span class="demo-name fw-bold">{{ selected_role_config.label }}</span>
   </div>
-  <p class="demo-hint small text-secondary mb-3">{{ selected_role_config.hint }}</p>
-  <form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
-    {% csrf_token %}
-    <input type="hidden" name="role" value="{{ selected_role }}">
-    <button type="submit" class="btn btn-outline-primary btn-lg w-100 demo-btn">
-      <span aria-hidden="true">⚡</span> Masuk sebagai {{ selected_role_config.label }}
-    </button>
-    <p class="small text-secondary text-center mt-2 mb-0">
-      Tidak perlu mengetik username dan kata sandi.
+  <div class="demo-body">
+    <p class="demo-hint small text-secondary mb-3">{{ selected_role_config.hint }}</p>
+    <form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
+      {% csrf_token %}
+      <input type="hidden" name="role" value="{{ selected_role }}">
+      <button type="submit" class="btn btn-primary-green btn-lg w-100 demo-btn">
+        <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-alert-circle"></use></svg> Masuk sebagai {{ selected_role_config.label }}
+      </button>
+      <p class="small text-secondary text-center mt-2 mb-0">
+        Tidak perlu mengetik username dan kata sandi.
+      </p>
+    </form>
+  </div>
+  <div class="demo-footer">
+    <p class="small text-secondary text-center mb-0">
+      Demo hanya untuk coba fitur. Gunakan akun Anda sendiri untuk data aktual.
     </p>
-  </form>
+  </div>
 </div>
 
 <div class="auth-divider mt-4"><span>atau</span></div>
 
-<a class="btn btn-outline-secondary w-100" href="{% url 'accounts:guide' %}">
-  <span aria-hidden="true">🧭</span> Belum tahu peran saya? Buka panduan
+<a class="btn btn-outline-green w-100" href="{% url 'accounts:guide' %}">
+  <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-search"></use></svg> Belum tahu peran saya? Buka panduan
 </a>
 
 <p class="small text-secondary text-center mt-4 mb-0">
@@ -109,7 +121,7 @@
   toggle.addEventListener("click", function () {
     const reveal = input.type === "password";
     input.type = reveal ? "text" : "password";
-    toggle.textContent = reveal ? "🙈" : "👁";
+    toggle.innerHTML = reveal ? '<svg class="nt-icon" aria-hidden="true"><use href="#icon-eye-off"></use></svg>' : '<svg class="nt-icon" aria-hidden="true"><use href="#icon-eye"></use></svg>';
     toggle.setAttribute("aria-label", reveal ? "Sembunyikan kata sandi" : "Tampilkan kata sandi");
     toggle.setAttribute("aria-pressed", String(reveal));
     input.focus();
@@ -118,12 +130,10 @@
   const usernameInput = document.getElementById("{{ form.username.id_for_label }}");
   const usernameLabel = document.getElementById("usernameLabel");
   const usernameHint = document.getElementById("usernameHint");
-  const demoSelect = document.getElementById("demoRoleSelect");
+  const cards = Array.from(document.querySelectorAll(".demo-role-card"));
   const demoIcon = document.querySelector(".demo-icon");
   const demoName = document.querySelector(".demo-name");
   const demoHint = document.querySelector(".demo-hint");
-  const demoRoleInput = document.querySelector('input[name="role"]');
-  const demoBtn = document.querySelector(".demo-btn");
 
   function applyRole(cfg) {
     if (!cfg) return;
@@ -132,27 +142,43 @@
     usernameInput.placeholder = cfg.placeholder || "";
   }
 
-  function applyDemo(option) {
-    if (!option) return;
-    demoIcon.textContent = option.dataset.icon || "";
-    demoName.textContent = option.dataset.label || "";
-    demoHint.textContent = option.dataset.hint || "";
-    demoRoleInput.value = option.value;
-    demoBtn.innerHTML = '<span aria-hidden="true">⚡</span> Masuk sebagai ' + option.dataset.label;
-    applyRole({
-      label: option.dataset.label || "",
-      placeholder: option.dataset.placeholder || "",
-      inputLabel: option.dataset.inputLabel || "Username",
-      hint: option.dataset.hint || "",
+  function selectCard(card) {
+    cards.forEach(function (c) {
+      const isSelected = c === card;
+      c.classList.toggle("is-selected", isSelected);
+      c.setAttribute("aria-pressed", isSelected ? "true" : "false");
+      const check = c.querySelector(".demo-role-check");
+      if (check) check.innerHTML = isSelected ? '<svg class="nt-icon" aria-hidden="true"><use href="#icon-check-circle"></use></svg>' : '<svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>';
     });
+    const icon = card.querySelector(".demo-role-icon");
+    const name = card.querySelector(".demo-role-name");
+    const hint = card.querySelector(".demo-role-hint");
+    if (demoIcon) demoIcon.innerHTML = icon ? icon.innerHTML : "";
+    if (demoName) demoName.textContent = name ? name.textContent : "";
+    if (demoHint) demoHint.textContent = hint ? hint.textContent : "";
+
+    const role = card.getAttribute("href").split("role=")[1];
+    const cfgMap = {
+      "farmer": { inputLabel: "Username / ID Petani", placeholder: "contoh: petani1", hint: "Kelola produk, pesanan, kualitas, dan aset usaha." },
+      "horeca": { inputLabel: "Username / Email usaha", placeholder: "contoh: horeca1", hint: "Pre-order terjadwal untuk hotel, restoran, dan kafe." },
+      "consumer": { inputLabel: "Username / Email", placeholder: "contoh: konsumen1", hint: "Belanja microgreens segar untuk rumah tangga." },
+      "qc": { inputLabel: "ID Petugas QC", placeholder: "contoh: qc1", hint: "Periksa dan putuskan kelayakan produk sebelum dikirim." },
+      "mentor": { inputLabel: "Username Mentor", placeholder: "contoh: mentor1", hint: "Jadwalkan dan catat pendampingan petani." },
+      "bank": { inputLabel: "Username / Email mitra", placeholder: "contoh: bank1", hint: "Pantau performa usaha dan indikator pembiayaan." },
+    };
+    applyRole(cfgMap[role] || {});
   }
 
-  const selectedOption = demoSelect.options[demoSelect.selectedIndex];
-  applyDemo(selectedOption);
-
-  demoSelect.addEventListener("change", function () {
-    applyDemo(this.options[this.selectedIndex]);
+  cards.forEach(function (card) {
+    card.addEventListener("click", function (event) {
+      event.preventDefault();
+      selectCard(card);
+      window.location.href = card.getAttribute("href");
+    });
   });
+
+  const selectedCard = cards.find(function (c) { return c.classList.contains("is-selected"); });
+  if (selectedCard) selectCard(selectedCard);
 })();
 </script>
 {% endblock %}
