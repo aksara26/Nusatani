@@ -1,16 +1,15 @@
-/* NusaTani — Token CSS (White + Glassmorphism + High Contrast) */
+/* NusaTani — Token CSS (Light Nature Glassmorphism) */
 :root {
-  /* Latar dominan putih & terang */
   --bg:#FFFFFF;
   --bg-soft:#F8FAFC;
   --bg-pale:#F2F7F4;
 
-  /* Teks gelap untuk kontras jelas (WCAG AA >= 4.5:1) */
-  --ink:#0f2a1d;
-  --ink-muted:#3F5A4B;
-  --ink-soft:#4b5563;
+  /* Teks gelap untuk kontras tajam */
+  --ink:#0f172a;
+  --ink-muted:#475569;
+  --ink-soft:#64748B;
 
-  /* Hijau segar aksen */
+  /* Hijau utama NusaTani */
   --green-900:#0B3D2A;
   --green-800:#166534;
   --green-700:#15803D;
@@ -34,25 +33,19 @@
   --sky-top:#E8F8EE;
   --sky-bottom:#FFFBEA;
 
-  /* Gunung kabut (latar belakang tetap terlihat) */
-  --mtn-far:#CDEBD6;
-  --mtn-mid:#9ED2B2;
-  --mtn-near:#5FAF84;
-  --mtn-front:#2F8A5E;
-
-  /* Glassmorphism: semi-transparan putih, blur halus, border tipis */
-  --glass-light:rgba(255,255,255,.75);
-  --glass-strong:rgba(255,255,255,.92);
-  --glass-dark:rgba(255,255,255,.85);
+  /* Glassmorphism — Light Nature */
+  --glass-light:rgba(255,255,255,.72);
+  --glass-strong:rgba(255,255,255,.72);
+  --glass-dark:rgba(255,255,255,.72);
   --glass-border:rgba(255,255,255,.85);
-  --glass-shadow:0 8px 32px rgba(11,61,42,.12);
+  --glass-shadow:0 8px 32px rgba(22,101,52,.08);
   --blur-sm:8px;
-  --blur-md:10px;
+  --blur-md:14px;
   --blur-max:16px;
 
   --radius-sm:10px;
   --radius-md:14px;
-  --radius-lg:20px;
+  --radius-lg:16px;
   --radius-xl:28px;
   --radius-pill:999px;
 
@@ -65,17 +58,16 @@
   --space-12:48px;
   --space-16:64px;
 
-  /* Warna aksen utama hijau segar */
+  /* Aksen hijau utama */
   --accent:#15803D;
-  --accent-hover:#14532d;
+  --accent-hover:#166534;
 }
 
-/* Aksen berbeda per role melalui <body data-role="...">.
-   Sisanya identik (base hijau). Qc dan mentor pakai base default. */
-body[data-role="farmer"]   { --accent:#15803D; --accent-hover:#14532d; }   /* petani */
-body[data-role="consumer"] { --accent:#0F766E; --accent-hover:#0d5c50; }   /* konsumen */
-body[data-role="horeca"]   { --accent:#B45309; --accent-hover:#8a3e07; }   /* HOREKA */
-body[data-role="bank"]     { --accent:#1D4ED8; --accent-hover:#173ab8; }   /* bank */
-body[data-role="admin"]    { --accent:#1F3A33; --accent-hover:#142822; }   /* administrator */
-body[data-role="mentor"]   { --accent:#15803D; --accent-hover:#14532d; }   /* mentor */
-body[data-role="qc"]       { --accent:#15803D; --accent-hover:#14532d; }   /* QC */
+/* Aksen per role */
+body[data-role="farmer"]   { --accent:#15803D; --accent-hover:#166534; }
+body[data-role="consumer"] { --accent:#15803D; --accent-hover:#166534; }
+body[data-role="horeca"]   { --accent:#15803D; --accent-hover:#166534; }
+body[data-role="bank"]     { --accent:#15803D; --accent-hover:#166534; }
+body[data-role="admin"]    { --accent:#15803D; --accent-hover:#166534; }
+body[data-role="mentor"]   { --accent:#15803D; --accent-hover:#166534; }
+body[data-role="qc"]       { --accent:#15803D; --accent-hover:#166534; }
