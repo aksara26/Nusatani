@@ -4,6 +4,7 @@ from datetime import timedelta
 from decimal import Decimal
 from functools import wraps
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -78,6 +79,7 @@ class NusaTaniLoginView(LoginView):
             context["selected_role_config"] = all_demo_roles[0]
         else:
             context["selected_role_config"] = None
+        context["demo_login_enabled"] = getattr(settings, "DEMO_LOGIN_ENABLED", True)
         return context
 
     def form_valid(self, form):

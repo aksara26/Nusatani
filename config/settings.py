@@ -169,3 +169,6 @@ SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 SECURE_REFERRER_POLICY = "same-origin"
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+
+# Demo login - bisa dimatikan via env var untuk produksi
+DEMO_LOGIN_ENABLED = _env_bool("DEMO_LOGIN_ENABLED", True)

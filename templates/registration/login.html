@@ -5,21 +5,21 @@
 
 {% block auth_body %}
 {% if user.is_authenticated %}
-<div class="alert alert-success small" role="status">
+<div class="alert alert-success small glass-strong" role="status" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);">
   Anda sudah masuk sebagai <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).
   <a class="alert-link" href="{% url 'accounts:dashboard' %}">Kembali ke dashboard</a>.
 </div>
 {% endif %}
 
 {% if form.non_field_errors %}
-<div class="alert alert-danger" role="alert">
+<div class="alert alert-danger glass-strong" role="alert" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);">
   <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
   {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
 </div>
 {% endif %}
 
-<h1 id="login-heading" class="h3 mb-1">Selamat datang kembali</h1>
-<p class="small text-secondary mb-4">Masukkan kredensial untuk membuka dashboard.</p>
+<h1 id="login-heading" class="h3 mb-1" style="color: var(--ink);">Selamat datang kembali</h1>
+<p class="small text-muted mb-4" style="color: var(--ink-muted);">Masukkan kredensial untuk membuka dashboard.</p>
 
 <!-- B. PEMILIH PERAN (segmented control radio) -->
 <fieldset class="role-selector mb-4" aria-label="Pilih peran">
@@ -39,7 +39,7 @@
             {% elif cfg.role == 'consumer' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-check-circle"></use></svg>
             {% elif cfg.role == 'qc' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-alert-circle"></use></svg>
             {% elif cfg.role == 'mentor' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-sprout"></use></svg>
-            {% elif cfg.role == 'bank' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-arrow-right"></use></svg>
+            {% elif cfg.role == 'bank' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-credit-card"></use></svg>
             {% endif %}
           </span>
           <span class="role-option-name">{{ cfg.label }}</span>
@@ -56,25 +56,25 @@
   <input type="hidden" name="next" value="{{ next }}">
 
   <div class="form-group mb-3">
-    <label for="{{ form.username.id_for_label }}" class="form-label" id="usernameLabel">Username</label>
+    <label for="{{ form.username.id_for_label }}" class="form-label" id="usernameLabel" style="color: var(--ink-muted);">Username</label>
     <input type="text" name="{{ form.username.name }}" id="{{ form.username.id_for_label }}"
            class="form-control form-control-lg {% if form.username.errors %}is-invalid{% endif %}"
            value="{{ form.username.value|default:'' }}" autocomplete="username"
            autocapitalize="none" autocorrect="off" spellcheck="false" required autofocus
-           placeholder="{{ selected_role_config.placeholder|default:'contoh: petani1' }}">
-    <div class="form-text" id="usernameHint">Tidak peka huruf besar/kecil. Spasi diabaikan.</div>
+           placeholder="{{ selected_role_config.placeholder|default:'contoh: petani1' }}" style="background: var(--glass-strong); border-color: rgba(148,163,184,.38);">
+    <div class="form-text" id="usernameHint" style="color: var(--ink-muted);">Tidak peka huruf besar/kecil. Spasi diabaikan.</div>
     {% for error in form.username.errors %}
     <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
     {% endfor %}
   </div>
 
   <div class="form-group mb-4">
-    <label for="{{ form.password.id_for_label }}" class="form-label">Kata sandi</label>
+    <label for="{{ form.password.id_for_label }}" class="form-label" style="color: var(--ink-muted);">Kata sandi</label>
     <div class="password-field">
       <input type="password" name="{{ form.password.name }}" id="{{ form.password.id_for_label }}"
              class="form-control form-control-lg {% if form.password.errors %}is-invalid{% endif %}"
              autocomplete="current-password" autocapitalize="none" autocorrect="off"
-             spellcheck="false" required placeholder="Masukkan kata sandi">
+             spellcheck="false" required placeholder="Masukkan kata sandi" style="background: var(--glass-strong); border-color: rgba(148,163,184,.38);">
       <button type="button" class="password-toggle" data-toggle-password
               aria-label="Tampilkan kata sandi" aria-pressed="false"><svg class="nt-icon" aria-hidden="true"><use href="#icon-eye"></use></svg></button>
     </div>
@@ -86,32 +86,33 @@
   <button type="submit" class="btn btn-primary-green btn-lg w-100 mb-3">Masuk ke dashboard <span aria-hidden="true"><svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-arrow-right"></use></svg></span></button>
 </form>
 
-<!-- D. PALING BAWAH: divider + ringkasan + tombol demo -->
+<!-- Demo section (satu bagian saja, hapus divider ganda) -->
+{% if demo_login_enabled|default:True %}
 <div class="auth-divider mb-3"><span>atau coba demo</span></div>
 
-<div class="demo-summary mb-3" aria-live="polite">
-  <div class="demo-summary-icon" aria-hidden="true">
+<div class="demo-summary mb-3 glass-strong" aria-live="polite" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-md); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); padding: var(--space-3); display: flex; align-items: center; gap: var(--space-3);">
+  <div class="demo-summary-icon" aria-hidden="true" style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(21, 128, 61, 0.1); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
     {% if selected_role_config.role == 'farmer' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-sprout"></use></svg>
     {% elif selected_role_config.role == 'horeca' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-search"></use></svg>
     {% elif selected_role_config.role == 'consumer' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-check-circle"></use></svg>
     {% elif selected_role_config.role == 'qc' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-alert-circle"></use></svg>
     {% elif selected_role_config.role == 'mentor' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-sprout"></use></svg>
-    {% elif selected_role_config.role == 'bank' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-arrow-right"></use></svg>
+    {% elif selected_role_config.role == 'bank' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-credit-card"></use></svg>
     {% endif %}
   </div>
-  <div class="demo-summary-info">
-    <strong class="demo-summary-name">{{ selected_role_config.label }}</strong>
-    <span class="demo-summary-hint">{{ selected_role_config.hint }}</span>
+  <div class="demo-summary-info" style="min-width: 0;">
+    <strong class="demo-summary-name" style="color: var(--ink);">{{ selected_role_config.label }}</strong>
+    <span class="demo-summary-hint" style="color: var(--ink-muted); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{ selected_role_config.hint }}</span>
   </div>
 </div>
 
 <form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
   {% csrf_token %}
   <input type="hidden" name="role" value="{{ selected_role }}" id="demoRoleInput">
-  <button type="submit" class="btn btn-outline-green w-100 mb-2">
+  <button type="submit" class="btn btn-outline-green w-100 mb-2" style="background: rgba(255,255,255,.95); border-color: var(--accent-hover); color: var(--accent-hover);">
     <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-arrow-right"></use></svg> Masuk demo sebagai {{ selected_role_config.label }}
   </button>
-  <p class="small text-secondary text-center mb-0">Tidak perlu mengetik username dan kata sandi.</p>
+  <p class="small text-muted text-center mb-0" style="color: var(--ink-muted);">Tidak perlu mengetik username dan kata sandi.</p>
 </form>
 
 <!-- Fallback select untuk non-JS (tersembunyi visual, tapi ikut submit form demo) -->
@@ -122,14 +123,15 @@
     {% endif %}
   {% endfor %}
 </select>
+{% endif %}
 
 <div class="auth-divider mt-4"><span>atau</span></div>
 
-<a class="btn btn-outline-green w-100" href="{% url 'accounts:guide' %}">
+<a class="btn btn-outline-green w-100" href="{% url 'accounts:guide' %}" style="background: rgba(255,255,255,.95); border-color: var(--accent-hover); color: var(--accent-hover);">
   <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-search"></use></svg> Belum tahu peran saya? Buka panduan
 </a>
 
-<p class="small text-secondary text-center mt-4 mb-0">
+<p class="small text-muted text-center mt-4 mb-0" style="color: var(--ink-muted);">
   Belum punya akun? <a href="{% url 'accounts:register' %}">Daftar sekarang</a>.
 </p>
 
@@ -162,7 +164,7 @@
   const usernameInput = document.getElementById("{{ form.username.id_for_label }}");
   const demoRoleInput = document.getElementById("demoRoleInput");
   const demoRoleSelect = document.getElementById("demoRoleSelect");
-  const demoSummaryName = document.querySelector(".demo-summary-name");
+  const demoSummaryName = document.query(".demo-summary-name");
   const demoSummaryHint = document.querySelector(".demo-summary-hint");
   const demoSummaryIcon = document.querySelector(".demo-summary-icon");
   const demoBtn = document.querySelector(".demo-form button[type='submit']");
@@ -173,7 +175,7 @@
     consumer: { inputLabel: "Username / Email", placeholder: "contoh: konsumen1", hint: "Belanja microgreens segar untuk rumah tangga.", icon: "check-circle" },
     qc: { inputLabel: "ID Petugas QC", placeholder: "contoh: qc1", hint: "Periksa dan putuskan kelayakan produk sebelum dikirim.", icon: "alert-circle" },
     mentor: { inputLabel: "Username Mentor", placeholder: "contoh: mentor1", hint: "Jadwalkan dan catat pendampingan petani.", icon: "sprout" },
-    bank: { inputLabel: "Username / Email mitra", placeholder: "contoh: bank1", hint: "Pantau performa usaha dan indikator pembiayaan.", icon: "arrow-right" }
+    bank: { inputLabel: "Username / Email mitra", placeholder: "contoh: bank1", hint: "Pantau performa usaha dan indikator pembiayaan.", icon: "credit-card" }
   };
 
   const iconMap = {
@@ -181,7 +183,7 @@
     search: '<svg class="nt-icon" width="24" height="24"><use href="#icon-search"></use></svg>',
     "check-circle": '<svg class="nt-icon" width="24" height="24"><use href="#icon-check-circle"></use></svg>',
     "alert-circle": '<svg class="nt-icon" width="24" height="24"><use href="#icon-alert-circle"></use></svg>',
-    "arrow-right": '<svg class="nt-icon" width="24" height="24"><use href="#icon-arrow-right"></use></svg>'
+    "credit-card": '<svg class="nt-icon" width="24" height="24"><use href="#icon-credit-card"></use></svg>'
   };
 
   function applyRole(role) {

@@ -1,14 +1,14 @@
-/* NusaTani — Token CSS (White + Glassmorphism) */
+/* NusaTani — Token CSS (White + Glassmorphism + High Contrast) */
 :root {
   /* Latar dominan putih & terang */
   --bg:#FFFFFF;
   --bg-soft:#F8FAFC;
   --bg-pale:#F2F7F4;
 
-  /* Teks gelap untuk kontras jelas */
-  --ink:#0F172A;
-  --ink-muted:#475569;
-  --ink-soft:#64748B;
+  /* Teks gelap untuk kontras jelas (WCAG AA >= 4.5:1) */
+  --ink:#0f2a1d;
+  --ink-muted:#3F5A4B;
+  --ink-soft:#4b5563;
 
   /* Hijau segar aksen */
   --green-900:#0B3D2A;
@@ -42,12 +42,12 @@
 
   /* Glassmorphism: semi-transparan putih, blur halus, border tipis */
   --glass-light:rgba(255,255,255,.75);
-  --glass-strong:rgba(255,255,255,.85);
-  --glass-dark:rgba(255,255,255,.72);
+  --glass-strong:rgba(255,255,255,.92);
+  --glass-dark:rgba(255,255,255,.85);
   --glass-border:rgba(255,255,255,.85);
-  --glass-shadow:0 8px 24px rgba(15,23,42,.06);
+  --glass-shadow:0 8px 32px rgba(11,61,42,.12);
   --blur-sm:8px;
-  --blur-md:12px;
+  --blur-md:10px;
   --blur-max:16px;
 
   --radius-sm:10px;
@@ -67,12 +67,15 @@
 
   /* Warna aksen utama hijau segar */
   --accent:#15803D;
+  --accent-hover:#14532d;
 }
 
 /* Aksen berbeda per role melalui <body data-role="...">.
-   Sisanya identik (base hijam). Qc dan mentor pakai base default. */
-body[data-role="farmer"]   { --accent:#15803D; }   /* petani */
-body[data-role="consumer"] { --accent:#0F766E; }   /* konsumen */
-body[data-role="horeca"]   { --accent:#B45309; }   /* HOREKA */
-body[data-role="bank"]     { --accent:#1D4ED8; }   /* bank */
-body[data-role="admin"]    { --accent:#1F3A33; }   /* administrator */
+   Sisanya identik (base hijau). Qc dan mentor pakai base default. */
+body[data-role="farmer"]   { --accent:#15803D; --accent-hover:#14532d; }   /* petani */
+body[data-role="consumer"] { --accent:#0F766E; --accent-hover:#0d5c50; }   /* konsumen */
+body[data-role="horeca"]   { --accent:#B45309; --accent-hover:#8a3e07; }   /* HOREKA */
+body[data-role="bank"]     { --accent:#1D4ED8; --accent-hover:#173ab8; }   /* bank */
+body[data-role="admin"]    { --accent:#1F3A33; --accent-hover:#142822; }   /* administrator */
+body[data-role="mentor"]   { --accent:#15803D; --accent-hover:#14532d; }   /* mentor */
+body[data-role="qc"]       { --accent:#15803D; --accent-hover:#14532d; }   /* QC */

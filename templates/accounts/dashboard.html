@@ -4,8 +4,8 @@
 {% block title %}{{ dashboard.label }} — NusaTani{% endblock %}
 
 {% block content %}
-<!-- Hero .glass-dark (teks putih di atas latar gunung) -->
-<div class="glass-dark dashboard-hero mb-4" style="padding: var(--space-6) var(--space-8);">
+<!-- Hero .glass-dark (teks di atas latar gunung) -->
+<div class="glass-strong dashboard-hero mb-4" style="padding: var(--space-6) var(--space-8);">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
     <div>
       <div class="section-kicker mb-2" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted);">Dashboard NusaTani · {% now "d M Y" %}</div>
@@ -19,14 +19,12 @@
   </div>
 </div>
 
-<!-- 4 KPI card - CSS Grid -->
+<!-- 4 KPI card - CSS Grid dengan ikon yang berbeda -->
 {% if dashboard_data.stats %}
-<div class="dashboard-stats mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-6);">
+<div class="dashboard-stats mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-4);">
   {% for stat in dashboard_data.stats %}
-  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
-    <div class="kpi-ico" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
-      {{ stat.icon|nt_icon|safe }}
-    </div>
+  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; min-height: 140px; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
+    <div class="kpi-ico" data-icon="{{ stat.icon_type|default:'shield' }}" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; background-size: 20px 20px; background-position: center; background-repeat: no-repeat;"></div>
     <div class="kpi-label" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);">{{ stat.label }}</div>
     <div class="kpi-number" style="font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; font-family: 'Inter', system-ui, sans-serif;">{{ stat.value }}</div>
     <div class="kpi-hint" style="font-size: 14px; color: var(--ink-muted); margin-top: auto;">{{ stat.hint }}</div>
@@ -52,28 +50,31 @@
     <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
       <div>
         <h2 class="h5 mb-0" style="font-size: 20px; font-weight: 700; color: var(--ink);">Fokus peran Anda</h2>
-        <p class="small text-secondary mb-0">Langkah yang paling sering digunakan sesuai hak akses Anda.</p>
+        <p class="small text-muted mb-0">Langkah yang paling sering digunakan sesuai hak akses Anda.</p>
       </div>
     </div>
 
     <div class="row g-3">
       {% for focus in dashboard.focus_areas %}
       <div class="col-12 col-md-6 col-xl-12">
-        <div class="glass-strong h-100" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);">
+        <a href="{{ focus.url }}" class="focus-card-link glass-strong h-100" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); text-decoration: none; color: inherit; display: block; border-radius: var(--radius-lg); transition: transform 150ms ease-out, box-shadow 150ms ease-out, background 150ms ease-out;">
           <div class="p-3 p-md-4">
-            <div class="d-flex align-items-start gap-3">
-              <span class="focus-icon" aria-hidden="true" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(47, 138, 94, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.25rem;">
-                {% if forloop.first %}<svg class="nt-icon" width="24" height="24"><use href="#icon-search"></use></svg>
-                {% elif forloop.counter0 == 1 %}<svg class="nt-icon" width="24" height="24"><use href="#icon-check-circle"></use></svg>
-                {% else %}<svg class="nt-icon" width="24" height="24"><use href="#icon-sprout"></use></svg>{% endif %}
-              </span>
-              <div>
-                <h3 class="h6 fw-bold mb-1" style="font-size: 16px; font-weight: 700; color: var(--ink);">{{ focus.title }}</h3>
-                <p class="small text-secondary mb-0" style="font-size: 13px; color: var(--ink-muted);">{{ focus.body }}</p>
+            <div class="d-flex align-items-start justify-content-between gap-3">
+              <div class="d-flex align-items-start gap-3">
+                <span class="focus-icon" aria-hidden="true" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(47, 138, 94, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.25rem;">
+                  {% if forloop.first %}<svg class="nt-icon" width="24" height="24"><use href="#icon-calendar"></use></svg>
+                  {% elif forloop.counter0 == 1 %}<svg class="nt-icon" width="24" height="24"><use href="#icon-book"></use></svg>
+                  {% else %}<svg class="nt-icon" width="24" height="24"><use href="#icon-sprout"></use></svg>{% endif %}
+                </span>
+                <div>
+                  <h3 class="h6 fw-bold mb-1" style="font-size: 16px; font-weight: 700; color: var(--ink);">{{ focus.title }}</h3>
+                  <p class="small text-muted mb-0" style="font-size: 13px; color: var(--ink-muted);">{{ focus.body }}</p>
+                </div>
               </div>
+              <svg class="arrow-right nt-icon" width="20" height="20" style="color: var(--accent); flex-shrink: 0; margin-top: 4px; transition: transform 150ms ease-out;"><use href="#icon-arrow-right"></use></svg>
             </div>
           </div>
-        </div>
+        </a>
       </div>
       {% endfor %}
     </div>
@@ -83,7 +84,7 @@
     <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
       <h2 class="h5 mb-0" style="font-size: 20px; font-weight: 700; color: var(--ink);">{{ dashboard_data.recent_title }}</h2>
       {% if dashboard_data.recent_url %}
-        <a class="small text-decoration-none" href="{{ dashboard_data.recent_url }}" style="font-size: 13px; color: var(--accent);">Lihat semua <svg class="nt-icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;margin-left:2px;"><use href="#icon-arrow-right"></use></svg></a>
+        <a class="small text-decoration-none" href="{{ dashboard_data.recent_url }}" style="font-size: 13px; color: var(--accent-hover);">Lihat semua <svg class="nt-icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;margin-left:2px;"><use href="#icon-arrow-right"></use></svg></a>
       {% endif %}
     </div>
 
@@ -95,9 +96,12 @@
           <div class="d-flex align-items-start justify-content-between gap-3">
             <div class="min-w-0">
               <div class="fw-semibold text-truncate" style="font-size: 14px; font-weight: 600; color: var(--ink);">{{ item.title }}</div>
-              <div class="small text-secondary" style="font-size: 12px; color: var(--ink-muted);">{{ item.meta }}</div>
+              <div class="small text-muted" style="font-size: 12px; color: var(--ink-muted);">{{ item.meta }}</div>
             </div>
-            {{ item.badge|nt_chip|safe }}
+            <div class="d-flex gap-2">
+              {{ item.badge|nt_chip|safe }}
+              <a href="{{ item.url }}" class="btn btn-outline-green btn-sm" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; height: auto; min-height: 32px;">Detail</a>
+            </div>
           </div>
         </a>
         {% endfor %}

@@ -1,5 +1,4 @@
-/* NusaTani — Background scene (#bg-scene)
-   Foto gunung realistis + wash gradient. Semua dekorasi latar HANYA di dalam #bg-scene. */
+/* NusaTani — Background (mountain photo + overlay) */
 
 #bg-scene {
   position: fixed;
@@ -9,65 +8,31 @@
   pointer-events: none;
 }
 
-/* Cadangan gradient langit jika foto gagal dimuat */
 #bg-scene::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
+  background: #e6f4dc url("../images/gunung-bg.jpeg") center / cover fixed no-repeat;
+  filter: blur(1px);
 }
 
-/* Foto gunung: cover, bottom center, slight blur + saturate */
-#bg-scene .photo {
-  position: absolute;
-  inset: -24px;
-  background: url("../images/bg-gunung") center bottom / cover no-repeat;
-  filter: blur(3px) saturate(1.05);
-  transform: translateZ(0);
-}
-
-/* Wash gradient: fades from top (opaque) to bottom (transparent) */
-#bg-scene .wash {
-  position: absolute;
+body::before {
+  content: "";
+  position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, rgba(240, 253, 244, 0.78) 0%, rgba(240, 253, 244, 0.45) 40%, rgba(240, 253, 244, 0.18) 100%);
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.35) 100%);
 }
 
-/* Rays (existing) - reduce opacity */
-#bg-scene .rays {
-  opacity: 0.25;
-}
-
-/* Mobile: tighter inset, less blur, shift focus */
-@media (max-width: 700px) {
-  #bg-scene .photo {
-    inset: 0;
-    filter: blur(2px);
-    background-position: 60% bottom;
-  }
-}
-
-/* Latar sawah publik (tetap dipakai untuk halaman publik non-dashboard) */
-#bg-scene .bg-sawah {
-  display: none;
-}
-body.is-public #bg-scene .bg-sawah {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: clamp(160px, 22vw, 300px);
-  background-image:
-    linear-gradient(180deg, rgba(232, 248, 238, 0.08) 0%, rgba(232, 248, 238, 0.35) 55%, rgba(232, 248, 238, 0.92) 100%),
-    url("../images/highland-sawah.jpg");
-  background-repeat: no-repeat;
-  background-position: center 45%, center 42%;
-  background-size: cover, cover;
-  z-index: 1;
-}
-body.is-auth-page #bg-scene .bg-sawah {
-  display: none;
+/* Hilangkan elemen lama yang tidak dipakai */
+#bg-scene .photo,
+#bg-scene .wash,
+#bg-scene .rays,
+#bg-scene .bg-sawah,
+#bg-scene .bg-mountains,
+#bg-scene svg {
+  display: none !important;
 }
 
 /* Konten halaman di atas latar */
@@ -76,7 +41,7 @@ main, .page, .navbar, footer {
   z-index: 1;
 }
 
-/* Panel konten: wajib glass-strong agar teks/form/tabel tidak langsung di atas latar */
+/* Panel konten: glass-strong agar teks/form/tabel tidak langsung di atas latar */
 .content-panel {
   position: relative;
   z-index: 1;
@@ -86,17 +51,23 @@ main, .page, .navbar, footer {
   box-sizing: border-box;
 }
 .content-panel.glass-strong {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.85);
+  box-shadow: 0 8px 32px rgba(11,61,42,.1);
 }
 body.is-public .content-panel {
   min-height: auto;
   padding: var(--space-4);
 }
 body.is-public .content-panel.glass-strong {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-/* Cegah scroll horizontal & jaga stabilitas layout */
+/* Cegah scroll horizontal */
 html, body {
   overflow-x: hidden;
 }
@@ -104,7 +75,7 @@ html, body {
   max-width: 100%;
 }
 
-/* Nonaktifkan dekorasi latar in-flow/pseudo lama */
+/* Nonaktifkan dekorasi lama */
 body.is-workspace main::before {
   content: none !important;
   background: none !important;
@@ -113,9 +84,20 @@ body.is-workspace main::before {
   display: none !important;
 }
 
-/* Fallback tanpa backdrop-filter: panel tetap solid & terbaca */
+/* Fallback tanpa backdrop-filter */
 @supports not (backdrop-filter: blur(1px)) {
   .content-panel.glass-strong {
     background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(255,255,255,.9);
   }
+}
+
+/* Kredit foto di footer */
+.photo-credit {
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+}
+.photo-credit a {
+  color: var(--accent);
+  text-decoration: underline;
 }
