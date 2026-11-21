@@ -18,66 +18,65 @@
   <div class="col-12 col-md-5">
     {% if product.photo_url %}
       <img src="{{ product.photo_url }}" alt="{{ product.name }}"
-           class="img-fluid rounded-4 border w-100 product-media">
+           class="img-fluid rounded-3 border w-100" style="aspect-ratio:4/3;object-fit:cover;">
     {% else %}
-      <div class="product-placeholder d-flex align-items-center justify-content-center rounded-4 border">
-        <img src="{% static 'images/placeholder-sprout.svg' %}" alt=""
-             class="product-placeholder-img" width="96" height="96">
+      <div class="product-placeholder d-flex align-items-center justify-content-center rounded-3 border w-100" style="aspect-ratio:4/3;background:var(--surface-2);">
+        <svg class="icon" width="64" height="64" style="color:var(--muted-2);"><use href="#icon-sprout"/></svg>
       </div>
     {% endif %}
   </div>
   <div class="col-12 col-md-7">
     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-      <span class="badge text-bg-light border">{{ product.variety.name }}</span>
+      <span class="badge badge-secondary">{{ product.variety.name }}</span>
       {% if product.is_surplus %}
-        <span class="chip chip--menunggu">
-          <svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"></circle></svg>
-          Sisaku
-        </span>
+      <span class="badge badge-warning">
+        <svg class="icon" width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="currentColor"></circle></svg>
+        Sisaku
+      </span>
       {% endif %}
       <span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span>
     </div>
     <h1 class="h3 mb-2">{{ product.name }}</h1>
-    <p class="text-secondary mb-4">{{ product.description|default:"Belum ada deskripsi untuk produk ini." }}</p>
+    <p class="text-muted mb-4">{{ product.description|default:"Belum ada deskripsi untuk produk ini." }}</p>
 
     <div class="row g-3 mb-4">
       <div class="col-6 col-sm-4">
-        <div class="small text-secondary">Harga</div>
-        <div class="fw-bold text-success tabular-nums">{{ product.price|rupiah:"pack" }}</div>
+        <div class="small text-muted">Harga</div>
+        <div class="fw-bold text-primary tabular-nums">{{ product.price|rupiah:"pack" }}</div>
       </div>
       <div class="col-6 col-sm-4">
-        <div class="small text-secondary">Stok</div>
+        <div class="small text-muted">Stok</div>
         <div class="fw-bold">{{ product.stock }} pack</div>
       </div>
       <div class="col-6 col-sm-4">
-        <div class="small text-secondary">Tersedia sejak</div>
+        <div class="small text-muted">Tersedia sejak</div>
         <div class="fw-bold">{{ product.available_from|date:"d M Y" }}</div>
       </div>
       <div class="col-6 col-sm-4">
-        <div class="small text-secondary">Petani</div>
+        <div class="small text-muted">Petani</div>
         <div class="fw-bold">{{ product.farmer.username }}</div>
       </div>
     </div>
 
     {% if can_manage %}
-      <div class="d-flex flex-wrap gap-2">
-        <a class="btn btn-success btn-sm" href="{% url 'products:update' product.pk %}">Ubah produk</a>
-        <a class="btn btn-outline-success btn-sm" href="{% url 'products:inventory_update' product.pk %}">Perbarui stok</a>
-        <a class="btn btn-outline-secondary btn-sm" href="{% url 'products:my_products' %}">Kembali ke produk saya</a>
-      </div>
+    <div class="d-flex flex-wrap gap-2">
+      <a class="btn btn-primary btn-sm" href="{% url 'products:update' product.pk %}">Ubah produk</a>
+      <a class="btn btn-outline-primary btn-sm" href="{% url 'products:inventory_update' product.pk %}">Perbarui stok</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{% url 'products:my_products' %}">Kembali ke produk saya</a>
+    </div>
     {% else %}
       {% if user.role == 'horeca' %}
-        <div class="d-flex flex-wrap gap-2">
-          <a class="btn btn-success btn-sm" href="{% url 'orders:preorder_create' %}">Buat pre-order</a>
-          <a class="btn btn-outline-success btn-sm" href="{% url 'orders:my_orders' %}">Pesanan saya</a>
-        </div>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary btn-sm" href="{% url 'orders:preorder_create' %}">Buat pre-order</a>
+        <a class="btn btn-outline-primary btn-sm" href="{% url 'orders:my_orders' %}">Pesanan saya</a>
+      </div>
       {% elif user.role == 'consumer' and product.is_surplus %}
-        <div class="d-flex flex-wrap gap-2">
-          <a class="btn btn-success btn-sm" href="{% url 'orders:surplus_create' %}">Pesan produk surplus</a>
-          <a class="btn btn-outline-success btn-sm" href="{% url 'orders:my_orders' %}">Pesanan saya</a>
-        </div>
+      <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary btn-sm" href="{% url 'orders:surplus_create' %}">Pesan produk surplus</a>
+        <a class="btn btn-outline-primary btn-sm" href="{% url 'orders:my_orders' %}">Pesanan saya</a>
+      </div>
       {% else %}
-        <div class="alert alert-info small mb-0">Pemesanan tersedia untuk akun HOREKA dan konsumen.</div>
+      <div class="alert alert-info small mb-0">Pemesanan tersedia untuk akun HOREKA dan konsumen.</div>
       {% endif %}
     {% endif %}
   </div>

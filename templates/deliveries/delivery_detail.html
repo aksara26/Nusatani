@@ -11,82 +11,99 @@
   </ol>
 </nav>
 
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-  <div>
+<div class="page-header">
+  <div class="page-header-title">
     <h1 class="h3 mb-1">Pengiriman {{ order.order_number }}</h1>
-    <p class="small text-secondary mb-0">{{ order.farmer.username }} <svg class="nt-icon" width="14" height="14" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"></use></svg> {{ order.buyer.username }}</p>
+    <p class="small text-muted mb-0">{{ order.farmer.username }} <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-arrow-right"/></svg> {{ order.buyer.username }}</p>
   </div>
-  <span class="badge {{ delivery.status_badge_class }} fs-6">{{ delivery.get_status_display }}</span>
+  <div class="page-header-actions">
+    <span class="badge {{ delivery.status_badge_class }} fs-6">{{ delivery.get_status_display }}</span>
+  </div>
 </div>
 
 <div class="row g-4">
   <div class="col-12 col-lg-8">
-    <div class="card shadow-sm border-0 mb-4">
-      <div class="card-body p-4">
-        <h2 class="h6 fw-bold mb-3">Perjalanan pengiriman</h2>
-        <ol class="list-group list-group-numbered">
-          <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div><div class="fw-semibold">Disiapkan</div><div class="small text-secondary">Produk lolos QC dan diserahkan ke kurir simulasi.</div></div>
-            <span class="badge text-bg-secondary">{{ delivery.created_at|date:"d M Y H:i" }}</span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div><div class="fw-semibold">Dikirim</div><div class="small text-secondary">Kurir simulasi mencatat pengiriman.</div></div>
-            <span class="badge {% if delivery.sent_at %}text-bg-info{% else %}text-bg-light border{% endif %}">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Perjalanan pengiriman</h2>
+      </div>
+      <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">Disiapkan</div>
+              <div class="small text-muted">Produk lolos QC dan diserahkan ke kurir simulasi.</div>
+            </div>
+            <span class="badge badge-secondary">{{ delivery.created_at|date:"d M Y H:i" }}</span>
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">Dikirim</div>
+              <div class="small text-muted">Kurir simulasi mencatat pengiriman.</div>
+            </div>
+            <span class="badge {% if delivery.sent_at %}badge-info{% else %}badge-secondary{% endif %}">
               {% if delivery.sent_at %}{{ delivery.sent_at|date:"d M Y H:i" }}{% else %}Belum{% endif %}
             </span>
-          </li>
-          <li class="list-group-item d-flex justify-content-between align-items-start">
-            <div><div class="fw-semibold">Diterima</div><div class="small text-secondary">Pesanan dinyatakan selesai.</div></div>
-            <span class="badge {% if delivery.received_at %}text-bg-success{% else %}text-bg-light border{% endif %}">
+          </div>
+          <div class="list-group-item d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">Diterima</div>
+              <div class="small text-muted">Pesanan dinyatakan selesai.</div>
+            </div>
+            <span class="badge {% if delivery.received_at %}badge-success{% else %}badge-secondary{% endif %}">
               {% if delivery.received_at %}{{ delivery.received_at|date:"d M Y H:i" }}{% else %}Belum{% endif %}
             </span>
-          </li>
-        </ol>
+          </div>
+        </div>
       </div>
     </div>
 
     {% if is_farmer %}
-      <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
-          <h2 class="h6 fw-bold mb-3">Perbarui status</h2>
-          <div class="d-flex flex-wrap gap-2">
-            {% if delivery.status == 'disiapkan' %}
-              <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}"
-                    data-confirm="Tandai pengiriman {{ order.order_number }} sebagai sedang dikirim?"
-                    data-confirm-title="Tandai dikirim"
-                    data-confirm-ok="Ya, tandai dikirim">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="dikirim">
-                <button type="submit" class="btn btn-success btn-sm">Tandai dikirim</button>
-              </form>
-            {% elif delivery.status == 'dikirim' %}
-              <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}"
-                    data-confirm="Tandai pesanan {{ order.order_number }} sudah diterima dan selesai?"
-                    data-confirm-title="Tandai diterima"
-                    data-confirm-ok="Ya, selesaikan pesanan">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="diterima">
-                <button type="submit" class="btn btn-success btn-sm">Tandai diterima</button>
-              </form>
-            {% else %}
-              <span class="badge text-bg-success">Pengiriman selesai</span>
-            {% endif %}
-          </div>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Perbarui status</h2>
+      </div>
+      <div class="card-body">
+        <div class="d-flex flex-wrap gap-2">
+          {% if delivery.status == 'disiapkan' %}
+          <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}"
+                data-confirm="Tandai pengiriman {{ order.order_number }} sebagai sedang dikirim?"
+                data-confirm-title="Tandai dikirim"
+                data-confirm-ok="Ya, tandai dikirim">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="dikirim">
+            <button type="submit" class="btn btn-sm btn-primary">Tandai dikirim</button>
+          </form>
+          {% elif delivery.status == 'dikirim' %}
+          <form method="post" action="{% url 'deliveries:update_status' delivery.pk %}"
+                data-confirm="Tandai pesanan {{ order.order_number }} sudah diterima dan selesai?"
+                data-confirm-title="Tandai diterima"
+                data-confirm-ok="Ya, selesaikan pesanan">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="diterima">
+            <button type="submit" class="btn btn-sm btn-primary">Tandai diterima</button>
+          </form>
+          {% else %}
+          <span class="badge badge-success">Pengiriman selesai</span>
+          {% endif %}
         </div>
       </div>
+    </div>
     {% endif %}
   </div>
 
   <div class="col-12 col-lg-4">
-    <div class="card shadow-sm border-0">
-      <div class="card-body p-4">
-        <h2 class="h6 fw-bold mb-3">Data kurir simulasi</h2>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Data kurir simulasi</h2>
+      </div>
+      <div class="card-body">
         <dl class="row mb-0 small">
-          <dt class="col-5 text-secondary">Kurir</dt><dd class="col-7">{{ delivery.courier_name }}</dd>
-          <dt class="col-5 text-secondary">Pelacakan</dt><dd class="col-7">{{ delivery.tracking_number|default:"—" }}</dd>
-          <dt class="col-5 text-secondary">Status pesanan</dt><dd class="col-7">{{ order.get_status_display }}</dd>
+          <dt class="col-5 text-muted">Kurir</dt><dd class="col-7">{{ delivery.courier_name }}</dd>
+          <dt class="col-5 text-muted">Pelacakan</dt><dd class="col-7">{{ delivery.tracking_number|default:"—" }}</dd>
+          <dt class="col-5 text-muted">Status pesanan</dt><dd class="col-7">{{ order.get_status_display }}</dd>
         </dl>
-        {% if delivery.notes %}<p class="small text-secondary mt-3 mb-0">{{ delivery.notes }}</p>{% endif %}
+        {% if delivery.notes %}<p class="small text-muted mt-3 mb-0">{{ delivery.notes }}</p>{% endif %}
         <div class="alert alert-info small mt-3 mb-0">Kurir dan pelacakan hanya simulasi pada MVP.</div>
       </div>
     </div>

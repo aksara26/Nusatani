@@ -5,47 +5,49 @@
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-12 col-lg-8">
-    <div class="glass-strong p-4 p-md-5">
-      <h1 class="h4 mb-1">{{ title }}</h1>
-      <p class="small text-secondary mb-4">Catat materi pembelajaran dan jadwal pendampingan petani.</p>
+    <div class="card">
+      <div class="card-body">
+        <h1 class="h4 mb-1">{{ title }}</h1>
+        <p class="small text-muted mb-4">Catat materi pembelajaran dan jadwal pendampingan petani.</p>
 
-      {% if form.non_field_errors %}
+        {% if form.non_field_errors %}
         <div class="alert alert-danger" role="alert">
-          <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
+          <svg class="icon" width="20" height="20" aria-hidden="true"><use href="#icon-alert-circle"/></svg>
           {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
         </div>
-      {% endif %}
+        {% endif %}
 
-      <form method="post" novalidate
-            data-confirm="Simpan jadwal pendampingan ini?"
-            data-confirm-title="Simpan pendampingan"
-            data-confirm-ok="Ya, simpan">
-        {% csrf_token %}
-        {% for field in form %}
+        <form method="post" novalidate
+              data-confirm="Simpan jadwal pendampingan ini?"
+              data-confirm-title="Simpan pendampingan"
+              data-confirm-ok="Ya, simpan">
+          {% csrf_token %}
+          {% for field in form %}
           {% if field.field.widget.input_type == 'checkbox' %}
-            <div class="form-check mb-2">
-              {{ field }}
-              <label class="form-label form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-              {% for error in field.errors %}
-                <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
-              {% endfor %}
-            </div>
+          <div class="form-check mb-2">
+            {{ field }}
+            <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {% for error in field.errors %}
+            <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
+            {% endfor %}
+          </div>
           {% else %}
-            <div class="form-group mb-3">
-              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-              {{ field }}
-              {% for error in field.errors %}
-                <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
-              {% endfor %}
-            </div>
+          <div class="form-group mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% for error in field.errors %}
+            <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
+            {% endfor %}
+          </div>
           {% endif %}
-        {% endfor %}
+          {% endfor %}
 
-        <div class="btn-action-row mt-4">
-          <button type="submit" class="btn btn-primary-green">Simpan pendampingan</button>
-          <a class="btn btn-outline-green" href="{% if mentorship %}{% url 'mentorship:detail' mentorship.pk %}{% else %}{% url 'mentorship:list' %}{% endif %}">Batal</a>
-        </div>
-      </form>
+          <div class="d-flex flex-wrap gap-2 mt-4">
+            <button type="submit" class="btn btn-primary">Simpan pendampingan</button>
+            <a class="btn btn-outline-primary" href="{% if mentorship %}{% url 'mentorship:detail' mentorship.pk %}{% else %}{% url 'mentorship:list' %}{% endif %}">Batal</a>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

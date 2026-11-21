@@ -16,31 +16,36 @@
   </ol>
 </nav>
 
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-  <div>
+<div class="page-header">
+  <div class="page-header-title">
     <h1 class="h3 mb-1">{{ order.order_number }}</h1>
-    <p class="small text-secondary mb-0">{{ order.get_order_type_display }} · dibuat {{ order.created_at|date:"d M Y H:i" }}</p>
+    <p class="small text-muted mb-0">{{ order.get_order_type_display }} · dibuat {{ order.created_at|date:"d M Y H:i" }}</p>
   </div>
-  {{ order.get_status_display|nt_chip|safe }}
+  <div class="page-header-actions">
+    {{ order.get_status_display|nt_chip|safe }}
+  </div>
 </div>
 
 <div class="row g-4">
   <div class="col-12 col-lg-8">
-    <div class="glass-strong p-4 p-md-5 mb-4">
-      <h2 class="h6 fw-bold mb-3">Rincian pesanan</h2>
-      <div class="table-responsive">
-        <table class="table table-stack align-middle mb-0">
-          <thead>
-            <tr>
-              <th data-label="Produk">Produk</th>
-              <th data-label="Jumlah">Jumlah</th>
-              <th data-label="Harga satuan">Harga satuan</th>
-              <th data-label="Subtotal">Subtotal</th>
-              <th data-label="QC">QC</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in order.items.all %}
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Rincian pesanan</h2>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-stack align-middle mb-0">
+            <thead>
+              <tr>
+                <th data-label="Produk">Produk</th>
+                <th data-label="Jumlah">Jumlah</th>
+                <th data-label="Harga satuan">Harga satuan</th>
+                <th data-label="Subtotal">Subtotal</th>
+                <th data-label="QC">QC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in order.items.all %}
               <tr>
                 <td data-label="Produk">{{ item.product.name }}</td>
                 <td data-label="Jumlah">{{ item.quantity }}</td>
@@ -48,25 +53,29 @@
                 <td data-label="Subtotal" class="fw-semibold">{{ item.line_total|rupiah }}</td>
                 <td data-label="QC">{{ item.get_qc_result_display|nt_chip|safe }}</td>
               </tr>
-            {% endfor %}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th colspan="3" data-label="Total" class="text-end">Total</th>
-              <th colspan="2" data-label="Total">{{ order.total|rupiah }}</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      {% if order.notes %}
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="3" data-label="Total" class="text-end">Total</th>
+                <th colspan="2" data-label="Total">{{ order.total|rupiah }}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        {% if order.notes %}
         <div class="mt-3 small"><strong>Catatan pembeli:</strong> {{ order.notes }}</div>
-      {% endif %}
+        {% endif %}
+      </div>
     </div>
 
     {% if is_farmer and status_form.status.field.choices %}
-      <div class="glass-strong p-4 p-md-5 mb-4">
-        <h2 class="h6 fw-bold mb-3">Perbarui status</h2>
-        <p class="small text-secondary">Status saat ini: <strong>{{ order.get_status_display }}</strong></p>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Perbarui status</h2>
+      </div>
+      <div class="card-body">
+        <p class="small text-muted">Status saat ini: <strong>{{ order.get_status_display }}</strong></p>
         <form method="post" action="{% url 'orders:update_status' order.pk %}" novalidate
               data-confirm="Simpan status baru untuk pesanan {{ order.order_number }}?"
               data-confirm-title="Ubah status pesanan"
@@ -77,75 +86,100 @@
             <label for="{{ status_form.status.id_for_label }}" class="form-label">{{ status_form.status.label }}</label>
             {{ status_form.status }}
             {% for error in status_form.status.errors %}
-              <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+            <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
             {% endfor %}
           </div>
-          <button type="submit" class="btn btn-primary-green btn-sm">Simpan status</button>
+          <button type="submit" class="btn btn-sm btn-primary">Simpan status</button>
         </form>
       </div>
+    </div>
     {% endif %}
 
     {% if can_submit_qc %}
-      <div class="glass-strong p-4 p-md-5 mb-4">
-        <h2 class="h6 fw-bold mb-3">Ajukan ke Quality Control</h2>
-        <p class="small text-secondary">Produk akan menunggu pemeriksaan petugas QC sebelum dapat dikirim.</p>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Ajukan ke Quality Control</h2>
+      </div>
+      <div class="card-body">
+        <p class="small text-muted">Produk akan menunggu pemeriksaan petugas QC sebelum dapat dikirim.</p>
         <form method="post" action="{% url 'quality_control:submit_to_qc' order.pk %}"
               data-confirm="Ajukan pesanan {{ order.order_number }} ke pemeriksaan Quality Control?"
               data-confirm-title="Ajukan ke QC"
               data-confirm-ok="Ya, ajukan">
           {% csrf_token %}
-          <button type="submit" class="btn btn-primary-green btn-sm">Ajukan ke QC</button>
+          <button type="submit" class="btn btn-sm btn-primary">Ajukan ke QC</button>
         </form>
       </div>
+    </div>
     {% endif %}
 
     {% if can_prepare_delivery %}
-      <div class="glass-strong p-4 p-md-5 mb-4">
-        <h2 class="h6 fw-bold mb-3">Pengiriman</h2>
-        <p class="small text-secondary">Semua produk sudah lolos QC. Siapkan data kurir simulasi.</p>
-        <a class="btn btn-primary-green btn-sm" href="{% url 'deliveries:prepare' order.pk %}">Siapkan pengiriman</a>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Pengiriman</h2>
       </div>
+      <div class="card-body">
+        <p class="small text-muted">Semua produk sudah lolos QC. Siapkan data kurir simulasi.</p>
+        <a class="btn btn-sm btn-primary" href="{% url 'deliveries:prepare' order.pk %}">Siapkan pengiriman</a>
+      </div>
+    </div>
     {% endif %}
 
     {% if order.delivery %}
-      <div class="glass-strong p-4 p-md-5 mb-4">
-        <h2 class="h6 fw-bold mb-3">Status pengiriman</h2>
-        <p class="small mb-2">{{ order.delivery.get_status_display|nt_chip|safe }}</p>
-        <a class="btn btn-outline-green btn-sm" href="{% url 'deliveries:detail' order.delivery.pk %}">Lihat pengiriman</a>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Status pengiriman</h2>
       </div>
+      <div class="card-body">
+        <p class="small mb-2">{{ order.delivery.get_status_display|nt_chip|safe }}</p>
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'deliveries:detail' order.delivery.pk %}">Lihat pengiriman</a>
+      </div>
+    </div>
     {% endif %}
 
     {% if pending_inspection %}
-      <div class="glass-strong p-4 p-md-5 mb-4">
-        <h2 class="h6 fw-bold mb-3">Pemeriksaan QC</h2>
-        <p class="small text-secondary mb-2">{{ pending_inspection.product.name }} menunggu pemeriksaan Anda.</p>
-        <a class="btn btn-primary-green btn-sm" href="{% url 'quality_control:inspect' pending_inspection.pk %}">Periksa produk</a>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Pemeriksaan QC</h2>
       </div>
+      <div class="card-body">
+        <p class="small text-muted mb-2">{{ pending_inspection.product.name }} menunggu pemeriksaan Anda.</p>
+        <a class="btn btn-sm btn-primary" href="{% url 'quality_control:inspect' pending_inspection.pk %}">Periksa produk</a>
+      </div>
+    </div>
     {% endif %}
   </div>
 
   <div class="col-12 col-lg-4">
-    <div class="glass-strong p-4 p-md-5 mb-4">
-      <h2 class="h6 fw-bold mb-3">Informasi</h2>
-      <dl class="row mb-0 small">
-        <dt class="col-5 text-secondary">Pembeli</dt><dd class="col-7">{{ order.buyer.username }}</dd>
-        <dt class="col-5 text-secondary">Petani</dt><dd class="col-7">{{ order.farmer.username }}</dd>
-        <dt class="col-5 text-secondary">Dibutuhkan</dt>
-        <dd class="col-7">{% if order.needed_by %}{{ order.needed_by|date:"d M Y" }}{% else %}—{% endif %}</dd>
-        <dt class="col-5 text-secondary">Diperbarui</dt><dd class="col-7">{{ order.updated_at|date:"d M Y H:i" }}</dd>
-      </dl>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Informasi</h2>
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0 small">
+          <dt class="col-5 text-muted">Pembeli</dt><dd class="col-7">{{ order.buyer.username }}</dd>
+          <dt class="col-5 text-muted">Petani</dt><dd class="col-7">{{ order.farmer.username }}</dd>
+          <dt class="col-5 text-muted">Dibutuhkan</dt>
+          <dd class="col-7">{% if order.needed_by %}{{ order.needed_by|date:"d M Y" }}{% else %}—{% endif %}</dd>
+          <dt class="col-5 text-muted">Diperbarui</dt><dd class="col-7">{{ order.updated_at|date:"d M Y H:i" }}</dd>
+        </dl>
+      </div>
     </div>
 
-    <div class="glass-strong p-4 p-md-5">
-      <h2 class="h6 fw-bold mb-3">Pembayaran (simulasi)</h2>
-      <p class="mb-2">{{ order.payment.get_status_display|nt_chip|safe }}</p>
-      <p class="small mb-1"><strong>Jumlah tercatat:</strong> {{ order.payment.paid_amount|rupiah }}</p>
-      {% if order.payment.note %}<p class="small text-secondary">{{ order.payment.note }}</p>{% endif %}
-      {% if is_farmer %}
-        <a class="btn btn-outline-green btn-sm mt-2" href="{% url 'orders:update_payment' order.pk %}">Ubah catatan</a>
-      {% endif %}
-      <div class="alert alert-info small mt-3 mb-0">
-        Pembayaran hanya simulasi. Aplikasi tidak menyimpan atau menahan uang pengguna.
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Pembayaran (simulasi)</h2>
+      </div>
+      <div class="card-body">
+        <p class="mb-2">{{ order.payment.get_status_display|nt_chip|safe }}</p>
+        <p class="small mb-1"><strong>Jumlah tercatat:</strong> {{ order.payment.paid_amount|rupiah }}</p>
+        {% if order.payment.note %}<p class="small text-muted">{{ order.payment.note }}</p>{% endif %}
+        {% if is_farmer %}
+        <a class="btn btn-sm btn-outline-primary mt-2" href="{% url 'orders:update_payment' order.pk %}">Ubah catatan</a>
+        {% endif %}
+        <div class="alert alert-info small mt-3 mb-0">
+          Pembayaran hanya simulasi. Aplikasi tidak menyimpan atau menahan uang pengguna.
+        </div>
       </div>
     </div>
 

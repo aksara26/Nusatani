@@ -4,49 +4,49 @@
 {% block title %}BANKKU — NusaTani{% endblock %}
 
 {% block content %}
-<!-- Hero .glass-strong (teks di atas latar gunung) -->
-<div class="glass-strong mb-4" style="padding: var(--space-6) var(--space-8);">
-  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
-    <div>
-      <div class="section-kicker mb-2" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted);">BANKKU · {% now "d M Y" %}</div>
-      <h1 class="h2 mb-1" style="font-size: 32px; font-weight: 800; line-height: 1.2; color: var(--ink);">BANKKU</h1>
-      <p class="mb-0" style="font-size: 14px; line-height: 1.5; color: var(--ink-muted); max-width: 60ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Pantau performa usaha petani dan indikator pembiayaan sebagai simulasi.</p>
-    </div>
-    <div class="d-none d-lg-flex" aria-hidden="true" style="width: 56px; height: 56px; border-radius: var(--radius-md); background: rgba(255,255,255,0.15); border: 1px solid var(--glass-border); display: inline-flex; align-items: center; justify-content: center;">
-      <svg class="nt-icon" width="28" height="28" style="color: var(--ink);"><use href="#icon-credit-card"></use></svg>
-    </div>
+<!-- Dashboard Hero -->
+<div class="dashboard-hero">
+  <div>
+    <div class="section-kicker mb-2">BANKKU · {% now "d M Y" %}</div>
+    <h1 class="mb-1">BANKKU</h1>
+    <p class="mb-0">Pantau performa usaha petani dan indikator pembiayaan sebagai simulasi.</p>
+  </div>
+  <div class="dashboard-hero-mark d-none d-lg-flex" aria-hidden="true">
+    <svg class="icon" width="28" height="28"><use href="#icon-landmark"/></svg>
   </div>
 </div>
 
-<!-- 3 KPI card - CSS Grid dengan ikon berbeda -->
-<div class="dashboard-stats mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-4);">
-  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; min-height: 140px; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
-    <div class="kpi-ico" data-icon="users" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; background-size: 20px 20px; background-position: center; background-repeat: no-repeat;"></div>
-    <div class="kpi-label" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);">Petani tercatat</div>
-    <div class="kpi-number" style="font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; font-family: 'Inter', system-ui, sans-serif;">{{ farmer_count }}</div>
-    <div class="kpi-hint" style="font-size: 14px; color: var(--ink-muted); margin-top: auto;">terdaftar</div>
+<!-- 3 KPI Cards -->
+<div class="dashboard-stats">
+  <div class="kpi-card">
+    <div class="kpi-icon"><svg class="icon" width="24" height="24"><use href="#icon-users"/></svg></div>
+    <div class="kpi-label">Petani tercatat</div>
+    <div class="kpi-number">{{ farmer_count }}</div>
+    <div class="kpi-hint">terdaftar</div>
   </div>
-  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; min-height: 140px; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
-    <div class="kpi-ico" data-icon="bag" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; background-size: 20px 20px; background-position: center; background-repeat: no-repeat;"></div>
-    <div class="kpi-label" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);">Total pesanan aktif</div>
-    <div class="kpi-number" style="font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; font-family: 'Inter', system-ui, sans-serif;">{{ total_orders }}</div>
-    <div class="kpi-hint" style="font-size: 14px; color: var(--ink-muted); margin-top: auto;">seluruh platform</div>
+  <div class="kpi-card">
+    <div class="kpi-icon"><svg class="icon" width="24" height="24"><use href="#icon-package"/></svg></div>
+    <div class="kpi-label">Total pesanan aktif</div>
+    <div class="kpi-number">{{ total_orders }}</div>
+    <div class="kpi-hint">seluruh platform</div>
   </div>
-  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; min-height: 140px; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
-    <div class="kpi-ico" data-icon="card" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; background-size: 20px 20px; background-position: center; background-repeat: no-repeat;"></div>
-    <div class="kpi-label" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);">Total nilai pesanan</div>
-    <div class="kpi-number" style="font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; font-family: 'Inter', system-ui, sans-serif;">{{ total_value|rupiah }}</div>
-    <div class="kpi-hint" style="font-size: 14px; color: var(--ink-muted); margin-top: auto;">simulasi</div>
+  <div class="kpi-card">
+    <div class="kpi-icon"><svg class="icon" width="24" height="24"><use href="#icon-credit-card"/></svg></div>
+    <div class="kpi-label">Total nilai pesanan</div>
+    <div class="kpi-number">{{ total_value|rupiah }}</div>
+    <div class="kpi-hint">simulasi</div>
   </div>
 </div>
 
 {% if rows %}
-<!-- Tabel Ringkasan petani -->
-<div class="glass-strong overflow-hidden mb-4" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);">
-  <div class="p-3 p-md-4 border-bottom" style="border-color: var(--glass-border);">
+<!-- Ringkasan Petani Table -->
+<div class="card mb-4">
+  <div class="card-header">
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <h2 class="h6 fw-bold mb-0" style="font-size: 16px; font-weight: 700; color: var(--ink);">Ringkasan petani</h2>
+      <h2 class="h6 mb-0">Ringkasan petani</h2>
     </div>
+  </div>
+  <div class="card-body p-0">
     <div class="table-responsive">
       <table class="table table-stack align-middle mb-0">
         <thead>
@@ -62,7 +62,7 @@
         </thead>
         <tbody>
           {% for row in rows %}
-          <tr class="glass-strong {% if selected_row and row.farmer.pk == selected_row.farmer.pk %}table-success{% endif %}" style="background: transparent; border-bottom: 1px solid var(--glass-border);">
+          <tr class="{% if selected_row and row.farmer.pk == selected_row.farmer.pk %}table-primary{% endif %}">
             <td data-label="Petani" class="fw-semibold">{{ row.farmer.username }}</td>
             <td data-label="Pesanan">{{ row.performance.total_orders }}</td>
             <td data-label="Nilai pesanan">{{ row.performance.total_order_value|rupiah }}</td>
@@ -73,7 +73,7 @@
               <div class="small text-muted mt-1">{{ row.assessment.total_score|floatformat:0 }}/100</div>
             </td>
             <td class="text-end" data-label="Aksi">
-              <a class="btn btn-sm btn-outline-green" href="?petani={{ row.farmer.pk }}">Lihat</a>
+              <a class="btn btn-sm btn-outline-primary" href="?petani={{ row.farmer.pk }}">Lihat</a>
             </td>
           </tr>
           {% endfor %}
@@ -84,81 +84,97 @@
 </div>
 
 {% if selected_row %}
-<!-- Detail petani terpilih - 2 kolom -->
+<!-- Detail Petani Terpilih -->
 <div class="row g-4">
   <div class="col-12 col-lg-5">
-    <div class="glass-strong h-100" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-6);">
-      <h2 class="h6 fw-bold mb-1" style="font-size: 16px; font-weight: 700; color: var(--ink);">Indikator — {{ selected_row.farmer.username }}</h2>
-      <p class="small text-muted mb-3" style="font-size: 13px; color: var(--ink-muted);">Dihitung {{ selected_row.assessment.calculated_at|date:"d M Y H:i"|default:"—" }}</p>
-      <div class="d-flex align-items-center gap-3 mb-3">
-        <div class="display-6 fw-bold" style="font-size: 48px; font-weight: 800; color: var(--ink);">{{ selected_row.assessment.total_score|floatformat:0 }}</div>
-        <div>
-          <span class="badge {{ selected_row.assessment.eligibility_badge_class }}">{{ selected_row.assessment.get_eligibility_display }}</span>
-          <div class="small text-muted">dari 100 (simulasi)</div>
+    <div class="card h-100">
+      <div class="card-header">
+        <h2 class="h6 mb-1">Indikator — {{ selected_row.farmer.username }}</h2>
+        <p class="small text-muted mb-0">Dihitung {{ selected_row.assessment.calculated_at|date:"d M Y H:i"|default:"—" }}</p>
+      </div>
+      <div class="card-body">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          <div class="display-6 fw-bold" style="font-size: 48px; line-height: 1;">{{ selected_row.assessment.total_score|floatformat:0 }}</div>
+          <div>
+            <span class="badge {{ selected_row.assessment.eligibility_badge_class }}">{{ selected_row.assessment.get_eligibility_display }}</span>
+            <div class="small text-muted">dari 100 (simulasi)</div>
+          </div>
+        </div>
+        <dl class="row small mb-0">
+          <dt class="col-7 text-muted">Pemenuhan pesanan</dt>
+          <dd class="col-5 text-end">{{ selected_row.assessment.fulfillment_score|floatformat:0 }}/30</dd>
+          <dt class="col-7 text-muted">Kualitas QC</dt>
+          <dd class="col-5 text-end">{{ selected_row.assessment.quality_score|floatformat:0 }}/25</dd>
+          <dt class="col-7 text-muted">Data aset</dt>
+          <dd class="col-5 text-end">{{ selected_row.assessment.asset_score|floatformat:0 }}/20</dd>
+          <dt class="col-7 text-muted">Pendampingan</dt>
+          <dd class="col-5 text-end">{{ selected_row.assessment.mentorship_score|floatformat:0 }}/15</dd>
+          <dt class="col-7 text-muted">Pembayaran simulasi</dt>
+          <dd class="col-5 text-end">{{ selected_row.assessment.payment_score|floatformat:0 }}/10</dd>
+        </dl>
+        <div class="alert alert-warning small mt-3 mb-0">
+          {{ selected_row.assessment.notes }}
         </div>
       </div>
-      <dl class="row small mb-0" style="font-size: 13px;">
-        <dt class="col-7 text-muted">Pemenuhan pesanan</dt>
-        <dd class="col-5 text-end">{{ selected_row.assessment.fulfillment_score|floatformat:0 }}/30</dd>
-        <dt class="col-7 text-muted">Kualitas QC</dt>
-        <dd class="col-5 text-end">{{ selected_row.assessment.quality_score|floatformat:0 }}/25</dd>
-        <dt class="col-7 text-muted">Data aset</dt>
-        <dd class="col-5 text-end">{{ selected_row.assessment.asset_score|floatformat:0 }}/20</dd>
-        <dt class="col-7 text-muted">Pendampingan</dt>
-        <dd class="col-5 text-end">{{ selected_row.assessment.mentorship_score|floatformat:0 }}/15</dd>
-        <dt class="col-7 text-muted">Pembayaran simulasi</dt>
-        <dd class="col-5 text-end">{{ selected_row.assessment.payment_score|floatformat:0 }}/10</dd>
-      </dl>
-      <div class="alert alert-warning small mt-3 mb-0 glass-strong" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-3);">{{ selected_row.assessment.notes }}</div>
     </div>
   </div>
 
   <div class="col-12 col-lg-7">
-    <div class="glass-strong h-100" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-6);">
-      <h2 class="h6 fw-bold mb-3" style="font-size: 16px; font-weight: 700; color: var(--ink);">Riwayat pesanan {{ selected_row.farmer.username }}</h2>
-      {% if orders %}
-      <div class="table-responsive">
-        <table class="table table-stack small align-middle mb-0">
-          <thead>
-            <tr>
-              <th data-label="No. pesanan">No. pesanan</th>
-              <th data-label="Pembeli">Pembeli</th>
-              <th data-label="Status">Status</th>
-              <th class="text-end" data-label="Nilai">Nilai</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for order in orders %}
-            <tr class="glass-strong" style="background: transparent; border-bottom: 1px solid var(--glass-border);">
-              <td data-label="No. pesanan">{{ order.order_number }}</td>
-              <td data-label="Pembeli">{{ order.buyer.username }}</td>
-              <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
-              <td class="text-end" data-label="Nilai">{{ order.total|rupiah }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    <div class="card h-100">
+      <div class="card-header">
+        <h2 class="h6 mb-0">Riwayat pesanan {{ selected_row.farmer.username }}</h2>
       </div>
-      {% else %}
-      <div class="empty-state glass-strong h-100 d-flex flex-column justify-content-center" style="background: var(--glass-strong); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 2.5rem 2rem; text-align: center; color: var(--ink-muted);">
-        <div class="empty-icon" aria-hidden="true" style="width: 64px; height: 64px; border-radius: var(--radius-lg); background: rgba(47, 138, 94, 0.12); margin: 0 auto 1rem; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent);"><svg width="32" height="32" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
-        <p class="mb-0">Belum ada pesanan untuk petani ini.</p>
+      <div class="card-body p-0">
+        {% if orders %}
+        <div class="table-responsive">
+          <table class="table table-stack small align-middle mb-0">
+            <thead>
+              <tr>
+                <th data-label="No. pesanan">No. pesanan</th>
+                <th data-label="Pembeli">Pembeli</th>
+                <th data-label="Status">Status</th>
+                <th class="text-end" data-label="Nilai">Nilai</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in orders %}
+              <tr>
+                <td data-label="No. pesanan">{{ order.order_number }}</td>
+                <td data-label="Pembeli">{{ order.buyer.username }}</td>
+                <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
+                <td class="text-end" data-label="Nilai">{{ order.total|rupiah }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty-state h-100">
+          <div class="empty-icon"><svg class="icon" width="36" height="36"><use href="#icon-package"/></svg></div>
+          <h3>Belum ada pesanan</h3>
+          <p>Belum ada pesanan untuk petani ini.</p>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
     </div>
   </div>
 </div>
 {% endif %}
+
 {% else %}
-<!-- Empty state -->
-<div class="empty-state glass-strong h-100 d-flex flex-column justify-content-center" style="background: var(--glass-strong); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 2.5rem 2rem; text-align: center; color: var(--ink-muted);">
-  <div class="empty-icon" aria-hidden="true" style="width: 64px; height: 64px; border-radius: var(--radius-lg); background: rgba(47, 138, 94, 0.12); margin: 0 auto 1rem; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent);"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
-  <h3 class="h3 mb-0" style="font-size: 24px; font-weight: 700; color: var(--ink);">Belum ada petani</h3>
-  <p class="mb-0" style="color: var(--ink-muted);">Belum ada petani yang tercatat.</p>
+<!-- Empty State -->
+<div class="empty-state">
+  <div class="empty-icon"><svg class="icon" width="48" height="48"><use href="#icon-landmark"/></svg></div>
+  <h3>Belum ada petani</h3>
+  <p>Belum ada petani yang tercatat.</p>
 </div>
 {% endif %}
 
-<div class="glass-strong mt-4 mb-0" role="alert" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-4);">
-  <small style="color: var(--ink-muted);">Seluruh indikator pada BANKKU adalah simulasi untuk demonstrasi. Bukan keputusan kredit, penilaian resmi, atau layanan pembiayaan.</small>
+<!-- MVP Notice -->
+<div class="mvp-notice">
+  <svg class="icon" width="20" height="20" aria-hidden="true"><use href="#icon-info-circle"/></svg>
+  <div>
+    <small>Seluruh indikator pada BANKKU adalah simulasi untuk demonstrasi. Bukan keputusan kredit, penilaian resmi, atau layanan pembiayaan.</small>
+  </div>
 </div>
 {% endblock %}

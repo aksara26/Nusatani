@@ -11,64 +11,81 @@
   </ol>
 </nav>
 
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-  <div>
+<div class="page-header">
+  <div class="page-header-title">
     <h1 class="h3 mb-1">{{ mentorship.topic }}</h1>
-    <p class="small text-secondary mb-0">Mentor {{ mentorship.mentor.username }} · petani {{ mentorship.farmer.username }}</p>
+    <p class="small text-muted mb-0">Mentor {{ mentorship.mentor.username }} · petani {{ mentorship.farmer.username }}</p>
   </div>
-  {{ mentorship.get_status_display|nt_chip|safe }}
+  <div class="page-header-actions">
+    {{ mentorship.get_status_display|nt_chip|safe }}
+  </div>
 </div>
 
 <div class="row g-4">
   <div class="col-12 col-lg-8">
-    <div class="glass-strong p-4 p-md-5 mb-4">
-      <h2 class="h6 fw-bold mb-3">Detail pendampingan</h2>
-      <dl class="row small mb-0">
-        <dt class="col-4 col-md-3 text-secondary">Jadwal</dt>
-        <dd class="col-8 col-md-9">{{ mentorship.scheduled_at|date:"d M Y H:i" }}</dd>
-        <dt class="col-4 col-md-3 text-secondary">Materi</dt>
-        <dd class="col-8 col-md-9">{{ mentorship.description|default:"—"|linebreaksbr }}</dd>
-        <dt class="col-4 col-md-3 text-secondary">Evaluasi</dt>
-        <dd class="col-8 col-md-9">{{ mentorship.evaluation|default:"Belum ada catatan evaluasi."|linebreaksbr }}</dd>
-      </dl>
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="h6 fw-bold mb-3">Detail pendampingan</h2>
+        <dl class="row small mb-0">
+          <dt class="col-4 col-md-3 text-muted">Jadwal</dt>
+          <dd class="col-8 col-md-9">{{ mentorship.scheduled_at|date:"d M Y H:i" }}</dd>
+          <dt class="col-4 col-md-3 text-muted">Materi</dt>
+          <dd class="col-8 col-md-9">{{ mentorship.description|default:"—"|linebreaksbr }}</dd>
+          <dt class="col-4 col-md-3 text-muted">Evaluasi</dt>
+          <dd class="col-8 col-md-9">{{ mentorship.evaluation|default:"Belum ada catatan evaluasi."|linebreaksbr }}</dd>
+        </dl>
+      </div>
     </div>
 
-    <div class="glass-strong p-4 p-md-5">
-      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
-        <h2 class="h6 fw-bold mb-0">Riwayat kegiatan</h2>
-        <a class="btn btn-success btn-sm" href="{% url 'mentorship:activity_create' mentorship.pk %}">Tambah kegiatan</a>
+    <div class="card">
+      <div class="card-header">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <h2 class="h6 fw-bold mb-0">Riwayat kegiatan</h2>
+          <a class="btn btn-sm btn-primary" href="{% url 'mentorship:activity_create' mentorship.pk %}">
+            <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-plus"/></svg>
+            Tambah kegiatan
+          </a>
+        </div>
       </div>
-
-      {% if activities %}
-        <ol class="list-group list-group-numbered">
+      <div class="card-body p-0">
+        {% if activities %}
+        <div class="list-group list-group-flush">
           {% for activity in activities %}
-            <li class="list-group-item">
-              <div class="d-flex justify-content-between align-items-start gap-3">
-                <div>
-                  <div class="fw-semibold">{{ activity.description|linebreaksbr }}</div>
-                  <div class="small text-secondary mt-1">{{ activity.activity_date|date:"d M Y H:i" }} · {{ activity.author.username|default:"—" }}</div>
-                  {% if activity.evaluation %}
-                    <div class="small mt-2"><strong>Evaluasi:</strong> {{ activity.evaluation|linebreaksbr }}</div>
-                  {% endif %}
-                </div>
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+              <div>
+                <div class="fw-semibold">{{ activity.description|linebreaksbr }}</div>
+                <div class="small text-muted mt-1">{{ activity.activity_date|date:"d M Y H:i" }} · {{ activity.author.username|default:"—" }}</div>
+                {% if activity.evaluation %}
+                <div class="small mt-2"><strong>Evaluasi:</strong> {{ activity.evaluation|linebreaksbr }}</div>
+                {% endif %}
               </div>
-            </li>
+            </div>
+          </div>
           {% endfor %}
-        </ol>
-      {% else %}
-        <div class="alert alert-info small mb-0">Belum ada kegiatan yang dicatat untuk pendampingan ini.</div>
-      {% endif %}
+        </div>
+        {% else %}
+        <div class="alert alert-info small m-3">Belum ada kegiatan yang dicatat untuk pendampingan ini.</div>
+        {% endif %}
+      </div>
     </div>
   </div>
 
   <div class="col-12 col-lg-4">
-    <div class="glass-strong p-4 p-md-5">
-      <h2 class="h6 fw-bold mb-3">Aksi</h2>
-      <div class="btn-action-row d-grid gap-2">
-        {% if can_manage %}
-          <a class="btn btn-primary-green btn-sm" href="{% url 'mentorship:update' mentorship.pk %}">Ubah pendampingan</a>
-        {% endif %}
-        <a class="btn btn-outline-green btn-sm" href="{% url 'mentorship:activity_create' mentorship.pk %}">Catat kegiatan</a>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Aksi</h2>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          {% if can_manage %}
+          <a class="btn btn-outline-primary" href="{% url 'mentorship:update' mentorship.pk %}">Ubah pendampingan</a>
+          {% endif %}
+          <a class="btn btn-primary" href="{% url 'mentorship:activity_create' mentorship.pk %}">
+            <svg class="icon" width="18" height="18" aria-hidden="true"><use href="#icon-plus"/></svg>
+            Catat kegiatan
+          </a>
+        </div>
       </div>
     </div>
   </div>

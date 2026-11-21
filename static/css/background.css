@@ -1,42 +1,40 @@
-/* NusaTani — Light Nature Glassmorphism Background */
+/* NusaTani — Warm Minimalism Background with SVG Pattern */
 
-#bg-scene {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-#bg-scene::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("../images/bg.jpg") center / cover fixed no-repeat;
-  filter: blur(0.5px);
+body {
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(135deg, var(--bg), var(--bg-2)),
+    url("../images/pattern.svg");
+  background-repeat: repeat;
+  background-size: auto, 120px 120px;
+  background-attachment: fixed, fixed;
+  min-height: 100vh;
 }
 
 @media (max-width: 767px) {
-  #bg-scene::before {
-    background-attachment: scroll;
+  body {
+    background-attachment: scroll, scroll;
   }
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent 50%, rgba(255,255,255,.35) 70%, rgba(255,255,255,.55) 100%);
+body.is-workspace {
+  background-color: var(--bg);
+  background-image: 
+    linear-gradient(135deg, var(--bg), var(--bg-2)),
+    url("../images/pattern.svg");
+  background-repeat: repeat;
+  background-size: auto, 120px 120px;
+  background-attachment: fixed, fixed;
 }
 
-#bg-scene .photo,
-#bg-scene .wash,
-#bg-scene .rays,
-#bg-scene .bg-sawah,
-#bg-scene .bg-mountains,
-#bg-scene svg {
+@supports not (background-attachment: fixed) {
+  body, body.is-workspace {
+    background-attachment: scroll, scroll;
+  }
+}
+
+/* Skip the old photo background */
+#bg-scene {
   display: none !important;
 }
 
@@ -45,49 +43,11 @@ main, .page, .navbar, footer {
   z-index: 1;
 }
 
-.content-panel {
-  position: relative;
-  z-index: 1;
-  border-radius: 16px;
-  padding: 24px;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-.content-panel.glass-strong {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 8px 32px rgba(22, 101, 52, 0.08);
-}
-body.is-public .content-panel {
-  min-height: auto;
-  padding: 16px;
-}
-body.is-public .content-panel.glass-strong {
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
 html, body {
   overflow-x: hidden;
 }
-#bg-scene, #bg-scene * {
-  max-width: 100%;
-}
 
-body.is-workspace main::before {
-  content: none !important;
-  background: none !important;
-}
-.public-hero {
-  display: none !important;
-}
-
-@supports not (backdrop-filter: blur(1px)) {
-  .content-panel.glass-strong {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255,255,255,.9);
-  }
+/* Container max-width */
+.container, .container-fluid {
+  max-width: 1100px;
 }

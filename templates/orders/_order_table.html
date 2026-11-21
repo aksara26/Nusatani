@@ -1,39 +1,43 @@
 {% load dashboard_icons rupiah %}
 
-<div class="table-responsive">
-  <table class="table table-stack align-middle mb-0">
-    <thead>
-      <tr>
-        <th data-label="No. Pesanan">No. Pesanan</th>
-        {% if perspective == 'farmer' %}<th data-label="Pembeli">Pembeli</th>{% else %}<th data-label="Petani">Petani</th>{% endif %}
-        <th data-label="Produk">Produk</th>
-        <th data-label="Jumlah">Jumlah</th>
-        <th data-label="Total">Total</th>
-        <th data-label="Status">Status</th>
-        <th data-label="Tanggal">Tanggal</th>
-        <th class="text-end" data-label="Aksi">Aksi</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for order in orders %}
-        <tr>
-          <td data-label="No. Pesanan">
-            <a class="text-decoration-none fw-semibold" href="{% url 'orders:detail' order.pk %}">{{ order.order_number }}</a>
-            <div class="small text-secondary">{{ order.get_order_type_display }}</div>
-          </td>
-          {% if perspective == 'farmer' %}
-            <td data-label="Pembeli">{{ order.buyer.username }}</td>
-          {% else %}
-            <td data-label="Petani">{{ order.farmer.username }}</td>
-          {% endif %}
-          <td data-label="Produk">{{ order.items.first.product.name }}</td>
-          <td data-label="Jumlah">{{ order.total_quantity }}</td>
-          <td data-label="Total">{{ order.total|rupiah }}</td>
-          <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
-          <td data-label="Tanggal">{{ order.created_at|date:"d M Y" }}</td>
-          <td class="text-end" data-label="Aksi"><a class="btn btn-sm btn-outline-green" href="{% url 'orders:detail' order.pk %}">Detail</a></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-stack align-middle mb-0">
+        <thead>
+          <tr>
+            <th data-label="No. Pesanan">No. Pesanan</th>
+            {% if perspective == 'farmer' %}<th data-label="Pembeli">Pembeli</th>{% else %}<th data-label="Petani">Petani</th>{% endif %}
+            <th data-label="Produk">Produk</th>
+            <th data-label="Jumlah">Jumlah</th>
+            <th data-label="Total">Total</th>
+            <th data-label="Status">Status</th>
+            <th data-label="Tanggal">Tanggal</th>
+            <th class="text-end" data-label="Aksi">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td data-label="No. Pesanan">
+              <a class="text-decoration-none fw-semibold" href="{% url 'orders:detail' order.pk %}">{{ order.order_number }}</a>
+              <div class="small text-muted">{{ order.get_order_type_display }}</div>
+            </td>
+            {% if perspective == 'farmer' %}
+              <td data-label="Pembeli">{{ order.buyer.username }}</td>
+            {% else %}
+              <td data-label="Petani">{{ order.farmer.username }}</td>
+            {% endif %}
+            <td data-label="Produk">{{ order.items.first.product.name }}</td>
+            <td data-label="Jumlah">{{ order.total_quantity }}</td>
+            <td data-label="Total">{{ order.total|rupiah }}</td>
+            <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
+            <td data-label="Tanggal">{{ order.created_at|date:"d M Y" }}</td>
+            <td class="text-end" data-label="Aksi"><a class="btn btn-sm btn-outline-primary" href="{% url 'orders:detail' order.pk %}">Detail</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

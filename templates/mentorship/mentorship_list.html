@@ -4,48 +4,57 @@
 {% block title %}Mentorku — NusaTani{% endblock %}
 
 {% block content %}
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-  <div>
+<div class="page-header">
+  <div class="page-header-title">
     <h1 class="h3 mb-1">Mentorku</h1>
-    <p class="small text-secondary mb-0">Pantau materi, jadwal pendampingan, evaluasi, dan riwayat kegiatan.</p>
+    <p class="small text-muted mb-0">Pantau materi, jadwal pendampingan, evaluasi, dan riwayat kegiatan.</p>
   </div>
   {% if user.role == 'mentor' or user.is_superuser %}
-    <a class="btn btn-primary-green" href="{% url 'mentorship:create' %}">Tambah pendampingan</a>
+  <div class="page-header-actions">
+    <a class="btn btn-primary" href="{% url 'mentorship:create' %}">
+      <svg class="icon" width="18" height="18" aria-hidden="true"><use href="#icon-plus"/></svg>
+      Tambah pendampingan
+    </a>
+  </div>
   {% endif %}
 </div>
 
 {% if mentorships %}
-  <div class="table-responsive">
-    <table class="table table-stack align-middle mb-0">
-      <thead>
-        <tr>
-          <th data-label="Materi">Materi</th>
-          <th data-label="Mentor ke Petani">Mentor <svg class="nt-icon" width="12" height="12" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"></use></svg> Petani</th>
-          <th data-label="Jadwal">Jadwal</th>
-          <th data-label="Status">Status</th>
-          <th class="text-end" data-label="Aksi">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for mentorship in mentorships %}
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-stack align-middle mb-0">
+        <thead>
+          <tr>
+            <th data-label="Materi">Materi</th>
+            <th data-label="Mentor ke Petani">Mentor <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-arrow-right"/></svg> Petani</th>
+            <th data-label="Jadwal">Jadwal</th>
+            <th data-label="Status">Status</th>
+            <th class="text-end" data-label="Aksi">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for mentorship in mentorships %}
           <tr>
             <td data-label="Materi" class="fw-semibold">{{ mentorship.topic }}</td>
-            <td data-label="Mentor ke Petani">{{ mentorship.mentor.username }} <svg class="nt-icon" width="12" height="12" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"></use></svg> {{ mentorship.farmer.username }}</td>
+            <td data-label="Mentor ke Petani">{{ mentorship.mentor.username }} <svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-arrow-right"/></svg> {{ mentorship.farmer.username }}</td>
             <td data-label="Jadwal">{{ mentorship.scheduled_at|date:"d M Y H:i" }}</td>
             <td data-label="Status">{{ mentorship.get_status_display|nt_chip|safe }}</td>
             <td class="text-end" data-label="Aksi">
-              <a class="btn btn-sm btn-outline-green" href="{% url 'mentorship:detail' mentorship.pk %}">Lihat detail</a>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'mentorship:detail' mentorship.pk %}">Lihat detail</a>
             </td>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
 {% else %}
-  <div class="empty-state h-100 d-flex flex-column justify-content-center">
-    <div class="empty-icon" aria-hidden="true"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
-    <h3 class="h3 mb-0">Belum ada pendampingan</h3>
-    <p class="mb-0">Belum ada pendampingan yang tercatat.</p>
-  </div>
+<div class="empty-state">
+  <div class="empty-icon"><svg class="icon" width="48" height="48"><use href="#icon-graduation-cap"/></svg></div>
+  <h3>Belum ada pendampingan</h3>
+  <p>Belum ada pendampingan yang tercatat.</p>
+</div>
 {% endif %}
 {% endblock %}

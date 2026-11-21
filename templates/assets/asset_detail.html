@@ -11,70 +11,84 @@
   </ol>
 </nav>
 
-<div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
-  <div>
+<div class="page-header">
+  <div class="page-header-title">
     <h1 class="h3 mb-1">{{ asset.name }}</h1>
-    <p class="small text-secondary mb-0">{{ asset.get_category_display }} · {{ asset.quantity }} {{ asset.unit }}</p>
+    <p class="small text-muted mb-0">{{ asset.get_category_display }} · {{ asset.quantity }} {{ asset.unit }}</p>
   </div>
-  {{ asset.get_condition_display|nt_chip|safe }}
+  <div class="page-header-actions">
+    {{ asset.get_condition_display|nt_chip|safe }}
+  </div>
 </div>
 
 <div class="row g-4">
   <div class="col-12 col-lg-8">
-    <div class="glass-strong p-4 p-md-5 mb-4">
-      <h2 class="h6 fw-bold mb-3">Informasi aset</h2>
-      <dl class="row mb-0 small">
-        <dt class="col-5 col-md-4 text-secondary">Kategori</dt>
-        <dd class="col-7 col-md-8">{{ asset.get_category_display }}</dd>
-        <dt class="col-5 col-md-4 text-secondary">Jumlah</dt>
-        <dd class="col-7 col-md-8">{{ asset.quantity }} {{ asset.unit }}</dd>
-        <dt class="col-5 col-md-4 text-secondary">Kondisi</dt>
-        <dd class="col-7 col-md-8">{{ asset.get_condition_display }}</dd>
-        <dt class="col-5 col-md-4 text-secondary">Tanggal diperoleh</dt>
-        <dd class="col-7 col-md-8">{{ asset.acquisition_date|default:"—" }}</dd>
-        <dt class="col-5 col-md-4 text-secondary">Skema perolehan</dt>
-        <dd class="col-7 col-md-8">{{ asset.get_financing_scheme_display }}</dd>
-        <dt class="col-5 col-md-4 text-secondary">Dicatat oleh</dt>
-        <dd class="col-7 col-md-8">{{ asset.owner.username }}</dd>
-      </dl>
-      {% if asset.notes %}
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Informasi aset</h2>
+      </div>
+      <div class="card-body">
+        <dl class="row mb-0 small">
+          <dt class="col-5 col-md-4 text-muted">Kategori</dt>
+          <dd class="col-7 col-md-8">{{ asset.get_category_display }}</dd>
+          <dt class="col-5 col-md-4 text-muted">Jumlah</dt>
+          <dd class="col-7 col-md-8">{{ asset.quantity }} {{ asset.unit }}</dd>
+          <dt class="col-5 col-md-4 text-muted">Kondisi</dt>
+          <dd class="col-7 col-md-8">{{ asset.get_condition_display }}</dd>
+          <dt class="col-5 col-md-4 text-muted">Tanggal diperoleh</dt>
+          <dd class="col-7 col-md-8">{{ asset.acquisition_date|default:"—" }}</dd>
+          <dt class="col-5 col-md-4 text-muted">Skema perolehan</dt>
+          <dd class="col-7 col-md-8">{{ asset.get_financing_scheme_display }}</dd>
+          <dt class="col-5 col-md-4 text-muted">Dicatat oleh</dt>
+          <dd class="col-7 col-md-8">{{ asset.owner.username }}</dd>
+        </dl>
+        {% if asset.notes %}
         <hr>
         <h3 class="h6 fw-bold mb-2">Catatan</h3>
-        <p class="small text-secondary mb-0">{{ asset.notes|linebreaksbr }}</p>
-      {% endif %}
+        <p class="small text-muted mb-0">{{ asset.notes|linebreaksbr }}</p>
+        {% endif %}
+      </div>
     </div>
 
     {% if asset.is_ijarah %}
-      <div class="glass-strong p-4 p-md-5 mb-4">
-        <h2 class="h6 fw-bold mb-3">Simulasi ijarah</h2>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Simulasi ijarah</h2>
+      </div>
+      <div class="card-body">
         <dl class="row mb-0 small">
-          <dt class="col-5 col-md-4 text-secondary">Tenor</dt>
+          <dt class="col-5 col-md-4 text-muted">Tenor</dt>
           <dd class="col-7 col-md-8">{{ asset.ijarah_duration_months }} bulan</dd>
-          <dt class="col-5 col-md-4 text-secondary">Cicilan per bulan</dt>
+          <dt class="col-5 col-md-4 text-muted">Cicilan per bulan</dt>
           <dd class="col-7 col-md-8">{{ asset.ijarah_monthly_payment|rupiah }}</dd>
-          <dt class="col-5 col-md-4 text-secondary">Total simulasi</dt>
+          <dt class="col-5 col-md-4 text-muted">Total simulasi</dt>
           <dd class="col-7 col-md-8 fw-semibold">{{ asset.ijarah_total|rupiah }}</dd>
         </dl>
         <div class="alert alert-warning small mt-3 mb-0">Data ini hanya simulasi dan bukan tagihan atau keputusan pembiayaan.</div>
       </div>
+    </div>
     {% elif asset.is_starter_kit %}
-      <div class="alert alert-info small mb-0">Aset ini tercatat sebagai bagian dari starter kit usaha.</div>
+    <div class="alert alert-info small mb-0">Aset ini tercatat sebagai bagian dari starter kit usaha.</div>
     {% endif %}
   </div>
 
   <div class="col-12 col-lg-4">
-    <div class="glass-strong p-4 p-md-5">
-      <h2 class="h6 fw-bold mb-3">Kelola aset</h2>
-      <div class="btn-action-row d-grid gap-2">
-        <a class="btn btn-primary-green btn-sm" href="{% url 'assets:update' asset.pk %}">Ubah data</a>
-        <form method="post" action="{% url 'assets:delete' asset.pk %}"
-              data-confirm="Hapus aset ini dari catatan? Tindakan ini tidak dapat dibatalkan."
-              data-confirm-title="Hapus aset"
-              data-confirm-ok="Ya, hapus aset"
-              data-confirm-variant="danger">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-outline-danger btn-sm w-100">Hapus aset</button>
-        </form>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h6 fw-bold mb-0">Kelola aset</h2>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          <a class="btn btn-outline-primary" href="{% url 'assets:update' asset.pk %}">Ubah data</a>
+          <form method="post" action="{% url 'assets:delete' asset.pk %}"
+                data-confirm="Hapus aset ini dari catatan? Tindakan ini tidak dapat dibatalkan."
+                data-confirm-title="Hapus aset"
+                data-confirm-ok="Ya, hapus aset"
+                data-confirm-variant="danger">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger w-100">Hapus aset</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>

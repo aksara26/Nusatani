@@ -1,18 +1,19 @@
 {% extends "accounts/auth_base.html" %}
 
 {% block title %}Daftar Akun — NusaTani{% endblock %}
-{% block auth_panel_label %}Formulir pendaftaran akun NusaTani{% endblock %}
 
 {% block auth_body %}
-<span class="section-kicker">Pendaftaran akun</span>
-<h1 class="h3 mb-2">Buat akun NusaTani</h1>
-<p class="small text-secondary mb-4">Isi data di bawah ini untuk mulai menggunakan platform.</p>
+<div class="auth-header">
+  <span class="section-kicker">Pendaftaran akun</span>
+  <h1 class="auth-title">Buat akun NusaTani</h1>
+  <p class="auth-subtitle">Isi data di bawah ini untuk mulai menggunakan platform.</p>
+</div>
 
 {% if form.non_field_errors %}
-  <div class="alert alert-danger" role="alert">
-    <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
-    {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-  </div>
+<div class="alert alert-danger" role="alert">
+  <svg class="icon" width="20" height="20" aria-hidden="true"><use href="#icon-alert-circle"/></svg>
+  {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+</div>
 {% endif %}
 
 <form method="post" novalidate
@@ -21,21 +22,21 @@
       data-confirm-ok="Ya, daftar">
   {% csrf_token %}
 
-  <div class="form-group mb-3">
+  <div class="form-group">
     <label for="{{ form.role.id_for_label }}" class="form-label">{{ form.role.label }}</label>
     {{ form.role }}
     {% for error in form.role.errors %}
-      <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+    <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
     {% endfor %}
   </div>
 
-  <div class="row g-3">
+  <div class="form-row">
     <div class="col-12 col-sm-6">
       <div class="form-group">
         <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
         {{ form.first_name }}
         {% for error in form.first_name.errors %}
-          <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+        <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
         {% endfor %}
       </div>
     </div>
@@ -44,35 +45,35 @@
         <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
         {{ form.last_name }}
         {% for error in form.last_name.errors %}
-          <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+        <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
         {% endfor %}
       </div>
     </div>
   </div>
 
-  <div class="form-group mb-3 mt-3">
+  <div class="form-group">
     <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
     {{ form.username }}
     {% for error in form.username.errors %}
-      <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+    <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
     {% endfor %}
   </div>
 
-  <div class="form-group mb-3">
+  <div class="form-group">
     <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
     {{ form.email }}
     {% for error in form.email.errors %}
-      <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+    <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
     {% endfor %}
   </div>
 
-  <div class="row g-3 mb-4">
+  <div class="form-row">
     <div class="col-12 col-sm-6">
       <div class="form-group">
         <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label }}</label>
         {{ form.password1 }}
         {% for error in form.password1.errors %}
-          <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+        <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
         {% endfor %}
       </div>
     </div>
@@ -81,22 +82,26 @@
         <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label }}</label>
         {{ form.password2 }}
         {% for error in form.password2.errors %}
-          <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+        <div class="invalid-feedback d-block"><svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-alert-circle"/></svg>{{ error }}</div>
         {% endfor %}
       </div>
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary-green btn-lg w-100">Daftar <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-arrow-right"></use></svg></button>
+  <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+    Daftar
+    <svg class="icon" width="18" height="18" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+  </button>
 </form>
 
 <div class="auth-divider"><span>atau</span></div>
 
-<a class="btn btn-outline-green w-100" href="{% url 'accounts:guide' %}">
-  <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-search"></use></svg> Lihat cara daftar dulu
+<a class="btn btn-outline-primary w-100" href="{% url 'accounts:guide' %}">
+  <svg class="icon" width="18" height="18" aria-hidden="true"><use href="#icon-file-text"/></svg>
+  Lihat cara daftar dulu
 </a>
 
-<p class="small text-secondary text-center mt-4 mb-0">
+<p class="small text-muted text-center mt-4 mb-0">
   Sudah punya akun? <a href="{% url 'accounts:login' %}">Masuk di sini</a>.
 </p>
 {% endblock %}

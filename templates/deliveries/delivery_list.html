@@ -4,26 +4,30 @@
 {% block title %}Pengiriman — NusaTani{% endblock %}
 
 {% block content %}
-<div class="mb-4">
-  <h1 class="h3 mb-1">Pengiriman</h1>
-  <p class="small text-secondary mb-0">Pantau status pengiriman simulasi pesanan Anda.</p>
+<div class="page-header">
+  <div class="page-header-title">
+    <h1 class="h3 mb-1">Pengiriman</h1>
+    <p class="small text-muted mb-0">Pantau status pengiriman simulasi pesanan Anda.</p>
+  </div>
 </div>
 
 {% if deliveries %}
-  <div class="table-responsive">
-    <table class="table table-stack align-middle mb-0">
-      <thead>
-        <tr>
-          <th data-label="No. Pesanan">No. Pesanan</th>
-          <th data-label="Petani">Petani</th>
-          <th data-label="Pembeli">Pembeli</th>
-          <th data-label="Kurir">Kurir</th>
-          <th data-label="Status">Status</th>
-          <th class="text-end" data-label="Aksi">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for delivery in deliveries %}
+<div class="card">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-stack align-middle mb-0">
+        <thead>
+          <tr>
+            <th data-label="No. Pesanan">No. Pesanan</th>
+            <th data-label="Petani">Petani</th>
+            <th data-label="Pembeli">Pembeli</th>
+            <th data-label="Kurir">Kurir</th>
+            <th data-label="Status">Status</th>
+            <th class="text-end" data-label="Aksi">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for delivery in deliveries %}
           <tr>
             <td data-label="No. Pesanan">{{ delivery.order.order_number }}</td>
             <td data-label="Petani">{{ delivery.order.farmer.username }}</td>
@@ -31,18 +35,20 @@
             <td data-label="Kurir">{{ delivery.courier_name }}</td>
             <td data-label="Status">{{ delivery.get_status_display|nt_chip|safe }}</td>
             <td class="text-end" data-label="Aksi">
-              <a class="btn btn-sm btn-outline-green" href="{% url 'deliveries:detail' delivery.pk %}">Detail</a>
+              <a class="btn btn-sm btn-outline-primary" href="{% url 'deliveries:detail' delivery.pk %}">Detail</a>
             </td>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
+</div>
 {% else %}
-  <div class="empty-state h-100 d-flex flex-column justify-content-center">
-    <div class="empty-icon" aria-hidden="true"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
-    <h3 class="h3 mb-0">Belum ada pengiriman</h3>
-    <p class="mb-0">Belum ada pengiriman yang dicatat.</p>
-  </div>
+<div class="empty-state">
+  <div class="empty-icon"><svg class="icon" width="48" height="48"><use href="#icon-truck"/></svg></div>
+  <h3>Belum ada pengiriman</h3>
+  <p>Belum ada pengiriman yang dicatat.</p>
+</div>
 {% endif %}
 {% endblock %}

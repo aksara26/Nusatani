@@ -3,22 +3,24 @@
 {% block title %}Pesanan Masuk — NusaTani{% endblock %}
 
 {% block content %}
-<div class="mb-4">
-  <h1 class="h3 mb-1">Pesanan Masuk</h1>
-  <p class="small text-secondary mb-0">Terima pesanan dan jalankan statusnya sesuai tahap produksi.</p>
+<div class="page-header">
+  <div class="page-header-title">
+    <h1 class="h3 mb-1">Pesanan Masuk</h1>
+    <p class="small text-muted mb-0">Terima pesanan dan jalankan statusnya sesuai tahap produksi.</p>
+  </div>
 </div>
 
 {% if orders %}
   {% include "orders/_order_table.html" with perspective="farmer" %}
 {% else %}
-  <div class="empty-state h-100 d-flex flex-column justify-content-center">
-    <div class="empty-icon" aria-hidden="true"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
-    <h3 class="h3 mb-0">Belum ada pesanan masuk</h3>
-    <p class="mb-0">Belum ada pesanan yang masuk untuk Anda.</p>
-  </div>
+<div class="empty-state">
+  <div class="empty-icon"><svg class="icon" width="48" height="48"><use href="#icon-package"/></svg></div>
+  <h3>Belum ada pesanan masuk</h3>
+  <p>Belum ada pesanan yang masuk untuk Anda.</p>
+</div>
 {% endif %}
 
-<div class="alert alert-warning small mt-4 mb-0" role="alert">
+<div class="alert alert-warning small mt-4" role="alert">
   <strong>Aturan kualitas:</strong> status pengiriman hanya bisa dijalankan setelah produk dinyatakan lolos QC pada tahap berikutnya.
 </div>
 {% endblock %}
