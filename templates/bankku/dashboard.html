@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load dashboard_icons %}
+{% load dashboard_icons rupiah %}
 
 {% block title %}BANKKU — NusaTani{% endblock %}
 
@@ -30,7 +30,7 @@
     <div class="kpi-card h-100">
       <div class="kpi-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></div>
       <div class="kpi-label">Total nilai pesanan</div>
-      <div class="kpi-number">Rp{{ total_value|floatformat:0 }}</div>
+      <div class="kpi-number">{{ total_value|rupiah }}</div>
       <div class="kpi-hint">simulasi</div>
     </div>
   </div>
@@ -59,7 +59,7 @@
             <tr class="{% if selected_row and row.farmer.pk == selected_row.farmer.pk %}table-success{% endif %}">
               <td data-label="Petani" class="fw-semibold">{{ row.farmer.username }}</td>
               <td data-label="Pesanan">{{ row.performance.total_orders }}</td>
-              <td data-label="Nilai pesanan">Rp{{ row.performance.total_order_value|floatformat:0 }}</td>
+              <td data-label="Nilai pesanan">{{ row.performance.total_order_value|rupiah }}</td>
               <td data-label="Pemenuhan">{{ row.performance.fulfillment_rate|floatformat:0 }}%</td>
               <td data-label="Lolos QC">{{ row.performance.quality_pass_rate|floatformat:0 }}%</td>
               <td data-label="Indikator simulasi">
@@ -129,7 +129,7 @@
                       <td data-label="No. pesanan">{{ order.order_number }}</td>
                       <td data-label="Pembeli">{{ order.buyer.username }}</td>
                       <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
-                      <td class="text-end" data-label="Nilai">Rp{{ order.total|floatformat:0 }}</td>
+                      <td class="text-end" data-label="Nilai">{{ order.total|rupiah }}</td>
                     </tr>
                   {% endfor %}
                 </tbody>

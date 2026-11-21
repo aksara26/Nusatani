@@ -1,41 +1,51 @@
 {% extends "base.html" %}
+{% load static rupiah %}
 
-{% block title %}{% if surplus_only %}Marketplace Surplus{% else %}Katalog Produk{% endif %} — NusaTani{% endblock %}
+{% block title %}{% if surplus_only %}Sisaku{% else %}Katalog Produk{% endif %} — NusaTani{% endblock %}
 
 {% block content %}
 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3 mb-4">
   <div>
-    <h1 class="h3 mb-1">{% if surplus_only %}Marketplace Surplus{% else %}Katalog Produk{% endif %}</h1>
+    <h1 class="h3 mb-1">{% if surplus_only %}Sisaku{% else %}Katalog Produk{% endif %}</h1>
     <p class="text-secondary mb-0 small">
-      {% if surplus_only %}Produk surplus petani yang siap dibeli sesuai stok yang tersedia.{% else %}Pilihan microgreens dari petani mitra NusaTani.{% endif %}
+      {% if surplus_only %}
+        Produk surplus petani yang siap dibeli sesuai stok yang tersedia.
+      {% else %}
+        Pilihan microgreens dari petani mitra NusaTani.
+      {% endif %}
     </p>
   </div>
-  <div class="d-flex flex-wrap gap-2">
-    <a class="btn btn-sm {% if not surplus_only %}btn-success{% else %}btn-outline-success{% endif %}" href="{% url 'products:catalog' %}">Semua produk</a>
-    <a class="btn btn-sm {% if surplus_only %}btn-success{% else %}btn-outline-success{% endif %}" href="{% url 'products:surplus' %}">Surplus</a>
-    {% if user.role == 'farmer' %}
+  {% if user.role == 'farmer' or user.is_superuser %}
+    <div class="d-flex flex-wrap gap-2">
       <a class="btn btn-sm btn-success" href="{% url 'products:create' %}">+ Tambah produk</a>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
 </div>
 
 {% if products %}
   <div class="row g-3">
     {% for product in products %}
       <div class="col-12 col-md-6 col-lg-4">
-        <div class="card card-lift h-100 shadow-sm border-0 overflow-hidden">
+        <div class="card card-lift h-100 shadow-sm border-0 overflow-hidden glass" style="--blur-sm:8px;">
           {% if product.photo_url %}
-            <img src="{{ product.photo_url }}" alt="{{ product.name }}" class="card-img-top product-media">
+            <img src="{{ product.photo_url }}" alt="{{ product.name }}"
+                 class="card-img-top product-media">
           {% else %}
             <div class="product-placeholder d-flex align-items-center justify-content-center">
-              <span class="display-6" aria-hidden="true">🌱</span>
+              <img src="{% static 'images/placeholder-sprout.svg' %}" alt=""
+                   class="product-placeholder-img" width="64" height="64">
             </div>
           {% endif %}
           <div class="card-body d-flex flex-column">
             <div class="d-flex justify-content-between align-items-start gap-2">
               <h2 class="h6 fw-bold mb-1">{{ product.name }}</h2>
               <div class="d-flex flex-column flex-sm-row gap-1">
-                {% if product.is_surplus %}<span class="badge text-bg-warning">Sisaku</span>{% endif %}
+                {% if product.is_surplus %}
+                  <span class="chip chip--menunggu">
+                    <svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"></circle></svg>
+                    Sisaku
+                  </span>
+                {% endif %}
                 <span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span>
               </div>
             </div>
@@ -43,8 +53,12 @@
             <p class="small text-secondary mb-3">{{ product.description|truncatechars:90|default:"Tidak ada deskripsi." }}</p>
             <div class="mt-auto d-flex align-items-end justify-content-between">
               <div>
-                <div class="fw-bold text-success tabular-nums">Rp{{ product.price|floatformat:0 }}</div>
-                <div class="small text-secondary tabular-nums">Stok {{ product.stock }}</div>
+                <div class="fw-bold text-success tabular-nums">
+                  {{ product.price|rupiah:"pack" }}
+                </div>
+                <div class="small text-secondary">
+                  Stok {% if product.stock <= 0 %}<span class="text-danger fw-bold">habis</span>{% else %}{{ product.stock }} pack{% endif %}
+                </div>
               </div>
               <a class="btn btn-sm btn-outline-success" href="{% url 'products:detail' product.pk %}">Detail</a>
             </div>
@@ -54,12 +68,19 @@
     {% endfor %}
   </div>
 {% else %}
-  <div class="alert alert-info mb-0">
-    {% if surplus_only %}
-      Belum ada produk surplus. Petani dapat menandai produk sebagai surplus saat menambah produk.
-    {% else %}
-      Belum ada produk yang ditampilkan. Petani dapat menambah produk melalui menu <strong>Produk Saya</strong>.
-    {% endif %}
+  <div class="empty-state">
+    <div class="empty-icon">
+      <img src="{% static 'images/placeholder-sprout.svg' %}" alt=""
+           class="product-placeholder-img" width="48" height="48">
+    </div>
+    <h3 class="h3">{% if surplus_only %}Belum ada surplus{% else %}Belum ada produk{% endif %}</h3>
+    <p>
+      {% if surplus_only %}
+        Petani dapat menandai produk sebagai surplus saat menambah produk.
+      {% else %}
+        Petani dapat menambah produk melalui menu <strong>Produk Saya</strong>.
+      {% endif %}
+    </p>
   </div>
 {% endif %}
 {% endblock %}

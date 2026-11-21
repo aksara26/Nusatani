@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static rupiah %}
 
 {% block title %}Produk Saya — NusaTani{% endblock %}
 
@@ -29,11 +30,16 @@
           <tr>
             <td>
               <div class="fw-semibold">{{ product.name }}</div>
-              {% if product.is_surplus %}<span class="badge text-bg-warning">Surplus</span>{% endif %}
+              {% if product.is_surplus %}
+                <span class="chip chip--menunggu">
+                  <svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"></circle></svg>
+                  Sisaku
+                </span>
+              {% endif %}
             </td>
             <td>{{ product.variety.name }}</td>
-            <td>Rp{{ product.price|floatformat:0 }}</td>
-            <td>{{ product.stock }}</td>
+            <td>{{ product.price|rupiah:"pack" }}</td>
+            <td>{{ product.stock }} pack</td>
             <td><span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span></td>
             <td class="text-end">
               <a class="btn btn-sm btn-outline-success" href="{% url 'products:detail' product.pk %}">Detail</a>
@@ -46,13 +52,13 @@
     </table>
   </div>
 {% else %}
-  <div class="alert alert-info">
-    Anda belum memiliki produk. Klik <strong>Tambah produk</strong> untuk membuat produk pertama dan membuatnya muncul di katalog.
+  <div class="empty-state">
+    <div class="empty-icon">
+      <img src="{% static 'images/placeholder-sprout.svg' %}" alt=""
+           class="product-placeholder-img" width="48" height="48">
+    </div>
+    <h3 class="h3">Belum ada produk</h3>
+    <p>Klik <strong>Tambah produk</strong> untuk membuat produk pertama dan membuatnya muncul di katalog.</p>
   </div>
 {% endif %}
-
-<div class="mt-4">
-  <a class="btn btn-sm btn-outline-success" href="{% url 'products:catalog' %}">Lihat katalog</a>
-  <a class="btn btn-sm btn-outline-success" href="{% url 'products:surplus' %}">Lihat marketplace surplus</a>
-</div>
 {% endblock %}

@@ -14,7 +14,7 @@
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-4">
   <div>
     <h1 class="h3 mb-1">Pengiriman {{ order.order_number }}</h1>
-    <p class="small text-secondary mb-0">{{ order.farmer.username }} → {{ order.buyer.username }}</p>
+    <p class="small text-secondary mb-0">{{ order.farmer.username }} <svg class="nt-icon" width="14" height="14" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"></use></svg> {{ order.buyer.username }}</p>
   </div>
   <span class="badge {{ delivery.status_badge_class }} fs-6">{{ delivery.get_status_display }}</span>
 </div>

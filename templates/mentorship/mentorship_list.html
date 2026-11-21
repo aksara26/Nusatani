@@ -20,7 +20,7 @@
       <thead>
         <tr>
           <th data-label="Materi">Materi</th>
-          <th data-label="Mentor → Petani">Mentor → Petani</th>
+          <th data-label="Mentor ke Petani">Mentor <svg class="nt-icon" width="12" height="12" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"></use></svg> Petani</th>
           <th data-label="Jadwal">Jadwal</th>
           <th data-label="Status">Status</th>
           <th class="text-end" data-label="Aksi">Aksi</th>
@@ -30,7 +30,7 @@
         {% for mentorship in mentorships %}
           <tr>
             <td data-label="Materi" class="fw-semibold">{{ mentorship.topic }}</td>
-            <td data-label="Mentor → Petani">{{ mentorship.mentor.username }} → {{ mentorship.farmer.username }}</td>
+            <td data-label="Mentor ke Petani">{{ mentorship.mentor.username }} <svg class="nt-icon" width="12" height="12" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"></use></svg> {{ mentorship.farmer.username }}</td>
             <td data-label="Jadwal">{{ mentorship.scheduled_at|date:"d M Y H:i" }}</td>
             <td data-label="Status">{{ mentorship.get_status_display|nt_chip|safe }}</td>
             <td class="text-end" data-label="Aksi">

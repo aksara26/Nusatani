@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load dashboard_icons %}
+{% load dashboard_icons rupiah %}
 
 {% block title %}Asetku — NusaTani{% endblock %}
 
@@ -28,7 +28,7 @@
   <div class="col-12 col-md-4">
     <div class="glass-strong p-3">
       <div class="small text-secondary">Total cicilan ijarah simulasi</div>
-      <div class="fs-3 fw-bold">Rp{{ ijarah_total|floatformat:0 }}</div>
+      <div class="fs-3 fw-bold">{{ ijarah_total|rupiah }}</div>
       <div class="small text-secondary">{{ ijarah_count }} aset dengan skema ijarah</div>
     </div>
   </div>
@@ -57,7 +57,7 @@
             <td data-label="Skema">
               <span class="badge text-bg-light border">{{ asset.get_financing_scheme_display }}</span>
               {% if asset.is_ijarah and asset.ijarah_total %}
-                <div class="small text-secondary mt-1">Rp{{ asset.ijarah_total|floatformat:0 }} total simulasi</div>
+                <div class="small text-secondary mt-1">{{ asset.ijarah_total|rupiah }} total simulasi</div>
               {% endif %}
             </td>
             <td class="text-end" data-label="Aksi">

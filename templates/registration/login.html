@@ -5,24 +5,53 @@
 
 {% block auth_body %}
 {% if user.is_authenticated %}
-  <div class="alert alert-success small" role="status">
-    Anda sudah masuk sebagai <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).
-    <a class="alert-link" href="{% url 'accounts:dashboard' %}">Kembali ke dashboard</a>.
-  </div>
+<div class="alert alert-success small" role="status">
+  Anda sudah masuk sebagai <strong>{{ user.get_username }}</strong> ({{ user.get_role_display }}).
+  <a class="alert-link" href="{% url 'accounts:dashboard' %}">Kembali ke dashboard</a>.
+</div>
 {% endif %}
 
 {% if form.non_field_errors %}
-  <div class="alert alert-danger" role="alert">
-    <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
-    {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
-  </div>
+<div class="alert alert-danger" role="alert">
+  <svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>
+  {% for error in form.non_field_errors %}{{ error }}{% if not forloop.last %}<br>{% endif %}{% endfor %}
+</div>
 {% endif %}
 
-<span class="section-kicker">Halaman masuk</span>
-<h1 class="h3 mb-2">Selamat datang kembali</h1>
-<p class="small text-secondary mb-4">Masukkan kredensial akun Anda untuk membuka dashboard.</p>
+<h1 id="login-heading" class="h3 mb-1">Selamat datang kembali</h1>
+<p class="small text-secondary mb-4">Masukkan kredensial untuk membuka dashboard.</p>
 
-<form method="post" novalidate id="loginForm">
+<!-- B. PEMILIH PERAN (segmented control radio) -->
+<fieldset class="role-selector mb-4" aria-label="Pilih peran">
+  <legend class="visually-hidden">Pilih peran untuk masuk</legend>
+  <div class="role-options" role="radiogroup" aria-label="Peran">
+    {% for cfg in demo_roles %}
+      {% if cfg.role != 'admin' %}
+      <label class="role-option">
+        <input type="radio" name="role" value="{{ cfg.role }}"
+               {% if selected_role == cfg.role %}checked{% endif %}
+               class="visually-hidden"
+               aria-label="{{ cfg.label }}">
+        <span class="role-option-inner">
+          <span class="role-option-icon" aria-hidden="true">
+            {% if cfg.role == 'farmer' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-sprout"></use></svg>
+            {% elif cfg.role == 'horeca' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-search"></use></svg>
+            {% elif cfg.role == 'consumer' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-check-circle"></use></svg>
+            {% elif cfg.role == 'qc' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-alert-circle"></use></svg>
+            {% elif cfg.role == 'mentor' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-sprout"></use></svg>
+            {% elif cfg.role == 'bank' %}<svg class="nt-icon" width="20" height="20"><use href="#icon-arrow-right"></use></svg>
+            {% endif %}
+          </span>
+          <span class="role-option-name">{{ cfg.label }}</span>
+        </span>
+      </label>
+      {% endif %}
+    {% endfor %}
+  </div>
+</fieldset>
+
+<!-- C. FORM LOGIN -->
+<form method="post" novalidate id="loginForm" class="login-form">
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ next }}">
 
@@ -35,7 +64,7 @@
            placeholder="{{ selected_role_config.placeholder|default:'contoh: petani1' }}">
     <div class="form-text" id="usernameHint">Tidak peka huruf besar/kecil. Spasi diabaikan.</div>
     {% for error in form.username.errors %}
-      <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+    <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
     {% endfor %}
   </div>
 
@@ -50,57 +79,49 @@
               aria-label="Tampilkan kata sandi" aria-pressed="false"><svg class="nt-icon" aria-hidden="true"><use href="#icon-eye"></use></svg></button>
     </div>
     {% for error in form.password.errors %}
-      <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
+    <div class="form-error"><svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{{ error }}</div>
     {% endfor %}
   </div>
 
   <button type="submit" class="btn btn-primary-green btn-lg w-100 mb-3">Masuk ke dashboard <span aria-hidden="true"><svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-arrow-right"></use></svg></span></button>
 </form>
 
-<div class="auth-divider mb-4"><span>atau masuk sebagai demo</span></div>
+<!-- D. PALING BAWAH: divider + ringkasan + tombol demo -->
+<div class="auth-divider mb-3"><span>atau coba demo</span></div>
 
-<div class="demo-picker mb-3">
-  <label class="form-label small fw-bold">Pilih peran demo</label>
+<div class="demo-summary mb-3" aria-live="polite">
+  <div class="demo-summary-icon" aria-hidden="true">
+    {% if selected_role_config.role == 'farmer' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-sprout"></use></svg>
+    {% elif selected_role_config.role == 'horeca' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-search"></use></svg>
+    {% elif selected_role_config.role == 'consumer' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-check-circle"></use></svg>
+    {% elif selected_role_config.role == 'qc' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-alert-circle"></use></svg>
+    {% elif selected_role_config.role == 'mentor' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-sprout"></use></svg>
+    {% elif selected_role_config.role == 'bank' %}<svg class="nt-icon" width="24" height="24"><use href="#icon-arrow-right"></use></svg>
+    {% endif %}
+  </div>
+  <div class="demo-summary-info">
+    <strong class="demo-summary-name">{{ selected_role_config.label }}</strong>
+    <span class="demo-summary-hint">{{ selected_role_config.hint }}</span>
+  </div>
+</div>
+
+<form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
+  {% csrf_token %}
+  <input type="hidden" name="role" value="{{ selected_role }}" id="demoRoleInput">
+  <button type="submit" class="btn btn-outline-green w-100 mb-2">
+    <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-arrow-right"></use></svg> Masuk demo sebagai {{ selected_role_config.label }}
+  </button>
+  <p class="small text-secondary text-center mb-0">Tidak perlu mengetik username dan kata sandi.</p>
+</form>
+
+<!-- Fallback select untuk non-JS (tersembunyi visual, tapi ikut submit form demo) -->
+<select name="role" id="demoRoleSelect" class="visually-hidden" aria-hidden="true">
   {% for cfg in demo_roles %}
     {% if cfg.role != 'admin' %}
-    <a href="{% url 'accounts:demo_login' %}?role={{ cfg.role }}"
-       class="demo-role-card {% if selected_role == cfg.role %}is-selected{% endif %}"
-       aria-pressed="{% if selected_role == cfg.role %}true{% else %}false{% endif %}">
-      <span class="demo-role-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></span>
-      <div class="demo-role-info">
-        <span class="demo-role-name">{{ cfg.label }}</span>
-        <span class="demo-role-hint">{{ cfg.hint }}</span>
-      </div>
-      <span class="demo-role-check">{% if selected_role == cfg.role %}<svg class="nt-icon" aria-hidden="true"><use href="#icon-check-circle"></use></svg>{% else %}<svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>{% endif %}</span>
-    </a>
+    <option value="{{ cfg.role }}" {% if selected_role == cfg.role %}selected{% endif %}>{{ cfg.label }}</option>
     {% endif %}
   {% endfor %}
-</div>
-
-<div class="demo-card">
-  <div class="demo-header d-flex align-items-center gap-2 mb-2">
-    <span class="demo-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></span>
-    <span class="demo-name fw-bold">{{ selected_role_config.label }}</span>
-  </div>
-  <div class="demo-body">
-    <p class="demo-hint small text-secondary mb-3">{{ selected_role_config.hint }}</p>
-    <form method="post" action="{% url 'accounts:demo_login' %}" class="demo-form">
-      {% csrf_token %}
-      <input type="hidden" name="role" value="{{ selected_role }}">
-      <button type="submit" class="btn btn-primary-green btn-lg w-100 demo-btn">
-        <svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-alert-circle"></use></svg> Masuk sebagai {{ selected_role_config.label }}
-      </button>
-      <p class="small text-secondary text-center mt-2 mb-0">
-        Tidak perlu mengetik username dan kata sandi.
-      </p>
-    </form>
-  </div>
-  <div class="demo-footer">
-    <p class="small text-secondary text-center mb-0">
-      Demo hanya untuk coba fitur. Gunakan akun Anda sendiri untuk data aktual.
-    </p>
-  </div>
-</div>
+</select>
 
 <div class="auth-divider mt-4"><span>atau</span></div>
 
@@ -115,70 +136,84 @@
 {% block extra_js %}
 <script>
 (function () {
-  const toggle = document.querySelector("[data-toggle-password]");
-  if (!toggle) return;
-  const input = document.getElementById(toggle.closest(".password-field").querySelector("input").id);
-  toggle.addEventListener("click", function () {
-    const reveal = input.type === "password";
-    input.type = reveal ? "text" : "password";
-    toggle.innerHTML = reveal ? '<svg class="nt-icon" aria-hidden="true"><use href="#icon-eye-off"></use></svg>' : '<svg class="nt-icon" aria-hidden="true"><use href="#icon-eye"></use></svg>';
-    toggle.setAttribute("aria-label", reveal ? "Sembunyikan kata sandi" : "Tampilkan kata sandi");
-    toggle.setAttribute("aria-pressed", String(reveal));
-    input.focus();
-  });
+  "use strict";
 
-  const usernameInput = document.getElementById("{{ form.username.id_for_label }}");
+  // Password toggle
+  const toggle = document.querySelector("[data-toggle-password]");
+  if (toggle) {
+    const field = toggle.closest(".password-field");
+    const input = field ? field.querySelector("input") : null;
+    if (input) {
+      toggle.addEventListener("click", function () {
+        const reveal = input.type === "password";
+        input.type = reveal ? "text" : "password";
+        toggle.innerHTML = reveal ? '<svg class="nt-icon" aria-hidden="true"><use href="#icon-eye-off"></use></svg>' : '<svg class="nt-icon" aria-hidden="true"><use href="#icon-eye"></use></svg>';
+        toggle.setAttribute("aria-label", reveal ? "Sembunyikan kata sandi" : "Tampilkan kata sandi");
+        toggle.setAttribute("aria-pressed", String(reveal));
+        input.focus();
+      });
+    }
+  }
+
+  // Role selector sync
+  const roleRadios = document.querySelectorAll(".role-option input[name='role']");
   const usernameLabel = document.getElementById("usernameLabel");
   const usernameHint = document.getElementById("usernameHint");
-  const cards = Array.from(document.querySelectorAll(".demo-role-card"));
-  const demoIcon = document.querySelector(".demo-icon");
-  const demoName = document.querySelector(".demo-name");
-  const demoHint = document.querySelector(".demo-hint");
+  const usernameInput = document.getElementById("{{ form.username.id_for_label }}");
+  const demoRoleInput = document.getElementById("demoRoleInput");
+  const demoRoleSelect = document.getElementById("demoRoleSelect");
+  const demoSummaryName = document.querySelector(".demo-summary-name");
+  const demoSummaryHint = document.querySelector(".demo-summary-hint");
+  const demoSummaryIcon = document.querySelector(".demo-summary-icon");
+  const demoBtn = document.querySelector(".demo-form button[type='submit']");
 
-  function applyRole(cfg) {
-    if (!cfg) return;
-    usernameLabel.textContent = cfg.inputLabel || "Username";
-    usernameHint.textContent = cfg.hint || "";
-    usernameInput.placeholder = cfg.placeholder || "";
+  const roleConfig = {
+    farmer: { inputLabel: "Username / ID Petani", placeholder: "contoh: petani1", hint: "Kelola produk, pesanan, kualitas, dan aset usaha.", icon: "sprout" },
+    horeca: { inputLabel: "Username / Email usaha", placeholder: "contoh: horeca1", hint: "Pre-order terjadwal untuk hotel, restoran, dan kafe.", icon: "search" },
+    consumer: { inputLabel: "Username / Email", placeholder: "contoh: konsumen1", hint: "Belanja microgreens segar untuk rumah tangga.", icon: "check-circle" },
+    qc: { inputLabel: "ID Petugas QC", placeholder: "contoh: qc1", hint: "Periksa dan putuskan kelayakan produk sebelum dikirim.", icon: "alert-circle" },
+    mentor: { inputLabel: "Username Mentor", placeholder: "contoh: mentor1", hint: "Jadwalkan dan catat pendampingan petani.", icon: "sprout" },
+    bank: { inputLabel: "Username / Email mitra", placeholder: "contoh: bank1", hint: "Pantau performa usaha dan indikator pembiayaan.", icon: "arrow-right" }
+  };
+
+  const iconMap = {
+    sprout: '<svg class="nt-icon" width="24" height="24"><use href="#icon-sprout"></use></svg>',
+    search: '<svg class="nt-icon" width="24" height="24"><use href="#icon-search"></use></svg>',
+    "check-circle": '<svg class="nt-icon" width="24" height="24"><use href="#icon-check-circle"></use></svg>',
+    "alert-circle": '<svg class="nt-icon" width="24" height="24"><use href="#icon-alert-circle"></use></svg>',
+    "arrow-right": '<svg class="nt-icon" width="24" height="24"><use href="#icon-arrow-right"></use></svg>'
+  };
+
+  function applyRole(role) {
+    const cfg = roleConfig[role] || {};
+    if (usernameLabel) usernameLabel.textContent = cfg.inputLabel || "Username";
+    if (usernameHint) usernameHint.textContent = cfg.hint || "";
+    if (usernameInput) usernameInput.placeholder = cfg.placeholder || "";
+    if (demoRoleInput) demoRoleInput.value = role;
+    if (demoRoleSelect) demoRoleSelect.value = role;
+    if (demoSummaryName) demoSummaryName.textContent = document.querySelector(".role-option input[value='" + role + "']")?.closest(".role-option").querySelector(".role-option-name")?.textContent || "";
+    if (demoSummaryHint) demoSummaryHint.textContent = cfg.hint || "";
+    if (demoSummaryIcon) demoSummaryIcon.innerHTML = iconMap[cfg.icon] || "";
+    if (demoBtn) demoBtn.innerHTML = '<svg class="nt-icon" aria-hidden="true" style="width:16px;height:16px;"><use href="#icon-arrow-right"></use></svg> Masuk demo sebagai ' + (document.querySelector(".role-option input[value='" + role + "']")?.closest(".role-option").querySelector(".role-option-name")?.textContent || "");
   }
 
-  function selectCard(card) {
-    cards.forEach(function (c) {
-      const isSelected = c === card;
-      c.classList.toggle("is-selected", isSelected);
-      c.setAttribute("aria-pressed", isSelected ? "true" : "false");
-      const check = c.querySelector(".demo-role-check");
-      if (check) check.innerHTML = isSelected ? '<svg class="nt-icon" aria-hidden="true"><use href="#icon-check-circle"></use></svg>' : '<svg class="nt-icon" aria-hidden="true"><use href="#icon-alert-circle"></use></svg>';
-    });
-    const icon = card.querySelector(".demo-role-icon");
-    const name = card.querySelector(".demo-role-name");
-    const hint = card.querySelector(".demo-role-hint");
-    if (demoIcon) demoIcon.innerHTML = icon ? icon.innerHTML : "";
-    if (demoName) demoName.textContent = name ? name.textContent : "";
-    if (demoHint) demoHint.textContent = hint ? hint.textContent : "";
-
-    const role = card.getAttribute("href").split("role=")[1];
-    const cfgMap = {
-      "farmer": { inputLabel: "Username / ID Petani", placeholder: "contoh: petani1", hint: "Kelola produk, pesanan, kualitas, dan aset usaha." },
-      "horeca": { inputLabel: "Username / Email usaha", placeholder: "contoh: horeca1", hint: "Pre-order terjadwal untuk hotel, restoran, dan kafe." },
-      "consumer": { inputLabel: "Username / Email", placeholder: "contoh: konsumen1", hint: "Belanja microgreens segar untuk rumah tangga." },
-      "qc": { inputLabel: "ID Petugas QC", placeholder: "contoh: qc1", hint: "Periksa dan putuskan kelayakan produk sebelum dikirim." },
-      "mentor": { inputLabel: "Username Mentor", placeholder: "contoh: mentor1", hint: "Jadwalkan dan catat pendampingan petani." },
-      "bank": { inputLabel: "Username / Email mitra", placeholder: "contoh: bank1", hint: "Pantau performa usaha dan indikator pembiayaan." },
-    };
-    applyRole(cfgMap[role] || {});
-  }
-
-  cards.forEach(function (card) {
-    card.addEventListener("click", function (event) {
-      event.preventDefault();
-      selectCard(card);
-      window.location.href = card.getAttribute("href");
+  roleRadios.forEach(function (radio) {
+    radio.addEventListener("change", function () {
+      applyRole(this.value);
     });
   });
 
-  const selectedCard = cards.find(function (c) { return c.classList.contains("is-selected"); });
-  if (selectedCard) selectCard(selectedCard);
+  // Init from checked radio
+  const checked = document.querySelector(".role-option input[name='role']:checked");
+  if (checked) applyRole(checked.value);
+
+  // Sync hidden select on form submit (progressive enhancement)
+  const demoForm = document.querySelector(".demo-form");
+  if (demoForm) {
+    demoForm.addEventListener("submit", function () {
+      if (demoRoleSelect) demoRoleSelect.value = demoRoleInput?.value || "";
+    });
+  }
 })();
 </script>
 {% endblock %}

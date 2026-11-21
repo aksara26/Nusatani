@@ -24,7 +24,7 @@
 
 .glass-dark {
   background: var(--glass-dark);
-  color: #ffffff;
+  color: var(--ink);
   backdrop-filter: blur(var(--blur-md)) saturate(140%);
   -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);
   border: 1px solid var(--glass-border);
@@ -32,8 +32,8 @@
   border-radius: var(--radius-lg);
 }
 
-.glass-dark a { color: var(--mint-100); }
-.glass-dark a:hover { color: #ffffff; }
+.glass-dark a { color: var(--green-800); }
+.glass-dark a:hover { color: var(--accent); }
 
 @supports not (backdrop-filter: blur(1px)) {
   .glass,
@@ -41,7 +41,7 @@
     background: rgba(255, 255, 255, 0.95);
   }
   .glass-dark {
-    background: rgba(11, 61, 42, 0.95);
+    background: rgba(255, 255, 255, 0.92);
   }
 }
 
@@ -95,7 +95,10 @@
   color: var(--ink-muted);
 }
 
-/* Nav links */
+.navbar .navbar-toggler {
+  min-height: 44px;
+  padding: 0.6rem 0.6rem;
+}
 .navbar .nav-link {
   color: var(--ink-muted);
   font-size: 0.9rem;
@@ -110,7 +113,7 @@
 .navbar .nav-link:focus,
 .navbar .nav-link.active {
   color: var(--accent);
-  background-color: rgba(47, 138, 94, 0.10);
+  background-color: rgba(21, 128, 61, 0.08);
 }
 
 /* Dropdown role menu */
@@ -136,7 +139,7 @@
 
 .navbar .dropdown-item:hover,
 .navbar .dropdown-item:focus {
-  background-color: rgba(47, 138, 94, 0.10);
+  background-color: rgba(21, 128, 61, 0.08);
   color: var(--accent);
 }
 
@@ -149,9 +152,9 @@
   font-weight: 600;
   padding: 0.28rem 0.7rem;
   border-radius: var(--radius-pill);
-  background: rgba(47, 138, 94, 0.12);
+  background: rgba(21, 128, 61, 0.08);
   color: var(--accent);
-  border: 1px solid rgba(47, 138, 94, 0.25);
+  border: 1px solid rgba(21, 128, 61, 0.18);
   margin-left: 0.5rem;
 }
 
@@ -178,7 +181,7 @@
   transition: 150ms ease-out;
 }
 
-.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.82rem; height: auto; }
+.btn-sm { padding: 0.35rem 0.75rem; font-size: 0.82rem; min-height: 44px; height: auto; }
 .btn-lg { padding: 0.7rem 1.5rem; font-size: 1rem; height: auto; }
 
 /* Primer: isi --accent, teks putih */
@@ -217,7 +220,7 @@
 }
 .btn-ghost:hover,
 .btn-ghost:focus {
-  background: rgba(47, 138, 94, 0.08);
+  background: rgba(21, 128, 61, 0.08);
   border-color: var(--accent);
   color: var(--accent);
 }
@@ -393,6 +396,11 @@
   border: none;
   font-size: 1.25rem;
   opacity: 0.6;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .btn-close:hover { opacity: 1; }
 
@@ -582,25 +590,22 @@ footer {
   padding: var(--space-6) var(--space-8);
 }
 .dashboard-hero.glass-dark .section-kicker {
-  color: var(--mint-100);
+  color: var(--ink-muted);
   font-size: 0.78rem;
 }
 .dashboard-hero.glass-dark h1,
 .dashboard-hero.glass-dark .h2 {
-  color: #ffffff;
+  color: var(--ink);
 }
 .dashboard-hero.glass-dark p,
 .dashboard-hero.glass-dark .lead {
-  color: rgba(255, 255, 255, 0.9);
-}
-.dashboard-hero.glass-dark .lead {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--ink-muted);
 }
 .dashboard-hero-mark {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.5);
   border: 1px solid var(--glass-border);
   display: inline-flex;
   align-items: center;
@@ -609,7 +614,7 @@ footer {
 .dashboard-hero-mark .nt-icon {
   width: 20px;
   height: 20px;
-  color: #ffffff;
+  color: var(--ink);
 }
 
 /* KPI card: ikon SVG 40px, label 12px uppercase, angka 32px, keterangan 14px */
@@ -701,6 +706,22 @@ footer {
 .dashboard-recent .chip {
   font-size: 0.78rem;
   padding: 0.28rem 0.65rem;
+}
+
+/* Animasi dimatikan untuk prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .skeleton-card {
+    animation: none !important;
+    background: rgba(229, 231, 235, 0.5);
+  }
+  .onboarding-step.is-active {
+    animation: none !important;
+  }
+  .flow-list li {
+    animation: none !important;
+    opacity: 1;
+  }
 }
 
 /* =========================
@@ -878,25 +899,22 @@ footer {
   padding: var(--space-6) var(--space-8);
 }
 .dashboard-hero.glass-dark .section-kicker {
-  color: var(--mint-100);
+  color: var(--ink-muted);
   font-size: 0.78rem;
 }
 .dashboard-hero.glass-dark h1,
 .dashboard-hero.glass-dark .h2 {
-  color: #ffffff;
+  color: var(--ink);
 }
 .dashboard-hero.glass-dark p,
 .dashboard-hero.glass-dark .lead {
-  color: rgba(255, 255, 255, 0.9);
-}
-.dashboard-hero.glass-dark .lead {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--ink-muted);
 }
 .dashboard-hero-mark {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.5);
   border: 1px solid var(--glass-border);
   display: inline-flex;
   align-items: center;
@@ -905,7 +923,7 @@ footer {
 .dashboard-hero-mark .nt-icon {
   width: 20px;
   height: 20px;
-  color: #ffffff;
+  color: var(--ink);
 }
 
 /* KPI card: ikon SVG 40px, label 12px uppercase, angka 32px, keterangan 14px */
@@ -997,4 +1015,222 @@ footer {
 .dashboard-recent .chip {
   font-size: 0.78rem;
   padding: 0.28rem 0.65rem;
+}
+
+/* Animasi dimatikan untuk prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .skeleton-card {
+    animation: none !important;
+    background: rgba(229, 231, 235, 0.5);
+  }
+  .onboarding-step.is-active {
+    animation: none !important;
+  }
+  .flow-list li {
+    animation: none !important;
+    opacity: 1;
+  }
+}
+
+/* =========================
+   Auth Page (Login/Register) — per docs/design-spec.md
+   ========================= */
+.auth-page {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6) var(--space-4);
+  min-height: 0;
+  width: 100%;
+}
+
+.auth-card {
+  width: min(100%, 460px);
+  margin: auto;
+  background: var(--glass-light);
+  backdrop-filter: blur(var(--blur-max)) saturate(160%);
+  -webkit-backdrop-filter: blur(var(--blur-max)) saturate(160%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow);
+  padding: var(--space-6);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .auth-card {
+    background: rgba(255, 255, 255, 0.92);
+  }
+}
+
+/* Role selector — segmented control berbasis radio */
+.role-selector {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.role-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+.role-option {
+  position: relative;
+}
+.role-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.role-option-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-2);
+  min-height: 44px;
+  border: 2px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-strong);
+  backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  cursor: pointer;
+  transition: 150ms ease-out;
+  text-align: center;
+}
+.role-option:hover .role-option-inner,
+.role-option:focus-within .role-option-inner {
+  border-color: var(--accent);
+  background: rgba(21, 128, 61, 0.06);
+}
+.role-option input:checked + .role-option-inner {
+  border-color: var(--accent);
+  background: rgba(21, 128, 61, 0.1);
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+}
+.role-option-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
+}
+.role-option-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+@media (max-width: 480px) {
+  .role-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Demo summary */
+.demo-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--glass-strong);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%);
+}
+.demo-summary-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: rgba(21, 128, 61, 0.1);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.demo-summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.demo-summary-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.demo-summary-hint {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Auth divider */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+  color: var(--ink-muted);
+  font-size: 0.78rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--glass-border);
+}
+
+/* Toast container fix — di akhir body, z-index tinggi, safe-area */
+.toast-container {
+  position: fixed !important;
+  bottom: env(safe-area-inset-bottom, 16px) !important;
+  right: env(safe-area-inset-right, 16px) !important;
+  left: auto !important;
+  top: auto !important;
+  z-index: 2000 !important;
+  max-width: min(360px, calc(100vw - 32px)) !important;
+  padding: 0 !important;
+  pointer-events: none;
+}
+.toast-container > * {
+  pointer-events: auto;
+}
+
+/* Netralisasi style lama dari app.css untuk halaman auth */
+.is-auth-page main {
+  padding-top: var(--space-6) !important;
+}
+.auth-page {
+  display: grid !important;
+  justify-content: center !important;
+  min-height: auto !important;
+  overflow: visible !important;
+}
+.auth-panel,
+.auth-card,
+.auth-mobile-brand,
+.auth-legal,
+.demo-picker,
+.demo-role-card,
+.demo-card,
+.demo-header,
+.demo-body,
+.demo-footer,
+.demo-btn {
+  all: unset;
+  display: revert;
+}
+.demo-picker {
+  display: none !important;
+}
+.demo-card {
+  display: none !important;
 }

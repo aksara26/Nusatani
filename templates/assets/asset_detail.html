@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load dashboard_icons %}
+{% load dashboard_icons rupiah %}
 
 {% block title %}{{ asset.name }} — NusaTani{% endblock %}
 
@@ -51,9 +51,9 @@
           <dt class="col-5 col-md-4 text-secondary">Tenor</dt>
           <dd class="col-7 col-md-8">{{ asset.ijarah_duration_months }} bulan</dd>
           <dt class="col-5 col-md-4 text-secondary">Cicilan per bulan</dt>
-          <dd class="col-7 col-md-8">Rp{{ asset.ijarah_monthly_payment|floatformat:0 }}</dd>
+          <dd class="col-7 col-md-8">{{ asset.ijarah_monthly_payment|rupiah }}</dd>
           <dt class="col-5 col-md-4 text-secondary">Total simulasi</dt>
-          <dd class="col-7 col-md-8 fw-semibold">Rp{{ asset.ijarah_total|floatformat:0 }}</dd>
+          <dd class="col-7 col-md-8 fw-semibold">{{ asset.ijarah_total|rupiah }}</dd>
         </dl>
         <div class="alert alert-warning small mt-3 mb-0">Data ini hanya simulasi dan bukan tagihan atau keputusan pembiayaan.</div>
       </div>

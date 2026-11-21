@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 520" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="fogBand" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Gunung far (paling belakang, paling terang) -->
+  <path class="mtn-far"
+        d="M0,420 L120,380 L240,410 L360,350 L480,400 L600,340 L720,390 L840,330 L960,380 L1080,320 L1200,370 L1320,330 L1400,380 L1400,520 L0,520 Z"/>
+
+  <!-- Gunung mid -->
+  <path class="mtn-mid"
+        d="M0,440 L90,300 L180,390 L270,260 L360,380 L450,200 L540,360 L630,180 L720,340 L810,160 L900,320 L990,200 L1080,280 L1170,240 L1260,300 L1350,220 L1400,300 L1400,520 L0,520 Z"/>
+
+  <!-- Gunung near -->
+  <path class="mtn-near"
+        d="M0,460 L110,240 L220,420 L330,180 L440,360 L550,100 L660,300 L770,60 L880,240 L990,140 L1100,220 L1210,120 L1320,200 L1400,160 L1400,520 L0,520 Z"/>
+
+  <!-- Gunung front (paling depan, paling gelap) -->
+  <path class="mtn-front"
+        d="M0,480 L140,200 L280,440 L420,120 L560,420 L700,80 L840,380 L980,60 L1120,340 L1260,100 L1400,240 L1400,520 L0,520 Z"/>
+
+  <!-- Kabut di antara lapisan -->
+  <rect class="fog-band" x="0" y="420" width="1400" height="100"/>
+</svg>

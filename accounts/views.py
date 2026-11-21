@@ -13,7 +13,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_http_methods
 
 from .forms import NusaTaniAuthenticationForm, ProfileForm, RegistrationForm
 from .roles import (
@@ -69,9 +69,15 @@ class NusaTaniLoginView(LoginView):
                 Role.FARMER.value,
             )
 
-        context["demo_roles"] = list(DEMO_ROLE_ACCOUNTS.values())
+        all_demo_roles = [c for c in DEMO_ROLE_ACCOUNTS.values() if c["role"] != Role.ADMIN.value]
+        context["demo_roles"] = all_demo_roles
         context["selected_role"] = requested_role
-        context["selected_role_config"] = DEMO_ROLE_ACCOUNTS[requested_role]
+        if requested_role in DEMO_ROLE_ACCOUNTS and requested_role != Role.ADMIN.value:
+            context["selected_role_config"] = DEMO_ROLE_ACCOUNTS[requested_role]
+        elif all_demo_roles:
+            context["selected_role_config"] = all_demo_roles[0]
+        else:
+            context["selected_role_config"] = None
         return context
 
     def form_valid(self, form):
@@ -97,7 +103,7 @@ class NusaTaniLogoutView(LogoutView):
 
 
 @never_cache
-@require_POST
+@require_http_methods(["GET", "POST"])
 def demo_login(request):
     """Masuk cepat sebagai akun demo yang dipilih dari halaman login.
 
@@ -106,8 +112,9 @@ def demo_login(request):
     """
     from django.contrib.auth import get_user_model, login
 
-    config = DEMO_ROLE_ACCOUNTS.get(request.POST.get("role", "").strip())
-    if config is None:
+    role = (request.POST.get("role") or request.GET.get("role") or "").strip()
+    config = DEMO_ROLE_ACCOUNTS.get(role)
+    if config is None or config["role"] == Role.ADMIN.value:
         messages.error(request, "Peran demo tidak dikenal. Pilih salah satu role yang tersedia.")
         return redirect("accounts:login")
 
