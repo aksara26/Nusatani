@@ -1234,3 +1234,89 @@ footer {
 .demo-card {
   display: none !important;
 }
+
+/* =========================
+   Dashboard Glass — per docs/design-spec.md & fix-glass.md
+   ========================= */
+
+/* Glass variants tambahan */
+.glass-sm {
+  backdrop-filter: blur(var(--blur-sm)) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%) !important;
+}
+
+/* Lift hover effect */
+.lift {
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(11, 61, 42, 0.18);
+}
+
+/* KPI icon wrapper */
+.kpi-ico {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: rgba(21, 128, 61, 0.12);
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.kpi-ico svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Dashboard hero mark — override size */
+.dashboard-hero .dashboard-hero-mark {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: var(--radius-md) !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid var(--glass-border) !important;
+}
+.dashboard-hero .dashboard-hero-mark .nt-icon {
+  width: 28px !important;
+  height: 28px !important;
+  color: var(--ink) !important;
+}
+
+/* List group item glass-strong */
+.list-group-item.glass-strong {
+  background: transparent !important;
+  border-color: var(--glass-border) !important;
+  color: var(--ink) !important;
+}
+.list-group-item.glass-strong:hover,
+.list-group-item.glass-strong:focus {
+  background: rgba(21, 128, 61, 0.04) !important;
+}
+
+/* Empty state glass-strong */
+.empty-state.glass-strong {
+  background: var(--glass-strong) !important;
+  border: 1px dashed var(--glass-border) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+/* Alert glass-strong */
+.alert.glass-strong {
+  background: var(--glass-strong) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--glass-shadow) !important;
+  backdrop-filter: blur(var(--blur-md)) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%) !important;
+}
+
+/* Toast autohide delay 4s — sudah di template via data-bs-delay="4000" */

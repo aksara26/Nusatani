@@ -65,15 +65,8 @@
   </svg>
 
   <div id="bg-scene" aria-hidden="true">
-    <div class="bg-sawah"></div>
-    <div class="bg-mountains">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 520" preserveAspectRatio="xMidYMax slice">
-        <path class="mtn-layer mtn-far" d="M0,420 L120,380 L240,410 L360,350 L480,400 L600,340 L720,390 L840,330 L960,380 L1080,320 L1200,370 L1320,330 L1400,380 L1400,520 L0,520 Z"/>
-        <path class="mtn-layer mtn-mid" d="M0,440 L90,300 L180,390 L270,260 L360,380 L450,200 L540,360 L630,180 L720,340 L810,160 L900,320 L990,200 L1080,280 L1170,240 L1260,300 L1350,220 L1400,300 L1400,520 L0,520 Z"/>
-        <path class="mtn-layer mtn-near" d="M0,460 L110,240 L220,420 L330,180 L440,360 L550,100 L660,300 L770,60 L880,240 L990,140 L1100,220 L1210,120 L1320,200 L1400,160 L1400,520 L0,520 Z"/>
-        <path class="mtn-layer mtn-front" d="M0,480 L140,200 L280,440 L420,120 L560,420 L700,80 L840,380 L980,60 L1120,340 L1260,100 L1400,240 L1400,520 L0,520 Z"/>
-      </svg>
-    </div>
+    <div class="photo"></div>
+    <div class="wash"></div>
   </div>
   <a class="visually-hidden-focusable skip-link btn btn-light btn-sm m-2" href="#main-content">Lewati ke konten utama</a>
 
@@ -181,9 +174,7 @@
   </nav>
 
 <main id="main-content" class="container flex-grow-1 py-4">
-    <div class="content-panel glass-strong">
-      {% block content %}{% endblock %}
-    </div>
+    {% block content %}{% endblock %}
   </main>
 
   {% if user.is_authenticated %}
@@ -239,7 +230,7 @@
     {% for message in messages %}
     <div class="toast nt-toast nt-toast-{{ message.tags|default:'info' }}"
          role="status" aria-live="polite" aria-atomic="true"
-         data-bs-delay="6500" data-bs-autohide="true">
+         data-bs-delay="4000" data-bs-autohide="true">
       <div class="toast-header">
         <span class="nt-toast-icon" aria-hidden="true">
           {% if message.tags == 'success' %}<svg width="18" height="18"><use href="#icon-check-circle"></use></svg>
@@ -286,7 +277,9 @@
 
     document.querySelectorAll(".nt-toast").forEach(function (toastEl) {
       if (window.bootstrap) {
-        window.bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 6500 }).show();
+        var delay = parseInt(toastEl.getAttribute("data-bs-delay"), 10) || 4000;
+        var autohide = toastEl.getAttribute("data-bs-autohide") !== "false";
+        window.bootstrap.Toast.getOrCreateInstance(toastEl, { delay: delay, autohide: autohide }).show();
       } else {
         toastEl.classList.add("show");
       }

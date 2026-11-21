@@ -4,42 +4,54 @@
 {% block title %}BANKKU — NusaTani{% endblock %}
 
 {% block content %}
-<div class="mb-4">
-  <h1 class="h3 mb-1">BANKKU</h1>
-  <p class="small text-secondary mb-0">Pantau performa usaha petani dan indikator pembiayaan sebagai simulasi.</p>
+<!-- Hero .glass-dark -->
+<div class="glass-dark mb-4" style="padding: var(--space-6) var(--space-8);">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+    <div>
+      <div class="section-kicker mb-2" style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-muted);">BANKKU · {% now "d M Y" %}</div>
+      <h1 class="h2 mb-1" style="font-size: 32px; font-weight: 800; line-height: 1.2; color: var(--ink);">BANKKU</h1>
+      <p class="mb-0" style="font-size: 14px; line-height: 1.5; color: var(--ink-muted); max-width: 60ch; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">Pantau performa usaha petani dan indikator pembiayaan sebagai simulasi.</p>
+    </div>
+    <div class="d-none d-lg-flex" aria-hidden="true" style="width: 56px; height: 56px; border-radius: var(--radius-md); background: rgba(255,255,255,0.15); border: 1px solid var(--glass-border); display: inline-flex; align-items: center; justify-content: center;">
+      <svg class="nt-icon" width="28" height="28" style="color: var(--ink);"><use href="#icon-sprout"></use></svg>
+    </div>
+  </div>
 </div>
 
-<div class="dashboard-stats mb-4">
-  <div class="col-6 col-lg-4">
-    <div class="kpi-card h-100">
-      <div class="kpi-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></div>
-      <div class="kpi-label">Petani tercatat</div>
-      <div class="kpi-number">{{ farmer_count }}</div>
-      <div class="kpi-hint">terdaftar</div>
+<!-- 3 KPI card - CSS Grid -->
+<div class="dashboard-stats mb-4" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: var(--space-6);">
+  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
+    <div class="kpi-ico" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg>
     </div>
+    <div class="kpi-label" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);">Petani tercatat</div>
+    <div class="kpi-number" style="font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; font-family: 'Inter', system-ui, sans-serif;">{{ farmer_count }}</div>
+    <div class="kpi-hint" style="font-size: 14px; color: var(--ink-muted); margin-top: auto;">terdaftar</div>
   </div>
-  <div class="col-6 col-lg-4">
-    <div class="kpi-card h-100">
-      <div class="kpi-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-search"></use></svg></div>
-      <div class="kpi-label">Total pesanan aktif</div>
-      <div class="kpi-number">{{ total_orders }}</div>
-      <div class="kpi-hint">seluruh platform</div>
+  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
+    <div class="kpi-ico" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg class="nt-icon" aria-hidden="true"><use href="#icon-search"></use></svg>
     </div>
+    <div class="kpi-label" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);">Total pesanan aktif</div>
+    <div class="kpi-number" style="font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; font-family: 'Inter', system-ui, sans-serif;">{{ total_orders }}</div>
+    <div class="kpi-hint" style="font-size: 14px; color: var(--ink-muted); margin-top: auto;">seluruh platform</div>
   </div>
-  <div class="col-6 col-lg-4">
-    <div class="kpi-card h-100">
-      <div class="kpi-icon"><svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg></div>
-      <div class="kpi-label">Total nilai pesanan</div>
-      <div class="kpi-number">{{ total_value|rupiah }}</div>
-      <div class="kpi-hint">simulasi</div>
+  <div class="kpi-card glass glass-sm lift" style="display: flex; flex-direction: column; gap: var(--space-2); width: 100%; padding: var(--space-4); background: var(--glass-light); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-sm)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-sm)) saturate(140%); transition: transform 150ms ease-out, box-shadow 150ms ease-out;">
+    <div class="kpi-ico" style="width: 40px; height: 40px; border-radius: var(--radius-md); background: rgba(21, 128, 61, 0.12); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+      <svg class="nt-icon" aria-hidden="true"><use href="#icon-sprout"></use></svg>
     </div>
+    <div class="kpi-label" style="font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-muted);">Total nilai pesanan</div>
+    <div class="kpi-number" style="font-size: 32px; font-weight: 800; line-height: 1.2; letter-spacing: -0.03em; color: var(--ink); font-variant-numeric: tabular-nums; font-family: 'Inter', system-ui, sans-serif;">{{ total_value|rupiah }}</div>
+    <div class="kpi-hint" style="font-size: 14px; color: var(--ink-muted); margin-top: auto;">simulasi</div>
   </div>
 </div>
 
 {% if rows %}
-  <div class="glass-strong p-4 p-md-5 mb-4">
+<!-- Tabel Ringkasan petani -->
+<div class="glass-strong overflow-hidden mb-4" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%);">
+  <div class="p-3 p-md-4 border-bottom" style="border-color: var(--glass-border);">
     <div class="d-flex align-items-center justify-content-between mb-3">
-      <h2 class="h6 fw-bold mb-0">Ringkasan petani</h2>
+      <h2 class="h6 fw-bold mb-0" style="font-size: 16px; font-weight: 700; color: var(--ink);">Ringkasan petani</h2>
     </div>
     <div class="table-responsive">
       <table class="table table-stack align-middle mb-0">
@@ -51,109 +63,108 @@
             <th data-label="Pemenuhan">Pemenuhan</th>
             <th data-label="Lolos QC">Lolos QC</th>
             <th data-label="Indikator simulasi">Indikator simulasi</th>
-            <th class="text-end" data-label="Aksi">Aksi</th>
+            <th class="text-end" data-label="Aksi">Aki</th>
           </tr>
         </thead>
         <tbody>
           {% for row in rows %}
-            <tr class="{% if selected_row and row.farmer.pk == selected_row.farmer.pk %}table-success{% endif %}">
-              <td data-label="Petani" class="fw-semibold">{{ row.farmer.username }}</td>
-              <td data-label="Pesanan">{{ row.performance.total_orders }}</td>
-              <td data-label="Nilai pesanan">{{ row.performance.total_order_value|rupiah }}</td>
-              <td data-label="Pemenuhan">{{ row.performance.fulfillment_rate|floatformat:0 }}%</td>
-              <td data-label="Lolos QC">{{ row.performance.quality_pass_rate|floatformat:0 }}%</td>
-              <td data-label="Indikator simulasi">
-                <span class="badge {{ row.assessment.eligibility_badge_class }}">{{ row.assessment.get_eligibility_display }}</span>
-                <div class="small text-secondary mt-1">{{ row.assessment.total_score|floatformat:0 }}/100</div>
-              </td>
-              <td class="text-end" data-label="Aksi">
-                <a class="btn btn-sm btn-outline-green" href="?petani={{ row.farmer.pk }}">Lihat</a>
-              </td>
-            </tr>
+          <tr class="glass-strong {% if selected_row and row.farmer.pk == selected_row.farmer.pk %}table-success{% endif %}" style="background: transparent; border-bottom: 1px solid var(--glass-border);">
+            <td data-label="Petani" class="fw-semibold">{{ row.farmer.username }}</td>
+            <td data-label="Pesanan">{{ row.performance.total_orders }}</td>
+            <td data-label="Nilai pesanan">{{ row.performance.total_order_value|rupiah }}</td>
+            <td data-label="Pemenuhan">{{ row.performance.fulfillment_rate|floatformat:0 }}%</td>
+            <td data-label="Lolos QC">{{ row.performance.quality_pass_rate|floatformat:0 }}%</td>
+            <td data-label="Indikator simulasi">
+              <span class="badge {{ row.assessment.eligibility_badge_class }}">{{ row.assessment.get_eligibility_display }}</span>
+              <div class="small text-secondary mt-1">{{ row.assessment.total_score|floatformat:0 }}/100</div>
+            </td>
+            <td class="text-end" data-label="Aksi">
+              <a class="btn btn-sm btn-outline-green" href="?petani={{ row.farmer.pk }}">Lihat</a>
+            </td>
+          </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
+</div>
 
-  {% if selected_row %}
-    <div class="row g-4">
-      <div class="col-12 col-lg-5">
-        <div class="glass-strong p-4 p-md-5 h-100">
-          <h2 class="h6 fw-bold mb-1">Indikator — {{ selected_row.farmer.username }}</h2>
-          <p class="small text-secondary mb-3">
-            Dihitung {{ selected_row.assessment.calculated_at|date:"d M Y H:i"|default:"—" }}
-          </p>
-          <div class="d-flex align-items-center gap-3 mb-3">
-            <div class="display-6 fw-bold">{{ selected_row.assessment.total_score|floatformat:0 }}</div>
-            <div>
-              <span class="badge {{ selected_row.assessment.eligibility_badge_class }}">
-                {{ selected_row.assessment.get_eligibility_display }}
-              </span>
-              <div class="small text-secondary">dari 100 (simulasi)</div>
-            </div>
-          </div>
-          <dl class="row small mb-0">
-            <dt class="col-7 text-secondary">Pemenuhan pesanan</dt>
-            <dd class="col-5 text-end">{{ selected_row.assessment.fulfillment_score|floatformat:0 }}/30</dd>
-            <dt class="col-7 text-secondary">Kualitas QC</dt>
-            <dd class="col-5 text-end">{{ selected_row.assessment.quality_score|floatformat:0 }}/25</dd>
-            <dt class="col-7 text-secondary">Data aset</dt>
-            <dd class="col-5 text-end">{{ selected_row.assessment.asset_score|floatformat:0 }}/20</dd>
-            <dt class="col-7 text-secondary">Pendampingan</dt>
-            <dd class="col-5 text-end">{{ selected_row.assessment.mentorship_score|floatformat:0 }}/15</dd>
-            <dt class="col-7 text-secondary">Pembayaran simulasi</dt>
-            <dd class="col-5 text-end">{{ selected_row.assessment.payment_score|floatformat:0 }}/10</dd>
-          </dl>
-          <div class="alert alert-warning small mt-3 mb-0">{{ selected_row.assessment.notes }}</div>
+{% if selected_row %}
+<!-- Detail petani terpilih - 2 kolom -->
+<div class="row g-4">
+  <div class="col-12 col-lg-5">
+    <div class="glass-strong h-100" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-6);">
+      <h2 class="h6 fw-bold mb-1" style="font-size: 16px; font-weight: 700; color: var(--ink);">Indikator — {{ selected_row.farmer.username }}</h2>
+      <p class="small text-secondary mb-3" style="font-size: 13px; color: var(--ink-muted);">Dihitung {{ selected_row.assessment.calculated_at|date:"d M Y H:i"|default:"—" }}</p>
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="display-6 fw-bold" style="font-size: 48px; font-weight: 800; color: var(--ink);">{{ selected_row.assessment.total_score|floatformat:0 }}</div>
+        <div>
+          <span class="badge {{ selected_row.assessment.eligibility_badge_class }}">{{ selected_row.assessment.get_eligibility_display }}</span>
+          <div class="small text-secondary">dari 100 (simulasi)</div>
         </div>
       </div>
-
-      <div class="col-12 col-lg-7">
-        <div class="glass-strong p-4 p-md-5 h-100">
-          <h2 class="h6 fw-bold mb-3">Riwayat pesanan {{ selected_row.farmer.username }}</h2>
-          {% if orders %}
-            <div class="table-responsive">
-              <table class="table table-stack small align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th data-label="No. pesanan">No. pesanan</th>
-                    <th data-label="Pembeli">Pembeli</th>
-                    <th data-label="Status">Status</th>
-                    <th class="text-end" data-label="Nilai">Nilai</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for order in orders %}
-                    <tr>
-                      <td data-label="No. pesanan">{{ order.order_number }}</td>
-                      <td data-label="Pembeli">{{ order.buyer.username }}</td>
-                      <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
-                      <td class="text-end" data-label="Nilai">{{ order.total|rupiah }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          {% else %}
-            <div class="empty-state h-100 d-flex flex-column justify-content-center">
-              <div class="empty-icon" aria-hidden="true"><svg width="32" height="32" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
-              <p class="mb-0">Belum ada pesanan untuk petani ini.</p>
-            </div>
-          {% endif %}
-        </div>
-      </div>
+      <dl class="row small mb-0" style="font-size: 13px;">
+        <dt class="col-7 text-secondary">Pemenuhan pesanan</dt>
+        <dd class="col-5 text-end">{{ selected_row.assessment.fulfillment_score|floatformat:0 }}/30</dd>
+        <dt class="col-7 text-secondary">Kualitas QC</dt>
+        <dd class="col-5 text-end">{{ selected_row.assessment.quality_score|floatformat:0 }}/25</dd>
+        <dt class="col-7 text-secondary">Data aset</dt>
+        <dd class="col-5 text-end">{{ selected_row.assessment.asset_score|floatformat:0 }}/20</dd>
+        <dt class="col-7 text-secondary">Pendampingan</dt>
+        <dd class="col-5 text-end">{{ selected_row.assessment.mentorship_score|floatformat:0 }}/15</dd>
+        <dt class="col-7 text-secondary">Pembayaran simulasi</dt>
+        <dd class="col-5 text-end">{{ selected_row.assessment.payment_score|floatformat:0 }}/10</dd>
+      </dl>
+      <div class="alert alert-warning small mt-3 mb-0 glass-strong" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-3);">{{ selected_row.assessment.notes }}</div>
     </div>
-  {% endif %}
-{% else %}
-  <div class="empty-state h-100 d-flex flex-column justify-content-center">
-    <div class="empty-icon" aria-hidden="true"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
-    <h3 class="h3 mb-0">Belum ada petani</h3>
-    <p class="mb-0">Belum ada petani yang tercatat.</p>
   </div>
+
+  <div class="col-12 col-lg-7">
+    <div class="glass-strong h-100" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-6);">
+      <h2 class="h6 fw-bold mb-3" style="font-size: 16px; font-weight: 700; color: var(--ink);">Riwayat pesanan {{ selected_row.farmer.username }}</h2>
+      {% if orders %}
+      <div class="table-responsive">
+        <table class="table table-stack small align-middle mb-0">
+          <thead>
+            <tr>
+              <th data-label="No. pesanan">No. pesanan</th>
+              <th data-label="Pembeli">Pembeli</th>
+              <th data-label="Status">Status</th>
+              <th class="text-end" data-label="Nilai">Nilai</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr class="glass-strong" style="background: transparent; border-bottom: 1px solid var(--glass-border);">
+              <td data-label="No. pesanan">{{ order.order_number }}</td>
+              <td data-label="Pembeli">{{ order.buyer.username }}</td>
+              <td data-label="Status">{{ order.get_status_display|nt_chip|safe }}</td>
+              <td class="text-end" data-label="Nilai">{{ order.total|rupiah }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state glass-strong h-100 d-flex flex-column justify-content-center" style="background: var(--glass-strong); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 2.5rem 2rem; text-align: center; color: var(--ink-muted);">
+        <div class="empty-icon" aria-hidden="true" style="width: 64px; height: 64px; border-radius: var(--radius-lg); background: rgba(47, 138, 94, 0.12); margin: 0 auto 1rem; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent);"><svg width="32" height="32" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
+        <p class="mb-0">Belum ada pesanan untuk petani ini.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+{% else %}
+<!-- Empty state -->
+<div class="empty-state glass-strong h-100 d-flex flex-column justify-content-center" style="background: var(--glass-strong); border: 1px dashed var(--glass-border); border-radius: var(--radius-lg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 2.5rem 2rem; text-align: center; color: var(--ink-muted);">
+  <div class="empty-icon" aria-hidden="true" style="width: 64px; height: 64px; border-radius: var(--radius-lg); background: rgba(47, 138, 94, 0.12); margin: 0 auto 1rem; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent);"><svg width="48" height="48" class="nt-icon"><use href="#icon-sprout"></use></svg></div>
+  <h3 class="h3 mb-0" style="font-size: 24px; font-weight: 700; color: var(--ink);">Belum ada petani</h3>
+  <p class="mb-0" style="color: var(--ink-muted);">Belum ada petani yang tercatat.</p>
+</div>
 {% endif %}
 
-<div class="alert alert-warning small mt-4 mb-0" role="alert">
-  Seluruh indikator pada BANKKU adalah simulasi untuk demonstrasi. Bukan keputusan kredit, penilaian resmi, atau layanan pembiayaan.
+<div class="glass-strong mt-4 mb-0" role="alert" style="background: var(--glass-strong); border: 1px solid var(--glass-border); border-radius: var(--radius-lg); box-shadow: var(--glass-shadow); backdrop-filter: blur(var(--blur-md)) saturate(140%); -webkit-backdrop-filter: blur(var(--blur-md)) saturate(140%); padding: var(--space-4);">
+  <small style="color: var(--ink-muted);">Seluruh indikator pada BANKKU adalah simulasi untuk demonstrasi. Bukan keputusan kredit, penilaian resmi, atau layanan pembiayaan.</small>
 </div>
 {% endblock %}

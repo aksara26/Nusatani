@@ -1,9 +1,5 @@
 /* NusaTani — Background scene (#bg-scene)
-   Semua dekorasi latar HANYA di dalam #bg-scene (fixed, di belakang konten). */
-
-:root {
-  --mtn-height: clamp(180px, 34vh, 380px);
-}
+   Foto gunung realistis + wash gradient. Semua dekorasi latar HANYA di dalam #bg-scene. */
 
 #bg-scene {
   position: fixed;
@@ -13,7 +9,7 @@
   pointer-events: none;
 }
 
-/* Langit: gradient --sky-top -> --sky-bottom */
+/* Cadangan gradient langit jika foto gagal dimuat */
 #bg-scene::before {
   content: "";
   position: absolute;
@@ -21,19 +17,37 @@
   background: linear-gradient(180deg, var(--sky-top), var(--sky-bottom));
 }
 
-/* Glow matahari: radial lembut --lime-300 ~.35 di kanan atas */
-#bg-scene::after {
-  content: "";
+/* Foto gunung: cover, bottom center, slight blur + saturate */
+#bg-scene .photo {
   position: absolute;
-  top: 0;
-  right: 0;
-  width: min(600px, 80vw);
-  height: 400px;
-  background: radial-gradient(circle at 80% 20%, rgba(190, 242, 100, 0.35), transparent 60%);
-  z-index: 1;
+  inset: -24px;
+  background: url("../images/bg-gunung") center bottom / cover no-repeat;
+  filter: blur(3px) saturate(1.05);
+  transform: translateZ(0);
 }
 
-/* Latar sawah publik (dekorasi dipindah dari .public-hero in-flow ke dalam scene) */
+/* Wash gradient: fades from top (opaque) to bottom (transparent) */
+#bg-scene .wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(240, 253, 244, 0.78) 0%, rgba(240, 253, 244, 0.45) 40%, rgba(240, 253, 244, 0.18) 100%);
+}
+
+/* Rays (existing) - reduce opacity */
+#bg-scene .rays {
+  opacity: 0.25;
+}
+
+/* Mobile: tighter inset, less blur, shift focus */
+@media (max-width: 700px) {
+  #bg-scene .photo {
+    inset: 0;
+    filter: blur(2px);
+    background-position: 60% bottom;
+  }
+}
+
+/* Latar sawah publik (tetap dipakai untuk halaman publik non-dashboard) */
 #bg-scene .bg-sawah {
   display: none;
 }
@@ -56,67 +70,7 @@ body.is-auth-page #bg-scene .bg-sawah {
   display: none;
 }
 
-/* Pembungkus gunung di dasar scene + mask memudar ke atas (tanpa garis tegas) */
-#bg-scene .bg-mountains {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--mtn-height);
-  z-index: 2;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 35%, transparent 100%);
-  mask-image: linear-gradient(to top, #000 0%, #000 35%, transparent 100%);
-}
-
-#bg-scene .bg-mountains svg {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* 4 lapis gunung + blur per kedalaman */
-#bg-scene .mtn-layer {
-  shape-rendering: geometricPrecision;
-}
-#bg-scene .mtn-far {
-  fill: var(--mtn-far);
-  filter: blur(2px);
-}
-#bg-scene .mtn-mid {
-  fill: var(--mtn-mid);
-  filter: blur(1.5px);
-}
-#bg-scene .mtn-near {
-  fill: var(--mtn-near);
-  filter: blur(1px);
-}
-#bg-scene .mtn-front {
-  fill: var(--mtn-front);
-}
-
-/* Jika viewport pendek (<600px tinggi): pakai 26vh */
-@media (max-height: 599px) {
-  :root {
-    --mtn-height: clamp(120px, 26vh, 220px);
-  }
-}
-
-/* Layar sempit (<600px lebar): hanya 2 lapisan dan tinggi 22vh */
-@media (max-width: 599px) {
-  :root {
-    --mtn-height: clamp(110px, 22vh, 180px);
-  }
-  #bg-scene .mtn-mid,
-  #bg-scene .mtn-near {
-    display: none;
-  }
-}
-
-/* Konten halaman di atas latar (di luar scene) */
+/* Konten halaman di atas latar */
 main, .page, .navbar, footer {
   position: relative;
   z-index: 1;
@@ -150,7 +104,7 @@ html, body {
   max-width: 100%;
 }
 
-/* Nonaktifkan dekorasi latar in-flow/pseudo lama (dipindah ke #bg-scene) */
+/* Nonaktifkan dekorasi latar in-flow/pseudo lama */
 body.is-workspace main::before {
   content: none !important;
   background: none !important;
