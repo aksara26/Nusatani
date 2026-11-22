@@ -43,6 +43,39 @@ class ProfileForm(forms.ModelForm):
 class RegistrationForm(forms.ModelForm):
     """Pendaftaran mandiri hanya untuk peran yang bisa mendaftar sendiri."""
 
+    ROLE_FIELD_LABELS = {
+        Role.FARMER.value: {
+            "first_name": "Nama petani",
+            "last_name": "Nama usaha / kelompok tani",
+            "username": "Username / ID petani",
+            "email": "Email petani",
+        },
+        Role.HORECA.value: {
+            "first_name": "Nama penanggung jawab",
+            "last_name": "Nama usaha HOREKA",
+            "username": "Username usaha",
+            "email": "Email usaha",
+        },
+        Role.CONSUMER.value: {
+            "first_name": "Nama depan pembeli",
+            "last_name": "Nama belakang pembeli",
+            "username": "Username pembeli",
+            "email": "Email pembeli",
+        },
+    }
+
+    ROLE_NOTES = {
+        Role.FARMER.value: (
+            "Untuk petani/penjual. Alamat atau daerah lahan belum diminta pada formulir ini."
+        ),
+        Role.HORECA.value: (
+            "Untuk hotel, restoran, atau kafe. Nomor telepon belum diminta pada formulir ini."
+        ),
+        Role.CONSUMER.value: (
+            "Untuk pembeli rumah tangga. Email digunakan untuk akun; alamat rumah tidak diminta."
+        ),
+    }
+
     ROLE_CHOICES = (
         (Role.FARMER.value, "Petani"),
         (Role.HORECA.value, "HOREKA"),
@@ -77,6 +110,24 @@ class RegistrationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        role = (
+            self.data.get("role")
+            if self.is_bound
+            else self.initial.get("role", self.instance.role if self.instance.pk else "")
+        )
+        role = role or Role.CONSUMER.value
+        self.role_presentations = {
+            presentation_role: {
+                "labels": labels,
+                "note": self.ROLE_NOTES[presentation_role],
+            }
+            for presentation_role, labels in self.ROLE_FIELD_LABELS.items()
+        }
+        self.registration_note = self.ROLE_NOTES.get(
+            role, self.ROLE_NOTES[Role.CONSUMER.value]
+        )
+        for field_name, label in self.ROLE_FIELD_LABELS.get(role, {}).items():
+            self.fields[field_name].label = label
         for field in self.fields.values():
             field.widget.attrs.setdefault("class", "form-control")
 

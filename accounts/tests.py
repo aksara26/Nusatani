@@ -158,6 +158,17 @@ class DemoLoginTests(TestCase):
         response = self.client.get(reverse("accounts:register"), {"role": "horeca"})
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'value="horeca" selected')
+        self.assertContains(response, "Nama usaha HOREKA")
+        self.assertContains(response, "Email usaha")
+
+    def test_registration_fields_and_guidance_match_selected_role(self):
+        farmer = self.client.get(reverse("accounts:register"), {"role": "farmer"})
+        self.assertContains(farmer, "Nama usaha / kelompok tani")
+        self.assertContains(farmer, "Alamat atau daerah lahan belum diminta")
+
+        consumer = self.client.get(reverse("accounts:register"), {"role": "consumer"})
+        self.assertContains(consumer, "Email pembeli")
+        self.assertContains(consumer, "alamat rumah tidak diminta")
 
     def test_wrong_password_is_rejected(self):
         response = self.client.post(
