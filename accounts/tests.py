@@ -160,6 +160,7 @@ class DemoLoginTests(TestCase):
         self.assertContains(response, 'value="horeca" selected')
         self.assertContains(response, "Nama usaha HOREKA")
         self.assertContains(response, "Email usaha")
+        self.assertContains(response, 'href="/accounts/login/?role=horeca"')
 
     def test_registration_fields_and_guidance_match_selected_role(self):
         farmer = self.client.get(reverse("accounts:register"), {"role": "farmer"})
@@ -277,8 +278,28 @@ class GuideAndProfileTests(TestCase):
         self.assertContains(login, 'name="password"')
         self.assertNotContains(login, "Sebelum masuk, pilih peran Anda")
         self.assertContains(login, "Buka panduan")
-        self.assertContains(login, "Daftar sekarang")
+        self.assertContains(login, 'data-auth-tab="register"')
         self.assertNotContains(login, "password123")
+
+    def test_auth_switch_is_at_top_of_form_and_not_in_main_nav(self):
+        for route_name, active_tab in (
+            ("login", "login"),
+            ("register", "register"),
+        ):
+            response = self.client.get(reverse(f"accounts:{route_name}"))
+            content = response.content.decode()
+            nav_start = content.index('<nav class="navbar')
+            nav_end = content.index("</nav>", nav_start)
+            main_nav = content[nav_start:nav_end]
+
+            with self.subTest(page=route_name):
+                self.assertLess(
+                    content.index('class="auth-switch"'),
+                    content.index('class="auth-header"'),
+                )
+                self.assertIn(f'data-auth-tab="{active_tab}"', content)
+                self.assertNotIn("/accounts/login/", main_nav)
+                self.assertNotIn("/accounts/daftar/", main_nav)
 
     def test_authenticated_user_can_open_guide(self):
         user = User.objects.create_user(

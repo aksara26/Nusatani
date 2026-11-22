@@ -132,10 +132,6 @@
   Belum tahu peran saya? Buka panduan
 </a>
 
-<p class="small text-muted text-center mt-4 mb-0">
-  Belum punya akun? <a href="{% url 'accounts:register' %}">Daftar sekarang</a>.
-</p>
-
 {% block extra_js %}
 <script>
 (function () {
@@ -170,6 +166,8 @@
   const demoSummaryHint = document.querySelector(".demo-summary-hint");
   const demoSummaryIcon = document.querySelector(".demo-summary-icon");
   const demoBtn = document.querySelector(".demo-form button[type='submit']");
+  const registerTab = document.querySelector('[data-auth-tab="register"]');
+  const registerUrl = "{% url 'accounts:register' %}";
 
   const roleConfig = {
     farmer: { inputLabel: "Username / ID Petani", placeholder: "contoh: petani1", hint: "Kelola produk, pesanan, kualitas, dan aset usaha.", icon: "sprout" },
@@ -191,6 +189,12 @@
 
   function applyRole(role) {
     const cfg = roleConfig[role] || {};
+    if (registerTab) {
+      const registerRole = ["farmer", "horeca", "consumer"].includes(role)
+        ? role
+        : "consumer";
+      registerTab.href = registerUrl + "?role=" + encodeURIComponent(registerRole);
+    }
     if (usernameLabel) usernameLabel.textContent = cfg.inputLabel || "Username";
     if (usernameHint) usernameHint.textContent = cfg.hint || "";
     if (usernameInput) usernameInput.placeholder = cfg.placeholder || "";

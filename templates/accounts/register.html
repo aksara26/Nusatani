@@ -1,11 +1,12 @@
 {% extends "accounts/auth_base.html" %}
 
 {% block title %}Daftar Akun — NusaTani{% endblock %}
+{% block auth_heading_id %}register-heading{% endblock %}
 
 {% block auth_body %}
 <div class="auth-header">
   <span class="section-kicker">Pendaftaran akun</span>
-  <h1 class="auth-title">Buat akun NusaTani</h1>
+  <h1 id="register-heading" class="auth-title">Buat akun NusaTani</h1>
   <p class="auth-subtitle">Isi data di bawah ini untuk mulai menggunakan platform.</p>
 </div>
 
@@ -101,12 +102,16 @@
   const roleSelect = document.getElementById("{{ form.role.id_for_label }}");
   const presentationData = document.getElementById("registrationRolePresentations");
   const note = document.querySelector("[data-registration-note]");
+  const loginTab = document.querySelector('[data-auth-tab="login"]');
   if (!roleSelect || !presentationData || !note) return;
 
   const presentations = JSON.parse(presentationData.textContent);
   function updateRoleFields() {
     const presentation = presentations[roleSelect.value];
     if (!presentation) return;
+    if (loginTab) {
+      loginTab.href = "{% url 'accounts:login' %}?role=" + encodeURIComponent(roleSelect.value);
+    }
 
     Object.entries(presentation.labels).forEach(function ([fieldName, labelText]) {
       const field = document.getElementById("id_" + fieldName);
@@ -127,8 +132,4 @@
   <svg class="icon" width="18" height="18" aria-hidden="true"><use href="#icon-file-text"/></svg>
   Lihat cara daftar dulu
 </a>
-
-<p class="small text-muted text-center mt-4 mb-0">
-  Sudah punya akun? <a href="{% url 'accounts:login' %}">Masuk di sini</a>.
-</p>
 {% endblock %}

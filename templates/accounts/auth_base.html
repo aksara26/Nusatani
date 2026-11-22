@@ -4,7 +4,17 @@
 
 {% block content %}
 <main class="auth-page" role="main">
-  <div class="auth-card" aria-labelledby="login-heading">
+  <div class="auth-card" aria-labelledby="{% block auth_heading_id %}login-heading{% endblock %}">
+    <nav class="auth-switch" aria-label="Masuk atau daftar">
+      <a class="auth-switch-link{% if request.resolver_match.url_name == 'login' %} is-active{% endif %}"
+         data-auth-tab="login"
+         href="{% url 'accounts:login' %}{% if request.resolver_match.url_name == 'register' and form.role.value %}?role={{ form.role.value|urlencode }}{% endif %}"
+         {% if request.resolver_match.url_name == 'login' %}aria-current="page"{% endif %}>Masuk</a>
+      <a class="auth-switch-link{% if request.resolver_match.url_name == 'register' %} is-active{% endif %}"
+         data-auth-tab="register"
+         href="{% url 'accounts:register' %}{% if request.resolver_match.url_name == 'login' and selected_role %}?role={{ selected_role|urlencode }}{% elif request.resolver_match.url_name == 'register' and form.role.value %}?role={{ form.role.value|urlencode }}{% endif %}"
+         {% if request.resolver_match.url_name == 'register' %}aria-current="page"{% endif %}>Daftar</a>
+    </nav>
     {% block auth_body %}{% endblock %}
   </div>
 </main>

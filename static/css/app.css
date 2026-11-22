@@ -959,6 +959,40 @@ a:hover { color: var(--primary-hover); text-decoration: underline; }
   padding: var(--space-8) var(--space-6);
 }
 
+.auth-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-1);
+  padding: var(--space-1);
+  margin-bottom: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-2);
+}
+
+.auth-switch-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: var(--radius-pill);
+  color: var(--muted);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-switch-link:hover,
+.auth-switch-link:focus {
+  color: var(--primary);
+  background: var(--primary-soft);
+  text-decoration: none;
+}
+
+.auth-switch-link.is-active {
+  color: #fff;
+  background: var(--primary);
+}
+
 .auth-header {
   text-align: center;
   margin-bottom: var(--space-6);
