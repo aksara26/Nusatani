@@ -38,7 +38,7 @@ body.is-workspace {
   display: none !important;
 }
 
-main, .page, .navbar, footer {
+main, .page, footer {
   position: relative;
   z-index: 1;
 }
