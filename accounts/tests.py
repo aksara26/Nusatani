@@ -269,6 +269,17 @@ class GuideAndProfileTests(TestCase):
         self.assertContains(login, "Daftar sekarang")
         self.assertNotContains(login, "password123")
 
+    def test_authenticated_user_can_open_guide(self):
+        user = User.objects.create_user(
+            username="pengguna", password="password123", role="consumer"
+        )
+        self.client.force_login(user)
+
+        guide = self.client.get(reverse("accounts:guide"))
+        self.assertEqual(guide.status_code, 200)
+        self.assertContains(guide, "Sebelum masuk, pilih peran Anda")
+        self.assertContains(guide, "Kembali ke dashboard")
+
     def test_login_is_always_discoverable_on_public_pages(self):
         for url in (
             reverse("accounts:guide"),
