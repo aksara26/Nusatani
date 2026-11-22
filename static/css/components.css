@@ -629,8 +629,8 @@
 .rounded-pill { border-radius: var(--radius-pill) !important; }
 
 /* =========================
-   16. Animations
-   ========================= */
+    16. Animations
+    ========================= */
 .fade-in {
   animation: fadeIn 0.3s ease-out;
 }
@@ -652,3 +652,252 @@
 .stagger-3 { animation-delay: 0.15s; }
 .stagger-4 { animation-delay: 0.2s; }
 .stagger-5 { animation-delay: 0.25s; }
+
+/* =========================
+    17. Guide / Onboarding
+    ========================= */
+.onboarding {
+  max-width: 720px;
+  margin: 0 auto;
+}
+.onboarding-head {
+  margin-bottom: var(--space-6);
+}
+.onboarding-progress {
+  position: relative;
+  margin-bottom: var(--space-6);
+}
+.onboarding-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-3);
+}
+.onboarding-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+.onboarding-dot-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.onboarding-step-dot.is-active .onboarding-dot {
+  background: var(--primary);
+  color: #fff;
+}
+.onboarding-step-dot.is-done .onboarding-dot {
+  background: var(--success);
+  color: #fff;
+}
+.onboarding-step-dot:not(.is-active):not(.is-done) .onboarding-dot {
+  background: var(--border);
+  color: var(--muted);
+}
+.onboarding-track {
+  position: absolute;
+  top: 28px;
+  left: 10%;
+  right: 10%;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  z-index: -1;
+}
+.onboarding-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+.onboarding-step {
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  transition: var(--transition);
+}
+.onboarding-step[hidden] {
+  display: none !important;
+}
+.role-grid-guide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.role-card-guide {
+  position: relative;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  padding: var(--space-4);
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+}
+.role-card-guide:hover {
+  border-color: var(--primary);
+  background: var(--primary-faint);
+}
+.role-card-guide.is-selected {
+  border-color: var(--primary);
+  background: var(--primary-faint);
+}
+.role-card-guide[aria-checked="true"] {
+  border-color: var(--primary);
+  background: var(--primary-faint);
+}
+.role-card-guide.is-amber {
+  border-color: var(--accent);
+}
+.role-card-guide-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.role-check {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--primary);
+  transition: var(--transition);
+}
+.role-check .icon {
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: var(--transition);
+}
+.role-card-guide[aria-checked="true"] .role-check {
+  border-color: var(--primary);
+}
+.role-card-guide[aria-checked="true"] .role-check .icon {
+  opacity: 1;
+  transform: scale(1);
+}
+.role-icon-guide {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-control);
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.role-card-guide.is-amber .role-icon-guide {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.role-name-guide {
+  font-weight: 600;
+  color: var(--heading);
+  display: block;
+}
+.role-summary-guide {
+  font-size: 0.8rem;
+  color: var(--muted);
+  display: block;
+}
+.role-hint-guide {
+  font-size: 0.8rem;
+  color: var(--primary);
+  font-weight: 600;
+  display: block;
+  margin-top: auto;
+}
+.assigned-roles {
+  margin-top: var(--space-4);
+}
+.flow-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.flow-icon-guide {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-control);
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.flow-list {
+  padding-left: var(--space-6);
+}
+.flow-list-compact {
+  margin: 0;
+  padding-left: var(--space-6);
+}
+.check-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.check-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.check-list-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--success-soft);
+  color: var(--success);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.check-list-icon .icon {
+  width: 14px;
+  height: 14px;
+}
+.onboarding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.btn-back-guide {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.btn-next-guide {
+  margin-left: auto;
+}
+.btn-finish-guide {
+  margin-left: auto;
+}

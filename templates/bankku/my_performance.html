@@ -48,7 +48,7 @@
         <div class="d-flex align-items-center gap-3 mb-3">
           <div class="display-6 fw-bold">{{ assessment.total_score|floatformat:0 }}</div>
           <div>
-            <span class="badge {{ assessment.eligibility_badge_class }}">{{ assessment.get_eligibility_display }}</span>
+            {{ assessment.get_eligibility_display|nt_chip|safe }}
             <div class="small text-muted">dari 100 (simulasi)</div>
           </div>
         </div>

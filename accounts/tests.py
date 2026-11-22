@@ -277,8 +277,11 @@ class GuideAndProfileTests(TestCase):
         ):
             with self.subTest(url=url):
                 response = self.client.get(url)
-                self.assertContains(response, 'class="public-hero"')
-                self.assertContains(response, "d-lg-none")
+                # Guide page uses onboarding, auth pages use auth-page
+                if url == reverse("accounts:guide"):
+                    self.assertContains(response, 'class="onboarding"')
+                else:
+                    self.assertContains(response, 'class="auth-page"')
                 self.assertContains(response, 'href="/accounts/login/"')
                 self.assertContains(response, "Foto sawah:")
 
@@ -300,7 +303,7 @@ class GuideAndProfileTests(TestCase):
 
         login_page = self.client.get(reverse("accounts:login"))
         self.assertEqual(login_page.status_code, 200)
-        self.assertContains(login_page, "Masuk sebagai akun lain")
+        self.assertContains(login_page, "Anda sudah masuk sebagai")
         self.assertContains(login_page, "Ganti akun")
 
         switched = self.client.post(
@@ -317,7 +320,7 @@ class GuideAndProfileTests(TestCase):
         response = self.client.get(reverse("accounts:guide"))
         self.assertContains(response, "favicon")
         self.assertContains(response, "apple-touch-icon")
-        self.assertContains(response, 'name="theme-color" content="#15803D"')
+        self.assertContains(response, 'name="theme-color" content="#2f6b3a"')
 
     def test_actions_show_toast_and_confirmation_modal(self):
         call_command("seed_demo_users", verbosity=0)
@@ -342,11 +345,15 @@ class GuideAndProfileTests(TestCase):
         css = (Path(settings.BASE_DIR) / "static/css/app.css").read_text(
             encoding="utf-8"
         )
-        self.assertIn("highland-sawah.jpg", css)
+        # Background pattern is in background.css
+        bg_css = (Path(settings.BASE_DIR) / "static/css/background.css").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("pattern.svg", bg_css)
         self.assertIn("backdrop-filter", css)
         self.assertIn(".nt-toast", css)
-        self.assertIn(".confirm-modal", css)
-        self.assertIn(".glass-panel", css)
+        self.assertIn(".modal-content", css)
+        self.assertIn(".glass-card", css)
 
     def test_critical_forms_ask_for_confirmation(self):
         templates = (

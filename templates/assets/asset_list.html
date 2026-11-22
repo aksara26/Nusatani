@@ -61,7 +61,7 @@
             <td data-label="Jumlah">{{ asset.quantity }} {{ asset.unit }}</td>
             <td data-label="Kondisi">{{ asset.get_condition_display|nt_chip|safe }}</td>
             <td data-label="Skema">
-              <span class="badge badge-secondary">{{ asset.get_financing_scheme_display }}</span>
+              {{ asset.get_financing_scheme_display|nt_chip|safe }}
               {% if asset.is_ijarah and asset.ijarah_total %}
                 <div class="small text-muted mt-1">{{ asset.ijarah_total|rupiah }} total simulasi</div>
               {% endif %}

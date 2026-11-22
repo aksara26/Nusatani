@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static rupiah %}
+{% load static dashboard_icons rupiah %}
 
 {% block title %}{% if surplus_only %}Sisaku{% else %}Katalog Produk{% endif %} — NusaTani{% endblock %}
 
@@ -43,12 +43,12 @@
         <h2 class="product-card-title">{{ product.name }}</h2>
         <div class="d-flex flex-wrap gap-1">
           {% if product.is_surplus %}
-          <span class="badge badge-warning">
-            <svg class="icon" width="10" height="10" aria-hidden="true"><circle cx="5" cy="5" r="4" fill="currentColor"></circle></svg>
-            Sisaku
+          <span class="chip chip--menunggu">
+            <svg class="nt-icon" width="10" height="10" aria-hidden="true"><use href="#icon-sprout"/></svg>
+            <span class="chip-text">Sisaku</span>
           </span>
           {% endif %}
-          <span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span>
+          {{ product.availability_status|nt_chip|safe }}
         </div>
       </div>
       <p class="small text-muted mb-2">{{ product.variety.name }} · {{ product.farmer.username }}</p>

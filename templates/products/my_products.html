@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static rupiah %}
+{% load static dashboard_icons rupiah %}
 
 {% block title %}Produk Saya — NusaTani{% endblock %}
 
@@ -21,34 +21,34 @@
 <div class="card">
   <div class="card-body p-0">
     <div class="table-responsive">
-      <table class="table align-middle mb-0">
+      <table class="table table-stack align-middle mb-0">
         <thead>
           <tr>
-            <th>Produk</th>
-            <th>Varietas</th>
-            <th>Harga</th>
-            <th>Stok</th>
-            <th>Status</th>
-            <th class="text-end">Aksi</th>
+            <th data-label="Produk">Produk</th>
+            <th data-label="Varietas">Varietas</th>
+            <th data-label="Harga">Harga</th>
+            <th data-label="Stok">Stok</th>
+            <th data-label="Status">Status</th>
+            <th class="text-end" data-label="Aksi">Aksi</th>
           </tr>
         </thead>
         <tbody>
           {% for product in products %}
           <tr>
-            <td>
+            <td data-label="Produk">
               <div class="fw-semibold">{{ product.name }}</div>
               {% if product.is_surplus %}
-                <span class="badge badge-warning">
-                  <svg class="icon" width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="currentColor"></circle></svg>
-                  Sisaku
+                <span class="chip chip--netral">
+                  <svg class="nt-icon" width="12" height="12" aria-hidden="true"><use href="#icon-package"/></svg>
+                  <span class="chip-text">Sisaku</span>
                 </span>
               {% endif %}
             </td>
-            <td>{{ product.variety.name }}</td>
-            <td>{{ product.price|rupiah:"pack" }}</td>
-            <td>{{ product.stock }} pack</td>
-            <td><span class="badge {{ product.availability_badge_class }}">{{ product.availability_status }}</span></td>
-            <td class="text-end">
+            <td data-label="Varietas">{{ product.variety.name }}</td>
+            <td data-label="Harga">{{ product.price|rupiah:"pack" }}</td>
+            <td data-label="Stok">{{ product.stock }} pack</td>
+            <td data-label="Status">{{ product.availability_status|nt_chip|safe }}</td>
+            <td class="text-end" data-label="Aksi">
               <a class="btn btn-sm btn-outline-primary" href="{% url 'products:detail' product.pk %}">Detail</a>
               <a class="btn btn-sm btn-outline-secondary" href="{% url 'products:update' product.pk %}">Ubah</a>
               <a class="btn btn-sm btn-outline-secondary" href="{% url 'products:inventory_update' product.pk %}">Stok</a>

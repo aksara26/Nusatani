@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load dashboard_icons %}
 
 {% block title %}Cara Daftar — NusaTani{% endblock %}
 
@@ -18,76 +19,76 @@
   </header>
 
   <nav class="onboarding-progress" aria-label="Progres panduan">
-    <ol class="onboarding-steps d-flex align-items-center justify-content-center gap-2 mb-4" style="list-style:none;padding:0;margin:0;">
-      <li data-step-dot="1" class="is-active" aria-current="step" style="display:flex;flex-direction:column;align-items:center;gap:var(--space-1);">
-        <span class="onboarding-dot" style="width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">1</span>
-        <span class="onboarding-dot-label small" style="color:var(--muted);white-space:nowrap;">Pilih peran</span>
+    <ol class="onboarding-steps">
+      <li class="onboarding-step-dot is-active" data-step-dot="1" aria-current="step">
+        <span class="onboarding-dot">1</span>
+        <span class="onboarding-dot-label small">Pilih peran</span>
       </li>
-      <li data-step-dot="2" style="display:flex;flex-direction:column;align-items:center;gap:var(--space-1);position:relative;">
-        <span class="onboarding-dot" style="width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">2</span>
-        <span class="onboarding-dot-label small" style="color:var(--muted);white-space:nowrap;">Cara daftar</span>
+      <li class="onboarding-step-dot" data-step-dot="2">
+        <span class="onboarding-dot">2</span>
+        <span class="onboarding-dot-label small">Cara daftar</span>
       </li>
-      <li data-step-dot="3" style="display:flex;flex-direction:column;align-items:center;gap:var(--space-1);position:relative;">
-        <span class="onboarding-dot" style="width:32px;height:32px;border-radius:50%;background:var(--border);color:var(--muted);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;">3</span>
-        <span class="onboarding-dot-label small" style="color:var(--muted);white-space:nowrap;">Siap daftar</span>
+      <li class="onboarding-step-dot" data-step-dot="3">
+        <span class="onboarding-dot">3</span>
+        <span class="onboarding-dot-label small">Siap daftar</span>
       </li>
     </ol>
-    <div class="onboarding-track" role="presentation" style="position:absolute;top:28px;left:10%;right:10%;height:4px;background:var(--border);border-radius:2px;z-index:-1;">
-      <div class="onboarding-fill" data-progress-bar style="width: 33.333%;height:100%;background:var(--primary);border-radius:2px;transition:width 0.3s ease;"></div>
+    <div class="onboarding-track" role="presentation">
+      <div class="onboarding-fill" data-progress-bar style="width: 33.333%;"></div>
     </div>
   </nav>
 
   <div class="card">
     <!-- LANGKAH 1 -->
-    <section class="onboarding-step is-active" data-step="1" aria-labelledby="step1-title" style="padding:var(--space-6);">
+    <section class="onboarding-step is-active" data-step="1" aria-labelledby="step1-title">
       <h2 id="step1-title" class="h5 mb-1">Anda akan mendaftar sebagai apa?</h2>
       <p class="small text-muted mb-4">Pilih satu peran. Peran ini akan terisi otomatis di formulir pendaftaran.</p>
 
-      <div class="role-grid" role="radiogroup" aria-label="Pilih peran pendaftaran" data-role-group style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--space-3);">
+      <div class="role-grid-guide" role="radiogroup" aria-label="Pilih peran pendaftaran" data-role-group>
         {% for role_key, item in guides.items %}
-        <button type="button" class="role-card" style="border:2px solid var(--border);border-radius:var(--radius-control);background:var(--surface);padding:var(--space-4);text-align:left;cursor:pointer;transition:var(--transition);display:flex;flex-direction:column;gap:var(--space-2);height:100%;{% if item.is_amber %}border-color:var(--accent);{% endif %}"
+        <button type="button" class="role-card-guide{% if item.is_amber %} is-amber{% endif %}"
                 data-role-select
                 data-role="{{ role_key }}"
                 data-label="{{ item.label }}"
-                data-icon="{{ item.icon|safe }}"
+                data-icon="{{ item.icon }}"
                 data-summary="{{ item.summary }}"
                 data-register-url="{% url 'accounts:register' %}?role={{ role_key }}"
                 role="radio" aria-checked="false">
-          <div style="display:flex;align-items:flex-start;gap:var(--space-3);">
-            <span class="role-check" aria-hidden="true" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--primary);">
-              <svg class="icon" width="16" height="16" style="opacity:0;transform:scale(0.5);transition:var(--transition);"><use href="#icon-check"/></svg>
+          <div class="role-card-guide-header">
+            <span class="role-check" aria-hidden="true">
+              <svg class="icon" width="16" height="16"><use href="#icon-check"/></svg>
             </span>
-            <span class="role-icon" aria-hidden="true" style="width:44px;height:44px;border-radius:var(--radius-control);background:var(--primary-soft);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;{% if item.is_amber %}background:var(--accent-soft);color:var(--accent);{% endif %}">{{ item.icon|safe }}</span>
+            <span class="role-icon-guide" aria-hidden="true"><svg class="icon" width="22" height="22"><use href="#icon-{{ item.icon }}"/></svg></span>
           </div>
           <div>
-            <span class="role-name" style="font-weight:600;color:var(--heading);display:block;">{{ item.label }}</span>
-            <span class="role-summary" style="font-size:0.8rem;color:var(--muted);display:block;">{{ item.summary }}</span>
+            <span class="role-name-guide">{{ item.label }}</span>
+            <span class="role-summary-guide">{{ item.summary }}</span>
           </div>
-          <span class="role-hint" style="font-size:0.8rem;color:var(--primary);font-weight:600;display:block;margin-top:auto;">Daftar sebagai ini <svg class="icon" width="14" height="14" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"/></svg></span>
+          <span class="role-hint-guide">Daftar sebagai ini <svg class="icon" width="14" height="14" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"/></svg></span>
         </button>
         {% endfor %}
       </div>
 
-      <div class="assigned-roles mt-4">
+      <div class="assigned-roles">
         <span class="section-kicker">Peran dengan akses khusus</span>
         <p class="small text-muted mb-2 mt-1">
           Akun untuk peran berikut dibuatkan oleh administrator setelah pendaftaran dan verifikasi.
         </p>
         <div class="d-flex flex-wrap gap-2">
           {% for item in assigned_roles %}
-            <span class="badge badge-secondary">{{ item.label }}</span>
+            {{ item.label|nt_chip|safe }}
           {% endfor %}
         </div>
       </div>
     </section>
 
     <!-- LANGKAH 2 -->
-    <section class="onboarding-step" data-step="2" aria-labelledby="step2-title" hidden style="padding:var(--space-6);">
-      <button type="button" class="btn btn-link btn-sm ps-0 mb-2" data-goto="1">
+    <section class="onboarding-step" data-step="2" aria-labelledby="step2-title" hidden>
+      <button type="button" class="btn btn-link btn-sm ps-0 mb-2 btn-back-guide" data-goto="1">
         <svg class="icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;transform:rotate(180deg);"><use href="#icon-arrow-right"/></svg> Ganti peran
       </button>
-      <div class="d-flex align-items-center gap-3 mb-2">
-        <span class="flow-icon" data-flow-icon aria-hidden="true" style="width:48px;height:48px;border-radius:var(--radius-control);background:var(--primary-soft);color:var(--primary);display:inline-flex;align-items:center;justify-content:center;"><svg class="icon" width="24" height="24"><use href="#icon-sprout"/></svg></span>
+      <div class="flow-header">
+        <span class="flow-icon-guide" data-flow-icon aria-hidden="true"><svg class="icon" width="24" height="24"><use href="#icon-sprout"/></svg></span>
         <div>
           <h2 id="step2-title" class="h5 mb-0" data-flow-title>Cara daftar</h2>
           <p class="small text-muted mb-0" data-flow-summary></p>
@@ -95,7 +96,7 @@
       </div>
 
       <span class="section-kicker d-block mt-4 mb-3">Langkah pendaftaran</span>
-      <ol class="flow-list" style="padding-left:var(--space-6);">
+      <ol class="flow-list">
         <li>Pilih peran di langkah pertama. Peran sudah tersimpan di formulir.</li>
         <li>Isi username, email, dan nama Anda dengan data yang masih aktif.</li>
         <li>Buat password minimal 8 karakter, lalu ketik ulang di kolom konfirmasi.</li>
@@ -104,13 +105,13 @@
 
       <div class="after-register mt-4">
         <span class="section-kicker">Langkah pertama setelah masuk</span>
-        <ol class="flow-list flow-list-compact" data-flow-steps style="padding-left:var(--space-6);"></ol>
+        <ol class="flow-list flow-list-compact" data-flow-steps></ol>
       </div>
     </section>
 
     <!-- LANGKAH 3 -->
-    <section class="onboarding-step" data-step="3" aria-labelledby="step3-title" hidden style="padding:var(--space-6);">
-      <button type="button" class="btn btn-link btn-sm ps-0 mb-2" data-goto="2">
+    <section class="onboarding-step" data-step="3" aria-labelledby="step3-title" hidden>
+      <button type="button" class="btn btn-link btn-sm ps-0 mb-2 btn-back-guide" data-goto="2">
         <svg class="icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;transform:rotate(180deg);"><use href="#icon-arrow-right"/></svg> Lihat cara daftar
       </button>
       <span class="section-kicker">Hampir selesai</span>
@@ -119,10 +120,10 @@
         Pastikan semua data sudah siap sebelum membuka formulir pendaftaran.
       </p>
 
-      <ul class="check-list" style="list-style:none;padding:0;display:flex;flex-direction:column;gap:var(--space-2);">
-        <li style="display:flex;align-items:center;gap:var(--space-2);"><span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:var(--success-soft);color:var(--success);display:inline-flex;align-items:center;justify-content:center;"><svg class="icon" width="14" height="14"><use href="#icon-check"/></svg></span> Username belum pernah dipakai</li>
-        <li style="display:flex;align-items:center;gap:var(--space-2);"><span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:var(--success-soft);color:var(--success);display:inline-flex;align-items:center;justify-content:center;"><svg class="icon" width="14" height="14"><use href="#icon-check"/></svg></span> Email aktif dan bisa dihubungi</li>
-        <li style="display:flex;align-items:center;gap:var(--space-2);"><span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:var(--success-soft);color:var(--success);display:inline-flex;align-items:center;justify-content:center;"><svg class="icon" width="14" height="14"><use href="#icon-check"/></svg></span> Password minimal 8 karakter</li>
+      <ul class="check-list">
+        <li class="check-list-item"><span class="check-list-icon" aria-hidden="true"><svg class="icon" width="14" height="14"><use href="#icon-check"/></svg></span> Username belum pernah dipakai</li>
+        <li class="check-list-item"><span class="check-list-icon" aria-hidden="true"><svg class="icon" width="14" height="14"><use href="#icon-check"/></svg></span> Email aktif dan bisa dihubungi</li>
+        <li class="check-list-item"><span class="check-list-icon" aria-hidden="true"><svg class="icon" width="14" height="14"><use href="#icon-check"/></svg></span> Password minimal 8 karakter</li>
       </ul>
 
       <div class="alert alert-info small mt-4 mb-0" role="alert">
@@ -131,14 +132,14 @@
     </section>
   </div>
 
-  <footer class="onboarding-actions d-flex flex-wrap align-items-center justify-content-between gap-2 mt-4">
-    <button type="button" class="btn btn-outline-secondary" data-back hidden>
+  <footer class="onboarding-actions">
+    <button type="button" class="btn btn-outline-secondary btn-back-guide" data-back hidden>
       <svg class="icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;transform:rotate(180deg);"><use href="#icon-arrow-right"/></svg> Kembali
     </button>
     <div class="ms-auto d-flex flex-wrap gap-2">
       <a class="btn btn-outline-primary btn-lg" href="{% url 'accounts:login' %}">Sudah punya akun? Masuk</a>
-      <button type="button" class="btn btn-primary btn-lg" data-next disabled>Pilih peran dulu</button>
-      <a class="btn btn-primary btn-lg" data-finish href="{% url 'accounts:register' %}" hidden>
+      <button type="button" class="btn btn-primary btn-lg btn-next-guide" data-next disabled>Pilih peran dulu</button>
+      <a class="btn btn-primary btn-lg btn-finish-guide" data-finish href="{% url 'accounts:register' %}" hidden>
         Lanjut ke pendaftaran <svg class="icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"/></svg>
       </a>
     </div>
@@ -231,7 +232,16 @@
     if (!selected) return;
     const panel = document.querySelector('[data-role-steps="' + selected.dataset.role + '"]');
     const list = panel ? panel.querySelector(".flow-list") : null;
-    flowIcon.innerHTML = selected.dataset.icon;
+    flowIcon.innerHTML = "";
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("class", "icon");
+    icon.setAttribute("width", "24");
+    icon.setAttribute("height", "24");
+    icon.setAttribute("aria-hidden", "true");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#icon-" + selected.dataset.icon);
+    icon.appendChild(use);
+    flowIcon.appendChild(icon);
     flowTitle.textContent = "Daftar sebagai " + selected.dataset.label;
     flowSummary.textContent = selected.dataset.summary;
     flowLabel.textContent = selected.dataset.label;

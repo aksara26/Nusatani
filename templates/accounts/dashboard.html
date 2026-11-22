@@ -23,7 +23,7 @@
   {% for stat in dashboard_data.stats %}
   <div class="kpi-card">
     <div class="kpi-icon">
-      <svg class="icon" width="24" height="24"><use href="#icon-{{ stat.icon_type|default:'shield-check' }}"/></svg>
+      <svg class="icon" width="24" height="24" aria-hidden="true"><use href="#icon-{{ stat.icon }}"/></svg>
     </div>
     <div class="kpi-label">{{ stat.label }}</div>
     <div class="kpi-number">{{ stat.value }}</div>
@@ -33,12 +33,64 @@
 </div>
 {% endif %}
 
+<!-- Trend Chart (7 hari) -->
+{% if dashboard_data.chart %}
+<div class="chart-card{% if dashboard_data.chart.tone == 'amber' %} chart-card--amber{% endif %}">
+  <div class="chart-head">
+    <div>
+      <div class="section-kicker">{{ dashboard_data.chart.kicker }}</div>
+      <h2 class="h5 mb-1">{{ dashboard_data.chart.title }}</h2>
+      <p class="small text-muted mb-0">{{ dashboard_data.chart.caption }}</p>
+    </div>
+    <div class="chart-stats">
+      <div class="chart-stat">
+        <span>Total</span>
+        <strong>{{ dashboard_data.chart.total }}</strong>
+      </div>
+      <div class="chart-stat">
+        <span>Rata-rata</span>
+        <strong>{{ dashboard_data.chart.average }}</strong>
+      </div>
+      <div class="chart-stat">
+        <span>Puncak</span>
+        <strong>{{ dashboard_data.chart.peak }}</strong>
+      </div>
+    </div>
+  </div>
+  <div class="chart-plot">
+    <svg class="chart-svg" viewBox="0 0 100 44" preserveAspectRatio="none" role="img"
+         aria-label="{{ dashboard_data.chart.title }}: total {{ dashboard_data.chart.total }} {{ dashboard_data.chart.unit }} dalam tujuh hari terakhir.">
+      <g class="chart-grid" aria-hidden="true">
+        <line x1="0" y1="6" x2="100" y2="6" vector-effect="non-scaling-stroke"/>
+        <line x1="0" y1="17" x2="100" y2="17" vector-effect="non-scaling-stroke"/>
+        <line x1="0" y1="28" x2="100" y2="28" vector-effect="non-scaling-stroke"/>
+        <line x1="0" y1="39" x2="100" y2="39" vector-effect="non-scaling-stroke"/>
+      </g>
+      <path class="chart-area" d="{{ dashboard_data.chart.area }}" aria-hidden="true"/>
+      <path class="chart-line" d="{{ dashboard_data.chart.path }}" vector-effect="non-scaling-stroke" aria-hidden="true"/>
+    </svg>
+    <div class="chart-axis" aria-hidden="true">
+      {% for point in dashboard_data.chart.points %}
+      <div class="chart-tick" title="{{ point.date }}: {{ point.value }} {{ dashboard_data.chart.unit }}">
+        <strong>{{ point.value }}</strong>
+        <span>{{ point.short }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% if not dashboard_data.chart.has_data %}
+  <p class="chart-empty">Belum ada {{ dashboard_data.chart.unit }} pada tujuh hari terakhir.</p>
+  {% endif %}
+</div>
+{% endif %}
+
 <!-- Quick Actions -->
 {% if dashboard_data.actions %}
 <div class="dashboard-actions" aria-label="Aksi cepat">
   {% for action in dashboard_data.actions %}
   <a class="btn {% if action.style == 'success' %}btn-primary{% else %}btn-outline-primary{% endif %}" href="{{ action.url }}">
-    {{ action.icon|nt_icon|safe }} {{ action.label }}
+    <svg class="nt-icon" width="16" height="16" aria-hidden="true"><use href="#icon-{{ action.icon }}"/></svg>
+    {{ action.label }}
   </a>
   {% endfor %}
 </div>
@@ -58,9 +110,7 @@
       {% for focus in dashboard.focus_areas %}
       <a href="{{ focus.url }}" class="focus-card-link">
         <div class="focus-card-icon">
-          {% if forloop.first %}<svg class="icon" width="22" height="22"><use href="#icon-calendar"/></svg>
-          {% elif forloop.counter0 == 1 %}<svg class="icon" width="22" height="22"><use href="#icon-book"/></svg>
-          {% else %}<svg class="icon" width="22" height="22"><use href="#icon-sprout"/></svg>{% endif %}
+          <svg class="icon" width="22" height="22"><use href="#icon-{{ focus.icon }}"/></svg>
         </div>
         <h3 class="focus-card-title">{{ focus.title }}</h3>
         <p class="focus-card-desc">{{ focus.body }}</p>
@@ -76,7 +126,7 @@
     <div class="d-flex align-items-center justify-content-between gap-2 mb-3">
       <h2 class="h5 mb-0">{{ dashboard_data.recent_title }}</h2>
       {% if dashboard_data.recent_url %}
-        <a class="small view-all" href="{{ dashboard_data.recent_url }}">Lihat semua <svg class="icon" width="14" height="14" aria-hidden="true" style="vertical-align:middle;margin-left:4px;"><use href="#icon-arrow-right"/></use></svg></a>
+        <a class="small view-all" href="{{ dashboard_data.recent_url }}">Lihat semua <svg class="icon" width="14" height="14" aria-hidden="true" style="vertical-align:middle;margin-left:4px;"><use href="#icon-arrow-right"/></svg></a>
       {% endif %}
     </div>
 

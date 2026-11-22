@@ -123,15 +123,6 @@
   </button>
   <p class="small text-muted text-center mb-0">Tidak perlu mengetik username dan kata sandi.</p>
 </form>
-
-<!-- Fallback select untuk non-JS -->
-<select name="role" id="demoRoleSelect" class="visually-hidden" aria-hidden="true">
-  {% for cfg in demo_roles %}
-    {% if cfg.role != 'admin' %}
-    <option value="{{ cfg.role }}" {% if selected_role == cfg.role %}selected{% endif %}>{{ cfg.label }}</option>
-    {% endif %}
-  {% endfor %}
-</select>
 {% endif %}
 
 <div class="auth-divider"><span>atau</span></div>
@@ -175,7 +166,6 @@
   const usernameHint = document.getElementById("usernameHint");
   const usernameInput = document.getElementById("{{ form.username.id_for_label }}");
   const demoRoleInput = document.getElementById("demoRoleInput");
-  const demoRoleSelect = document.getElementById("demoRoleSelect");
   const demoSummaryName = document.querySelector(".demo-summary-name");
   const demoSummaryHint = document.querySelector(".demo-summary-hint");
   const demoSummaryIcon = document.querySelector(".demo-summary-icon");
@@ -205,7 +195,6 @@
     if (usernameHint) usernameHint.textContent = cfg.hint || "";
     if (usernameInput) usernameInput.placeholder = cfg.placeholder || "";
     if (demoRoleInput) demoRoleInput.value = role;
-    if (demoRoleSelect) demoRoleSelect.value = role;
 
     const checkedRadio = document.querySelector(".role-card input[value='" + role + "']");
     const cardLabel = checkedRadio ? checkedRadio.closest(".role-card").querySelector(".role-card-name")?.textContent || "" : "";
@@ -230,7 +219,7 @@
   const demoForm = document.querySelector(".demo-form");
   if (demoForm) {
     demoForm.addEventListener("submit", function () {
-      if (demoRoleSelect) demoRoleSelect.value = demoRoleInput?.value || "";
+      if (demoRoleInput) demoRoleInput.value = demoRoleInput?.value || "";
     });
   }
 })();

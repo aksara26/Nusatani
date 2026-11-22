@@ -5,6 +5,7 @@ cukup dilakukan di satu tempat. Konten per role diambil dari konfigurasi ini.
 """
 
 from django.db import models
+from django.urls import reverse_lazy
 
 
 class Role(models.TextChoices):
@@ -29,14 +30,20 @@ ROLE_DASHBOARDS = {
             {
                 "title": "Pesanan & stok",
                 "body": "Pesanan masuk dan ketersediaan produk menjadi dasar persiapan produksi.",
+                "url": reverse_lazy("products:my_products"),
+                "icon": "package",
             },
             {
                 "title": "Kualitas produk",
                 "body": "Produk perlu lolos Quality Control sebelum masuk ke proses pengiriman.",
+                "url": reverse_lazy("orders:incoming"),
+                "icon": "clipboard-check",
             },
             {
                 "title": "Aset usaha",
                 "body": "Rak, tray, lampu, dan peralatan panen tercatat untuk evaluasi usaha.",
+                "url": reverse_lazy("assets:list"),
+                "icon": "archive",
             },
         ],
     },
@@ -51,14 +58,20 @@ ROLE_DASHBOARDS = {
             {
                 "title": "Pre-order",
                 "body": "Perkiraan waktu pemesanan adalah 7–14 hari sebelum produk dibutuhkan.",
+                "url": reverse_lazy("orders:preorder_create"),
+                "icon": "calendar",
             },
             {
                 "title": "Status pesanan",
                 "body": "Setiap tahap pesanan dapat dipantau hingga status Selesai.",
+                "url": reverse_lazy("orders:my_orders"),
+                "icon": "package",
             },
             {
                 "title": "Riwayat pembelian",
                 "body": "Catatan pesanan sebelumnya membantu perencanaan kebutuhan berikutnya.",
+                "url": reverse_lazy("orders:my_orders"),
+                "icon": "book",
             },
         ],
     },
@@ -73,14 +86,20 @@ ROLE_DASHBOARDS = {
             {
                 "title": "Produk tersedia",
                 "body": "Pilih produk sesuai stok yang tercatat di marketplace.",
+                "url": reverse_lazy("products:catalog"),
+                "icon": "layout-dashboard",
             },
             {
                 "title": "Produk surplus",
                 "body": "Produk surplus petani ditawarkan dengan harga dan ketersediaan yang jelas.",
+                "url": reverse_lazy("products:surplus"),
+                "icon": "sprout",
             },
             {
                 "title": "Riwayat pesanan",
                 "body": "Lihat kembali pesanan yang sudah Anda lakukan.",
+                "url": reverse_lazy("orders:my_orders"),
+                "icon": "book",
             },
         ],
     },
@@ -95,14 +114,20 @@ ROLE_DASHBOARDS = {
             {
                 "title": "Antrean pemeriksaan",
                 "body": "Produk berstatus menunggu pemeriksaan menjadi prioritas petugas QC.",
+                "url": reverse_lazy("quality_control:queue"),
+                "icon": "clipboard-check",
             },
             {
                 "title": "Aspek yang dinilai",
                 "body": "Kondisi visual, kebersihan, kesegaran, dan kesesuaian berat.",
+                "url": reverse_lazy("quality_control:queue"),
+                "icon": "search",
             },
             {
                 "title": "Aturan pengiriman",
                 "body": "Produk yang tidak lolos QC tidak boleh masuk ke proses pengiriman.",
+                "url": reverse_lazy("deliveries:list"),
+                "icon": "truck",
             },
         ],
     },
@@ -117,14 +142,20 @@ ROLE_DASHBOARDS = {
             {
                 "title": "Perkembangan petani",
                 "body": "Pantau aktivitas usaha dan capaian petani yang dibimbing.",
+                "url": reverse_lazy("mentorship:list"),
+                "icon": "users",
             },
             {
                 "title": "Materi edukasi",
                 "body": "Bagikan materi yang relevan dengan kebutuhan budidaya microgreens.",
+                "url": reverse_lazy("mentorship:create"),
+                "icon": "book",
             },
             {
                 "title": "Catatan pendampingan",
                 "body": "Simpan evaluasi dan riwayat kegiatan pendampingan.",
+                "url": reverse_lazy("mentorship:list"),
+                "icon": "file-text",
             },
         ],
     },
@@ -139,14 +170,20 @@ ROLE_DASHBOARDS = {
             {
                 "title": "Performa usaha",
                 "body": "Jumlah pesanan, nilai pesanan, dan konsistensi pemenuhan pesanan.",
+                "url": reverse_lazy("bankku:dashboard"),
+                "icon": "bar-chart",
             },
             {
                 "title": "Data pendukung",
                 "body": "Riwayat transaksi, catatan kualitas, dan data aset petani.",
+                "url": reverse_lazy("bankku:dashboard"),
+                "icon": "book",
             },
             {
                 "title": "Indikator pembiayaan",
                 "body": "Nilai indikator pada MVP adalah simulasi, bukan keputusan kredit.",
+                "url": reverse_lazy("bankku:dashboard"),
+                "icon": "badge-check",
             },
         ],
     },
@@ -161,14 +198,20 @@ ROLE_DASHBOARDS = {
             {
                 "title": "Akun & hak akses",
                 "body": "Tetapkan peran pengguna sesuai tanggung jawab masing-masing.",
+                "url": reverse_lazy("admin:index"),
+                "icon": "settings",
             },
             {
                 "title": "Katalog & pesanan",
                 "body": "Pastikan data produk, varietas, dan pesanan tetap konsisten.",
+                "url": reverse_lazy("products:catalog"),
+                "icon": "layout-dashboard",
             },
             {
                 "title": "Laporan aktivitas",
                 "body": "Pantau ringkasan aktivitas platform dari satu dashboard.",
+                "url": reverse_lazy("bankku:dashboard"),
+                "icon": "bar-chart",
             },
         ],
     },
@@ -191,7 +234,7 @@ DEMO_ROLE_ACCOUNTS = {
         "role": Role.FARMER.value,
         "username": "petani1",
         "label": "Petani",
-        "icon": "🌾",
+        "icon": "sprout",
         "input_label": "Username / ID Petani",
         "placeholder": "contoh: petani1",
         "hint": "Kelola produk, pesanan, kualitas, dan aset usaha.",
@@ -200,7 +243,7 @@ DEMO_ROLE_ACCOUNTS = {
         "role": Role.HORECA.value,
         "username": "horeca1",
         "label": "HOREKA",
-        "icon": "🍽️",
+        "icon": "utensils",
         "input_label": "Username / Email usaha",
         "placeholder": "contoh: horeca1",
         "hint": "Pre-order terjadwal untuk hotel, restoran, dan kafe.",
@@ -209,7 +252,7 @@ DEMO_ROLE_ACCOUNTS = {
         "role": Role.CONSUMER.value,
         "username": "konsumen1",
         "label": "Konsumen",
-        "icon": "🥗",
+        "icon": "shopping-bag",
         "input_label": "Username / Email",
         "placeholder": "contoh: konsumen1",
         "hint": "Belanja microgreens segar untuk rumah tangga.",
@@ -218,7 +261,7 @@ DEMO_ROLE_ACCOUNTS = {
         "role": Role.QC.value,
         "username": "qc1",
         "label": "QC",
-        "icon": "🔍",
+        "icon": "clipboard-check",
         "input_label": "ID Petugas QC",
         "placeholder": "contoh: qc1",
         "hint": "Periksa dan putuskan kelayakan produk sebelum dikirim.",
@@ -227,7 +270,7 @@ DEMO_ROLE_ACCOUNTS = {
         "role": Role.MENTOR.value,
         "username": "mentor1",
         "label": "Mentor",
-        "icon": "🧑‍🏫",
+        "icon": "graduation-cap",
         "input_label": "Username Mentor",
         "placeholder": "contoh: mentor1",
         "hint": "Jadwalkan dan catat pendampingan petani.",
@@ -236,7 +279,7 @@ DEMO_ROLE_ACCOUNTS = {
         "role": Role.BANK.value,
         "username": "bank1",
         "label": "Bank",
-        "icon": "🏦",
+        "icon": "landmark",
         "input_label": "Username / Email mitra",
         "placeholder": "contoh: bank1",
         "hint": "Pantau performa usaha dan indikator pembiayaan.",
@@ -246,7 +289,7 @@ DEMO_ROLE_ACCOUNTS = {
 
 ROLE_GUIDES = {
     Role.FARMER.value: {
-        "icon": "🌾",
+        "icon": "sprout",
         "label": Role.FARMER.label,
         "demo_username": "petani1",
         "is_amber": False,
@@ -260,7 +303,7 @@ ROLE_GUIDES = {
         ],
     },
     Role.HORECA.value: {
-        "icon": "🍽️",
+        "icon": "utensils",
         "label": Role.HORECA.label,
         "demo_username": "horeca1",
         "is_amber": True,
@@ -273,7 +316,7 @@ ROLE_GUIDES = {
         ],
     },
     Role.CONSUMER.value: {
-        "icon": "🥗",
+        "icon": "shopping-bag",
         "label": Role.CONSUMER.label,
         "demo_username": "konsumen1",
         "is_amber": True,
@@ -286,7 +329,7 @@ ROLE_GUIDES = {
         ],
     },
     Role.QC.value: {
-        "icon": "🔍",
+        "icon": "clipboard-check",
         "label": Role.QC.label,
         "demo_username": "qc1",
         "is_amber": False,
@@ -299,7 +342,7 @@ ROLE_GUIDES = {
         ],
     },
     Role.MENTOR.value: {
-        "icon": "🧑‍🏫",
+        "icon": "graduation-cap",
         "label": Role.MENTOR.label,
         "demo_username": "mentor1",
         "is_amber": False,
@@ -312,7 +355,7 @@ ROLE_GUIDES = {
         ],
     },
     Role.BANK.value: {
-        "icon": "🏦",
+        "icon": "landmark",
         "label": Role.BANK.label,
         "demo_username": "bank1",
         "is_amber": False,
@@ -325,7 +368,7 @@ ROLE_GUIDES = {
         ],
     },
     Role.ADMIN.value: {
-        "icon": "⚙️",
+        "icon": "settings",
         "label": Role.ADMIN.label,
         "demo_username": "admin",
         "is_amber": False,

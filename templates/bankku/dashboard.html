@@ -69,7 +69,7 @@
             <td data-label="Pemenuhan">{{ row.performance.fulfillment_rate|floatformat:0 }}%</td>
             <td data-label="Lolos QC">{{ row.performance.quality_pass_rate|floatformat:0 }}%</td>
             <td data-label="Indikator simulasi">
-              <span class="badge {{ row.assessment.eligibility_badge_class }}">{{ row.assessment.get_eligibility_display }}</span>
+              {{ row.assessment.get_eligibility_display|nt_chip|safe }}
               <div class="small text-muted mt-1">{{ row.assessment.total_score|floatformat:0 }}/100</div>
             </td>
             <td class="text-end" data-label="Aksi">
@@ -96,7 +96,7 @@
         <div class="d-flex align-items-center gap-3 mb-3">
           <div class="display-6 fw-bold" style="font-size: 48px; line-height: 1;">{{ selected_row.assessment.total_score|floatformat:0 }}</div>
           <div>
-            <span class="badge {{ selected_row.assessment.eligibility_badge_class }}">{{ selected_row.assessment.get_eligibility_display }}</span>
+            {{ selected_row.assessment.get_eligibility_display|nt_chip|safe }}
             <div class="small text-muted">dari 100 (simulasi)</div>
           </div>
         </div>

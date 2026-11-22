@@ -84,7 +84,7 @@ class AssetTests(TestCase):
         self.assertEqual(asset.ijarah_total, Decimal("1800000"))
 
         listing = self.client.get(reverse("assets:list"))
-        self.assertContains(listing, "Rp1800000")
+        self.assertContains(listing, "Rp 1.800.000")
 
     def test_non_ijarah_asset_discards_ijarah_fields(self):
         self.client.login(username="petaniuji", password="password123")

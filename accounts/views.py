@@ -297,7 +297,8 @@ def _curve_chart(
     for index, (day, value) in enumerate(zip(days, values)):
         points.append(
             {
-                "x": round(index * 100 / 6, 2),
+                # Titik diletakkan di tengah kolom agar sejajar dengan label hari.
+                "x": round((index + 0.5) * 100 / 7, 2),
                 "y": round(38 - (value / max_value) * 32, 2),
                 "value": value,
                 "short": HARI_SINGKAT[day.weekday()],
@@ -318,7 +319,10 @@ def _curve_chart(
         "peak": max(values),
         "points": points,
         "path": line_path,
-        "area": f"{line_path} L 100,44 L 0,44 Z",
+        "area": (
+            f"{line_path} L {points[-1]['x']:.2f},44 "
+            f"L {points[0]['x']:.2f},44 Z"
+        ),
         "has_data": total > 0,
     }
 
@@ -351,16 +355,16 @@ def _farmer_dashboard(user):
 
     return {
         "stats": [
-            {"icon": "🌱", "label": "Produk aktif", "value": products.filter(is_active=True).count(), "hint": "tampil di katalog"},
-            {"icon": "📦", "label": "Pesanan aktif", "value": active_orders.count(), "hint": "belum selesai"},
-            {"icon": "🔍", "label": "Menunggu QC", "value": orders.filter(status=OrderStatus.MENUNGGU_QC.value).count(), "hint": "perlu pemeriksaan"},
-            {"icon": "🧰", "label": "Aset tercatat", "value": Asset.objects.filter(owner=user).count(), "hint": "rak, tray, alat"},
+            {"icon": "sprout", "label": "Produk aktif", "value": products.filter(is_active=True).count(), "hint": "tampil di katalog"},
+            {"icon": "package", "label": "Pesanan aktif", "value": active_orders.count(), "hint": "belum selesai"},
+            {"icon": "clipboard-check", "label": "Menunggu QC", "value": orders.filter(status=OrderStatus.MENUNGGU_QC.value).count(), "hint": "perlu pemeriksaan"},
+            {"icon": "archive", "label": "Aset tercatat", "value": Asset.objects.filter(owner=user).count(), "hint": "rak, tray, alat"},
         ],
         "actions": [
-            {"label": "Tambah produk", "url": reverse("products:create"), "icon": "＋", "style": "success"},
-            {"label": "Pesanan masuk", "url": reverse("orders:incoming"), "icon": "📥", "style": "outline"},
-            {"label": "Kelola aset", "url": reverse("assets:list"), "icon": "🧰", "style": "outline"},
-            {"label": "Performaku", "url": reverse("bankku:my_performance"), "icon": "📈", "style": "outline"},
+            {"label": "Tambah produk", "url": reverse("products:create"), "icon": "plus", "style": "success"},
+            {"label": "Pesanan masuk", "url": reverse("orders:incoming"), "icon": "package", "style": "outline"},
+            {"label": "Kelola aset", "url": reverse("assets:list"), "icon": "archive", "style": "outline"},
+            {"label": "Performaku", "url": reverse("bankku:my_performance"), "icon": "bar-chart", "style": "outline"},
         ],
         "recent_title": "Pesanan terbaru",
         "recent": recent,
@@ -393,9 +397,9 @@ def _buyer_dashboard(user, is_horeca):
     total_spend = sum((order.total for order in orders), Decimal("0"))
 
     stats = [
-        {"icon": "📦", "label": "Pesanan aktif", "value": len(active_orders), "hint": "sedang diproses"},
+        {"icon": "package", "label": "Pesanan aktif", "value": len(active_orders), "hint": "sedang diproses"},
         {
-            "icon": "🗓️" if is_horeca else "♻️",
+            "icon": "calendar" if is_horeca else "archive",
             "label": "Pre-order" if is_horeca else "Pesanan surplus",
             "value": sum(
                 1
@@ -406,24 +410,24 @@ def _buyer_dashboard(user, is_horeca):
             "hint": "terjadwal" if is_horeca else "produk berlebih",
         },
         {
-            "icon": "✅",
+            "icon": "check-circle",
             "label": "Selesai",
             "value": sum(1 for order in orders if order.status == OrderStatus.SELESAI.value),
             "hint": "pesanan tuntas",
         },
-        {"icon": "💳", "label": "Total belanja", "value": _rupiah(total_spend), "hint": "simulasi"},
+        {"icon": "credit-card", "label": "Total belanja", "value": _rupiah(total_spend), "hint": "simulasi"},
     ]
 
     actions = [
-        {"label": "Jelajahi katalog", "url": reverse("products:catalog"), "icon": "🛒", "style": "success"},
+        {"label": "Jelajahi katalog", "url": reverse("products:catalog"), "icon": "shopping-bag", "style": "success"},
     ]
     if is_horeca:
-        actions.append({"label": "Buat pre-order", "url": reverse("orders:preorder_create"), "icon": "🗓️", "style": "orange"})
+        actions.append({"label": "Buat pre-order", "url": reverse("orders:preorder_create"), "icon": "calendar", "style": "orange"})
     actions.extend(
         [
-            {"label": "Produk surplus", "url": reverse("orders:surplus_create"), "icon": "♻️", "style": "outline"},
-            {"label": "Pesanan saya", "url": reverse("orders:my_orders"), "icon": "📦", "style": "outline"},
-            {"label": "Pengiriman", "url": reverse("deliveries:list"), "icon": "🚚", "style": "outline"},
+            {"label": "Produk surplus", "url": reverse("orders:surplus_create"), "icon": "sprout", "style": "outline"},
+            {"label": "Pesanan saya", "url": reverse("orders:my_orders"), "icon": "package", "style": "outline"},
+            {"label": "Pengiriman", "url": reverse("deliveries:list"), "icon": "truck", "style": "outline"},
         ]
     )
 
@@ -474,13 +478,13 @@ def _qc_dashboard(user):
 
     return {
         "stats": [
-            {"icon": "⏳", "label": "Antrean QC", "value": queue.count(), "hint": "menunggu diperiksa"},
-            {"icon": "🔍", "label": "Diperiksa hari ini", "value": inspected.filter(inspected_at__date=today).count(), "hint": "hari ini"},
-            {"icon": "✅", "label": "Lolos", "value": inspected.filter(result=QcStatus.LOLOS.value).count(), "hint": "total Anda"},
-            {"icon": "⛔", "label": "Ditolak", "value": inspected.filter(result=QcStatus.DITOLAK.value).count(), "hint": "total Anda"},
+            {"icon": "clipboard-check", "label": "Antrean QC", "value": queue.count(), "hint": "menunggu diperiksa"},
+            {"icon": "search", "label": "Diperiksa hari ini", "value": inspected.filter(inspected_at__date=today).count(), "hint": "hari ini"},
+            {"icon": "check-circle", "label": "Lolos", "value": inspected.filter(result=QcStatus.LOLOS.value).count(), "hint": "total Anda"},
+            {"icon": "x", "label": "Ditolak", "value": inspected.filter(result=QcStatus.DITOLAK.value).count(), "hint": "total Anda"},
         ],
         "actions": [
-            {"label": "Buka antrean QC", "url": reverse("quality_control:queue"), "icon": "🔍", "style": "success"},
+            {"label": "Buka antrean QC", "url": reverse("quality_control:queue"), "icon": "search", "style": "success"},
         ],
         "recent_title": "Antrean pemeriksaan",
         "recent": recent,
@@ -513,14 +517,14 @@ def _mentor_dashboard(user):
 
     return {
         "stats": [
-            {"icon": "🗓️", "label": "Jadwal aktif", "value": mentorships.filter(status=MentorshipStatus.DIJADWALKAN.value).count(), "hint": "akan datang"},
-            {"icon": "✅", "label": "Selesai", "value": mentorships.filter(status=MentorshipStatus.SELESAI.value).count(), "hint": "pendampingan"},
-            {"icon": "🌾", "label": "Petani dibimbing", "value": mentorships.values("farmer").distinct().count(), "hint": "petani"},
-            {"icon": "📝", "label": "Catatan kegiatan", "value": MentorshipActivity.objects.filter(mentorship__mentor=user).count(), "hint": "riwayat"},
+            {"icon": "calendar", "label": "Jadwal aktif", "value": mentorships.filter(status=MentorshipStatus.DIJADWALKAN.value).count(), "hint": "akan datang"},
+            {"icon": "check-circle", "label": "Selesai", "value": mentorships.filter(status=MentorshipStatus.SELESAI.value).count(), "hint": "pendampingan"},
+            {"icon": "users", "label": "Petani dibimbing", "value": mentorships.values("farmer").distinct().count(), "hint": "petani"},
+            {"icon": "book", "label": "Catatan kegiatan", "value": MentorshipActivity.objects.filter(mentorship__mentor=user).count(), "hint": "riwayat"},
         ],
         "actions": [
-            {"label": "Tambah pendampingan", "url": reverse("mentorship:create"), "icon": "＋", "style": "success"},
-            {"label": "Daftar pendampingan", "url": reverse("mentorship:list"), "icon": "🗂️", "style": "outline"},
+            {"label": "Tambah pendampingan", "url": reverse("mentorship:create"), "icon": "plus", "style": "success"},
+            {"label": "Daftar pendampingan", "url": reverse("mentorship:list"), "icon": "file-text", "style": "outline"},
         ],
         "recent_title": "Pendampingan terbaru",
         "recent": recent,
@@ -560,13 +564,13 @@ def _bank_dashboard(user):
 
     return {
         "stats": [
-            {"icon": "🌾", "label": "Petani mitra", "value": farmers.count(), "hint": "terdaftar"},
-            {"icon": "📊", "label": "Sudah dinilai", "value": assessments.count(), "hint": "indikator"},
-            {"icon": "⭐", "label": "Potensial", "value": assessments.filter(eligibility=EligibilityBand.POTENSIAL.value).count(), "hint": "simulasi"},
-            {"icon": "📈", "label": "Rata-rata skor", "value": f"{average_score:.1f}".replace(".", ","), "hint": "dari 100"},
+            {"icon": "users", "label": "Petani mitra", "value": farmers.count(), "hint": "terdaftar"},
+            {"icon": "bar-chart", "label": "Sudah dinilai", "value": assessments.count(), "hint": "indikator"},
+            {"icon": "badge-check", "label": "Potensial", "value": assessments.filter(eligibility=EligibilityBand.POTENSIAL.value).count(), "hint": "simulasi"},
+            {"icon": "bar-chart", "label": "Rata-rata skor", "value": f"{average_score:.1f}".replace(".", ","), "hint": "dari 100"},
         ],
         "actions": [
-            {"label": "Buka BANKKU", "url": reverse("bankku:dashboard"), "icon": "📊", "style": "success"},
+            {"label": "Buka BANKKU", "url": reverse("bankku:dashboard"), "icon": "bar-chart", "style": "success"},
         ],
         "recent_title": "Performa petani",
         "recent": recent,
@@ -597,17 +601,17 @@ def _admin_dashboard(user):
 
     return {
         "stats": [
-            {"icon": "👥", "label": "Pengguna", "value": User.objects.count(), "hint": "akun terdaftar"},
-            {"icon": "🌾", "label": "Petani", "value": User.objects.filter(role=Role.FARMER.value).count(), "hint": "mitra aktif"},
-            {"icon": "📦", "label": "Pesanan", "value": orders.count(), "hint": "seluruh platform"},
-            {"icon": "🔍", "label": "Antrean QC", "value": queue_count, "hint": "perlu diperiksa"},
+            {"icon": "users", "label": "Pengguna", "value": User.objects.count(), "hint": "akun terdaftar"},
+            {"icon": "sprout", "label": "Petani", "value": User.objects.filter(role=Role.FARMER.value).count(), "hint": "mitra aktif"},
+            {"icon": "package", "label": "Pesanan", "value": orders.count(), "hint": "seluruh platform"},
+            {"icon": "clipboard-check", "label": "Antrean QC", "value": queue_count, "hint": "perlu diperiksa"},
         ],
         "actions": [
-            {"label": "Panel admin", "url": reverse("admin:index"), "icon": "⚙️", "style": "success"},
-            {"label": "Katalog", "url": reverse("products:catalog"), "icon": "🛒", "style": "outline"},
-            {"label": "Semua pesanan", "url": reverse("orders:my_orders"), "icon": "📦", "style": "outline"},
-            {"label": "Antrean QC", "url": reverse("quality_control:queue"), "icon": "🔍", "style": "outline"},
-            {"label": "BANKKU", "url": reverse("bankku:dashboard"), "icon": "📊", "style": "outline"},
+            {"label": "Panel admin", "url": reverse("admin:index"), "icon": "settings", "style": "success"},
+            {"label": "Katalog", "url": reverse("products:catalog"), "icon": "shopping-bag", "style": "outline"},
+            {"label": "Semua pesanan", "url": reverse("orders:my_orders"), "icon": "package", "style": "outline"},
+            {"label": "Antrean QC", "url": reverse("quality_control:queue"), "icon": "search", "style": "outline"},
+            {"label": "BANKKU", "url": reverse("bankku:dashboard"), "icon": "bar-chart", "style": "outline"},
         ],
         "recent_title": "Pesanan terbaru",
         "recent": [
