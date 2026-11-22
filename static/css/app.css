@@ -145,6 +145,11 @@ a:hover { color: var(--primary-hover); text-decoration: underline; }
 }
 
 /* Dropdown */
+.navbar .dropdown {
+  position: relative;
+  z-index: var(--z-dropdown);
+}
+
 .navbar .dropdown-menu {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -153,6 +158,8 @@ a:hover { color: var(--primary-hover); text-decoration: underline; }
   padding: var(--space-3);
   margin-top: var(--space-2);
   min-width: 220px;
+  position: absolute;
+  z-index: var(--z-dropdown);
 }
 
 .navbar .dropdown-item {

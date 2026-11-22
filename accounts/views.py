@@ -152,10 +152,10 @@ def home(request):
 @never_cache
 def guide(request):
     """Panduan pendaftaran sebelum login; bisa dilewati."""
-    if request.user.is_authenticated:
-        return redirect("accounts:dashboard")
     if request.GET.get("skip") == "1":
         request.session["nt_guide_seen"] = True
+        if request.user.is_authenticated:
+            return redirect("accounts:dashboard")
         return redirect("accounts:login")
 
     return render(

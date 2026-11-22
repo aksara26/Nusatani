@@ -14,7 +14,12 @@
       </p>
     </div>
     <a class="btn btn-outline-primary btn-sm flex-shrink-0" href="{% url 'accounts:guide' %}?skip=1">
-      Lewati panduan, langsung masuk <svg class="icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"/></svg>
+      {% if user.is_authenticated %}
+        Kembali ke dashboard
+      {% else %}
+        Lewati panduan, langsung masuk
+      {% endif %}
+      <svg class="icon" width="16" height="16" aria-hidden="true" style="vertical-align:middle;"><use href="#icon-arrow-right"/></svg>
     </a>
   </header>
 
