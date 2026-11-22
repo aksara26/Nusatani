@@ -1363,31 +1363,47 @@ a:hover { color: var(--primary-hover); text-decoration: underline; }
 /* =========================
    19. Responsive Adjustments
    ========================= */
-@media (max-width: 991.98px) {
+@media (max-width: 1199.98px) {
   .navbar .navbar-collapse {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
+    z-index: var(--z-dropdown);
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     border-radius: 0 0 var(--radius-card) var(--radius-card);
     box-shadow: var(--shadow-lg);
     padding: var(--space-4);
     margin-top: var(--space-2);
+    max-height: calc(100vh - 5rem);
+    max-height: calc(100dvh - 5rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
   }
   .navbar .navbar-nav {
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
     gap: var(--space-1);
+  }
+  .navbar .navbar-nav > .nav-item,
+  .navbar .navbar-nav > .dropdown {
+    width: 100%;
+  }
+  .navbar .navbar-nav .nav-link .d-none {
+    display: inline !important;
   }
   .navbar .nav-link {
     padding: 0.7rem 1rem;
     text-align: left;
     justify-content: flex-start;
+    width: 100%;
   }
   .navbar .dropdown-menu {
     position: static;
+    width: 100%;
+    min-width: 0;
     box-shadow: none;
     border: none;
     background: transparent;

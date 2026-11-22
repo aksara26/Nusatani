@@ -44,7 +44,7 @@ main, .page, .navbar, footer {
 }
 
 html, body {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Container max-width */
