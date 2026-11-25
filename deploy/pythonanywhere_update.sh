@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-"""Perbarui aplikasi NusaTani yang sudah berjalan di PythonAnywhere.
-
-Jalankan dari Bash console PythonAnywhere:
-
-    cd ~/Nusatani
-    bash deploy/pythonanywhere_update.sh
-
-Skrip ini menarik kode terbaru, memperbarui dependensi, menjalankan migrasi,
-mengumpulkan static files, lalu memicu reload web app bila file WSGI ditemukan.
-"""
+# Perbarui aplikasi NusaTani yang sudah berjalan di PythonAnywhere.
+#
+# Jalankan dari Bash console PythonAnywhere:
+#
+#     cd ~/Nusatani
+#     bash deploy/pythonanywhere_update.sh
+#
+# Skrip ini menarik kode terbaru, memperbarui dependensi, menjalankan migrasi,
+# mengumpulkan static files, lalu memicu reload web app bila file WSGI ditemukan.
 
 set -euo pipefail
 
