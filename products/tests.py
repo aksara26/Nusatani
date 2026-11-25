@@ -3,6 +3,7 @@
 from datetime import date
 
 from django.contrib.auth import get_user_model
+from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
 
@@ -103,3 +104,49 @@ class CatalogAndStockTests(TestCase):
         response = self.client.get(reverse("products:catalog"))
         self.assertEqual(response.status_code, 302)
         self.assertIn(reverse("accounts:login"), response.url)
+
+
+class ProductPhotoFallbackTests(TestCase):
+    """Gambar contoh varietas dipakai saat produk belum punya URL foto."""
+
+    def setUp(self):
+        self.farmer = User.objects.create_user(
+            username="petanifoto", password="TestPass123!", role="farmer"
+        )
+        self.client.login(username="petanifoto", password="TestPass123!")
+
+    def make_product(self, slug, name, photo_url=""):
+        variety, _created = Variety.objects.get_or_create(
+            slug=slug, defaults={"name": name}
+        )
+        return Product.objects.create(
+            farmer=self.farmer,
+            variety=variety,
+            name=f"Produk {name}",
+            price="12000",
+            photo_url=photo_url,
+        )
+
+    def test_custom_photo_url_is_used_when_present(self):
+        product = self.make_product(
+            "selada", "Selada", photo_url="https://example.com/foto.jpg"
+        )
+        self.assertEqual(product.display_photo_url, "https://example.com/foto.jpg")
+
+    def test_variety_sample_photo_is_used_when_photo_empty(self):
+        product = self.make_product("selada", "Selada")
+        self.assertEqual(
+            product.display_photo_url, static("images/products/selada.jpg")
+        )
+
+    def test_unknown_variety_falls_back_to_generic_photo(self):
+        product = self.make_product("kemangi", "Kemangi")
+        self.assertEqual(
+            product.display_photo_url, static("images/products/microgreens.jpg")
+        )
+
+    def test_catalog_renders_sample_photo(self):
+        self.make_product("brokoli", "Brokoli")
+        response = self.client.get(reverse("products:catalog"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, static("images/products/brokoli.jpg"))

@@ -30,8 +30,8 @@
   {% for product in products %}
   <a href="{% url 'products:detail' product.pk %}" class="product-card">
     <div class="product-card-image">
-      {% if product.photo_url %}
-        <img src="{{ product.photo_url }}" alt="{{ product.name }}" loading="lazy">
+      {% if product.display_photo_url %}
+        <img src="{{ product.display_photo_url }}" alt="{{ product.name }}" loading="lazy">
       {% else %}
         <div class="product-placeholder d-flex align-items-center justify-content-center w-100 h-100" style="background:var(--surface-2);">
           <svg class="icon" width="48" height="48" style="color:var(--muted-2);"><use href="#icon-sprout"/></svg>

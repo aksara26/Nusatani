@@ -36,7 +36,10 @@
           {% for product in products %}
           <tr>
             <td data-label="Produk">
-              <div class="fw-semibold">{{ product.name }}</div>
+              <div class="d-flex align-items-center gap-2">
+                <img src="{{ product.display_photo_url }}" alt="" class="product-thumb" loading="lazy">
+                <div class="fw-semibold">{{ product.name }}</div>
+              </div>
               {% if product.is_surplus %}
                 <span class="chip chip--netral">
                   <svg class="nt-icon" width="12" height="12" aria-hidden="true"><use href="#icon-package"/></svg>

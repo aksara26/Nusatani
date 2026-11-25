@@ -16,8 +16,8 @@
 
 <div class="row g-4">
   <div class="col-12 col-md-5">
-    {% if product.photo_url %}
-      <img src="{{ product.photo_url }}" alt="{{ product.name }}"
+    {% if product.display_photo_url %}
+      <img src="{{ product.display_photo_url }}" alt="{{ product.name }}"
            class="img-fluid rounded-3 border w-100" style="aspect-ratio:4/3;object-fit:cover;">
     {% else %}
       <div class="product-placeholder d-flex align-items-center justify-content-center rounded-3 border w-100" style="aspect-ratio:4/3;background:var(--surface-2);">

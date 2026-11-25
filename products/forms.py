@@ -38,6 +38,14 @@ class ProductForm(forms.ModelForm):
         widgets = {
             "description": forms.Textarea(attrs={"rows": 3}),
             "available_from": forms.DateInput(attrs={"type": "date"}),
+            "photo_url": forms.URLInput(
+                attrs={"placeholder": "https://contoh.com/foto-produk.jpg"}
+            ),
+        }
+        help_texts = {
+            "photo_url": (
+                "Opsional. Biarkan kosong untuk memakai gambar contoh sesuai varietas."
+            )
         }
 
     def __init__(self, *args, **kwargs):

@@ -6,8 +6,18 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.templatetags.static import static
 
 from accounts.roles import Role
+
+# Gambar contoh per varietas dipakai saat petani belum mengisi URL foto.
+VARIETY_PHOTOS = {
+    "selada": "images/products/selada.jpg",
+    "sawi-putih": "images/products/sawi-putih.jpg",
+    "brokoli": "images/products/brokoli.jpg",
+    "daun-katuk": "images/products/daun-katuk.jpg",
+}
+DEFAULT_PRODUCT_PHOTO = "images/products/microgreens.jpg"
 
 
 class Variety(models.Model):
@@ -76,6 +86,14 @@ class Product(models.Model):
         """Stok dari relasi Inventory; nol jika belum pernah dicatat."""
         inventory = getattr(self, "inventory", None)
         return inventory.quantity if inventory else 0
+
+    @property
+    def display_photo_url(self):
+        """URL foto produk, atau gambar contoh sesuai varietas bila kosong."""
+        if self.photo_url:
+            return self.photo_url
+        slug = (self.variety.slug or "").strip().lower()
+        return static(VARIETY_PHOTOS.get(slug, DEFAULT_PRODUCT_PHOTO))
 
     @property
     def availability_status(self):
