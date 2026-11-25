@@ -301,6 +301,39 @@ class GuideAndProfileTests(TestCase):
                 self.assertNotIn("/accounts/login/", main_nav)
                 self.assertNotIn("/accounts/daftar/", main_nav)
 
+    def test_guide_steps_link_to_the_relevant_navigation_destinations(self):
+        guide = self.client.get(reverse("accounts:guide"))
+        for route, label in (
+            ("products:my_products", "Produk Saya"),
+            ("orders:incoming", "Pesanan Masuk"),
+            ("products:catalog", "Katalog"),
+            ("orders:preorder_create", "pre-order"),
+            ("products:surplus", "Sisaku"),
+            ("orders:my_orders", "Pesanan Saya"),
+        ):
+            with self.subTest(route=route):
+                self.assertContains(
+                    guide, f'href="{reverse(route)}">{label}</a>'
+                )
+
+    def test_authenticated_navigation_marks_current_page(self):
+        user = User.objects.create_user(
+            username="navigasi", password="password123", role="consumer"
+        )
+        self.client.force_login(user)
+
+        catalog = self.client.get(reverse("products:catalog"))
+        self.assertRegex(
+            catalog.content.decode(),
+            rf'href="{reverse("products:catalog")}"\s+aria-current="page"',
+        )
+
+        dashboard = self.client.get(reverse("accounts:dashboard"))
+        self.assertRegex(
+            dashboard.content.decode(),
+            rf'href="{reverse("accounts:dashboard")}"\s+aria-current="page"',
+        )
+
     def test_authenticated_user_can_open_guide(self):
         user = User.objects.create_user(
             username="pengguna", password="password123", role="consumer"

@@ -1,0 +1,20 @@
+{% if role_nav.items %}
+<nav class="role-nav" aria-label="{{ role_nav.label }}">
+  <div class="container role-nav-inner">
+    <span class="role-nav-title">
+      <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-layout-dashboard"/></svg>
+      <span>{{ role_nav.label }}</span>
+    </span>
+    <div class="role-nav-scroll">
+      {% for item in role_nav.items %}
+      <a class="role-nav-item{% if item.active %} active{% endif %}"
+         href="{{ item.url }}"
+         {% if item.active %}aria-current="page"{% endif %}>
+        <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-{{ item.icon }}"/></svg>
+        <span>{{ item.label }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</nav>
+{% endif %}

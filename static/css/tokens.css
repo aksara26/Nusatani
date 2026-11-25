@@ -59,6 +59,9 @@
   --space-12: 48px;
   --space-16: 64px;
 
+  /* Layout */
+  --navbar-height: 68px;
+
   /* Transitions */
   --transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: all 0.12s ease-out;
@@ -73,6 +76,7 @@
   --z-modal: 1060;
   --z-toast: 2000;
   --z-navbar: 1030;
+  --z-subnav: 1025;
 }
 
 /* Focus visible untuk aksesibilitas */

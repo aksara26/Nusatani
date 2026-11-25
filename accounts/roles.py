@@ -6,6 +6,20 @@ cukup dilakukan di satu tempat. Konten per role diambil dari konfigurasi ini.
 
 from django.db import models
 from django.urls import reverse_lazy
+from django.utils.functional import lazy
+from django.utils.html import format_html
+
+
+def _guide_html(template, *args):
+    return lazy(lambda: format_html(template, *args), str)()
+
+
+def _guide_link(route_name, label):
+    return _guide_html(
+        '<strong><a href="{}">{}</a></strong>',
+        reverse_lazy(route_name),
+        label,
+    )
 
 
 class Role(models.TextChoices):
@@ -295,11 +309,24 @@ ROLE_GUIDES = {
         "is_amber": False,
         "summary": "Kelola produksi, stok, pesanan, kualitas, pengiriman, dan catatan usaha.",
         "steps": [
-            "Buka <strong>Produk Saya</strong> untuk menambah produk dan memperbarui stok.",
-            "Di <strong>Pesanan Masuk</strong>, konfirmasi pesanan lalu mulai produksi.",
+            _guide_html(
+                "Buka {} untuk menambah produk dan memperbarui stok.",
+                _guide_link("products:my_products", "Produk Saya"),
+            ),
+            _guide_html(
+                "Di {}, konfirmasi pesanan lalu mulai produksi.",
+                _guide_link("orders:incoming", "Pesanan Masuk"),
+            ),
             "Ajukan produk ke QC. Setelah <strong>Lolos QC</strong>, siapkan pengiriman lalu tandai selesai.",
-            "Catat rak, tray, dan alat di <strong>Asetku</strong>; lihat jadwal di <strong>Mentorku</strong>.",
-            "Pantau hasil usaha di <strong>Performaku</strong>.",
+            _guide_html(
+                "Catat rak, tray, dan alat di {}; lihat jadwal di {}.",
+                _guide_link("assets:list", "Asetku"),
+                _guide_link("mentorship:list", "Mentorku"),
+            ),
+            _guide_html(
+                "Pantau hasil usaha di {}.",
+                _guide_link("bankku:my_performance", "Performaku"),
+            ),
         ],
     },
     Role.HORECA.value: {
@@ -309,10 +336,19 @@ ROLE_GUIDES = {
         "is_amber": True,
         "summary": "Pesan microgreens terjadwal untuk hotel, restoran, dan kafe.",
         "steps": [
-            "Buka <strong>Katalog</strong> lalu pilih produk yang dibutuhkan.",
-            "Buat <strong>pre-order</strong> 7–14 hari sebelum tanggal kebutuhan.",
+            _guide_html(
+                "Buka {} lalu pilih produk yang dibutuhkan.",
+                _guide_link("products:catalog", "Katalog"),
+            ),
+            _guide_html(
+                "Buat {} 7–14 hari sebelum tanggal kebutuhan.",
+                _guide_link("orders:preorder_create", "pre-order"),
+            ),
             "Pantau status pesanan sampai produk dikirim dan diterima.",
-            "Lihat kembali pesanan melalui menu <strong>Pesanan Saya</strong>.",
+            _guide_html(
+                "Lihat kembali pesanan melalui menu {}.",
+                _guide_link("orders:my_orders", "Pesanan Saya"),
+            ),
         ],
     },
     Role.CONSUMER.value: {
@@ -322,10 +358,20 @@ ROLE_GUIDES = {
         "is_amber": True,
         "summary": "Beli microgreens segar, termasuk produk surplus petani.",
         "steps": [
-            "Buka <strong>Katalog</strong> atau <strong>Sisaku</strong> untuk melihat produk.",
-            "Pilih produk surplus yang masih tersedia lalu pesan.",
+            _guide_html(
+                "Buka {} atau {} untuk melihat produk.",
+                _guide_link("products:catalog", "Katalog"),
+                _guide_link("products:surplus", "Sisaku"),
+            ),
+            _guide_html(
+                "Pilih {} yang masih tersedia lalu pesan.",
+                _guide_link("products:surplus", "produk surplus"),
+            ),
             "Pantau status pesanan dan pengiriman simulasi.",
-            "Riwayat pembelian ada di menu <strong>Pesanan Saya</strong>.",
+            _guide_html(
+                "Riwayat pembelian ada di menu {}.",
+                _guide_link("orders:my_orders", "Pesanan Saya"),
+            ),
         ],
     },
     Role.QC.value: {

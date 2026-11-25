@@ -220,6 +220,7 @@
       const isSelected = candidate === button;
       candidate.classList.toggle("is-selected", isSelected);
       candidate.setAttribute("aria-checked", isSelected ? "true" : "false");
+      candidate.tabIndex = isSelected ? 0 : -1;
       // Update check icon visibility
       const checkIcon = candidate.querySelector(".role-check .icon");
       if (checkIcon) {
@@ -256,6 +257,9 @@
 
   roleButtons.forEach(function (button) {
     button.addEventListener("click", function () { selectRole(button); });
+  });
+  roleButtons.forEach(function (button, index) {
+    button.tabIndex = index === 0 ? 0 : -1;
   });
 
   const group = root.querySelector("[data-role-group]");
